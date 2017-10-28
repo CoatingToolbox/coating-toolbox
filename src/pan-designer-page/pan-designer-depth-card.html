@@ -1,0 +1,131 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="shared-card-styles.html">
+
+<dom-module id='pan-designer-depth-card'>
+    <template>
+        <style include='shared-card-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: 1.5fr 2fr;
+                grid-template-rows: auto auto auto;
+            } 
+            .section-title {
+                grid-column: 1 / 2;
+                grid-row: 2 / 3;
+            }
+            .text-container {
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+            }
+            iron-selector {
+                grid-column: 1 / 2;
+                grid-row: 3 / 4;
+                
+            }
+            coating-pan-graphic {
+                grid-column: 2 / 3;
+                grid-row: 1 / 4;
+                --pan-size: 300px;
+            }
+            unit-input + unit-input {
+                margin-top: 16px;
+            }
+        </style>
+        
+        <div class='text-container'>
+            <div class='subtitle'>Dimension - Depth</div>
+            <div class='caption'>Coating Pan Depth</div>
+            <div class='description'>
+                The depth of the coating pan is defined as the distance from the front opening
+                to the back wall. Because coatings pan have angled side walls we also require
+                the width of the perforated flat wall.
+            </div>
+        </div>
+       
+        <div class='section-title'>Pan Depths - <i>Inputs</i></div>
+        
+        <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
+            <unit-input 
+                dimen='brim-width'
+                value='[[pan.brimWidth]]' 
+                on-value-changed='_setBrimWidth'
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                title='Brim Width' 
+                details='The width of the pan at the brim height.'>
+            </unit-input>
+            <unit-input 
+                dimen='wall-width'
+                value='[[pan.wallWidth]]'
+                on-value-changed='_setWallWidth' 
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                title='Wall Width' 
+                details='The width of the pan at the perforated wall.'>
+            </unit-input>
+        </iron-selector>
+        
+        <coating-pan-graphic pan='[[pan]]' view='side' line-type='[[selected]]'></coating-pan-graphic>
+            
+        
+    </template>
+
+    <script>
+        class PanDesignerDepthCard extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'pan-designer-depth-card';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                    page: {type: Number, value: 0},
+                    lengthUnits: {type: String, value: 'in'},
+                    selected: {type: String, value: "brim-width"}
+                };
+            }
+      
+          _setPanDiameter(e) {
+            this.pan.panDiameter = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setOpeningDiameter(e) {
+            this.pan.openingDiameter = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setBrimWidth(e) {
+            this.pan.brimWidth = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setWallWidth(e) {
+            this.pan.wallWidth = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+        }
+        window.customElements.define(PanDesignerDepthCard.is, PanDesignerDepthCard);
+    </script>
+
+</dom-module>

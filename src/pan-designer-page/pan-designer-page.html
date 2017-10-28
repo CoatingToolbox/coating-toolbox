@@ -1,0 +1,142 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../elements/page-layout.html">
+<link rel="import" href="../elements/page-header.html">
+<link rel="import" href="../elements/basic-card.html">
+<link rel="import" href="../my-icons.html">
+<link rel="import" href="pan-designer-make-model-card.html">
+<link rel="import" href="pan-designer-height-card.html">
+<link rel="import" href="pan-designer-depth-card.html">
+<link rel="import" href="pan-designer-perforation-card.html">
+<link rel="import" href="pan-designer-baffle-card.html">
+<link rel="import" href="pan-designer-spray-gun-card.html">
+<link rel="import" href="pan-designer-save-card.html">
+<link rel="import" href="pan-designer-nav.html">
+
+<dom-module id="pan-designer-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #content {
+        display: grid;
+        grid-template-columns: auto 1fr 1fr;
+        grid-auto-rows: auto;
+        grid-gap: 32px;
+        padding: 32px 0px;
+        max-width: 900px;
+        margin: auto;
+      }
+      pan-designer-make-model-card,
+      pan-designer-height-card, 
+      pan-designer-depth-card {
+        grid-column: 1 / 3;
+      }
+      basic-card {
+        grid-column: 1 / 4;
+      }
+      .section {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-auto-rows: auto;
+        grid-gap: 16px;
+        /*white-space: nowrap;*/
+      }
+      .section + .section {
+        margin-top: 32px;
+      }
+      .section-title {
+        grid-row: 1 / 2;
+        grid-column: 1 / 2;
+        /*@apply --paper-font-title;*/
+      }
+      .title {
+        grid-column: 2 / 3;
+        /*padding: 16px;*/
+      }
+      .input {
+        grid-column: 3 / 4;
+        /*padding: 16px;*/
+        /*@apply --paper-font-body2;*/
+      }
+    </style>
+    
+    
+    <page-layout>
+      
+      
+      <page-header slot='header' title='Coating Pan Designer' icon='my-icons:ruler'>
+        <p>
+          Build your own coating pan from four simple dimensions. 
+          Followed by details on baffle design and spray guns.
+        
+        </p>
+      </page-header>
+      <div slot='header' sticky></div>
+      <!--<pan-designer-nav slot='header' sticky selected='[[section]]' on-selected-changed='_scrollToSection'></pan-designer-nav>-->
+  
+  
+    <div id='content'>
+      
+      <basic-card>
+        <div class='section'>
+          <div class='section-title'>Coating Pan Description</div>
+          <div class='title'>Manufacturer: </div>
+          <div class='input'>O'Hara</div>
+          <div class='title'>Model: </div>
+          <div class='input'>Fastcoat</div>
+          <div class='title'>Nickname: </div>
+          <div class='input'>48" Room</div>
+        </div>
+        
+        <div class='section'>
+          <div class='section-title'>Equipment Information</div>
+          
+          <div class='input'>O'Hara</div>
+          <div class='input'>Fastcoat</div>
+          <div class='input'>48" Room</div>
+        </div>
+      </basic-card>
+      
+     <pan-designer-make-model-card></pan-designer-make-model-card>
+     <pan-designer-height-card></pan-designer-height-card>
+     <pan-designer-depth-card></pan-designer-depth-card>
+     <pan-designer-baffle-card></pan-designer-baffle-card>
+     <pan-designer-spray-gun-card></pan-designer-spray-gun-card>
+     <pan-designer-save-card></pan-designer-save-card>
+    
+    </div>   
+      
+    </page-layout>
+   
+    
+  </template>
+
+  <script>
+    class PanDesignerPage extends Polymer.Element {
+      static get is() { return 'pan-designer-page'; }
+      
+      static get properties() {
+        return {
+          section: {
+            type: Number,
+            value: 0,
+          }
+        };
+      }
+      
+      
+      _scrollToSection(e) {
+        // const index = e.target.selected;
+        // const cards = this.$.content.children;
+        // cards[index].scrollIntoView();
+        // const scroll = this.$.layout.shadowRoot.querySelector('#contentContainer');
+        // if(cards.length > index + 1)
+        // scroll.scrollTop = scroll.scrollTop - 100;
+      }
+      
+    }
+
+    window.customElements.define(PanDesignerPage.is, PanDesignerPage);
+  </script>
+</dom-module>

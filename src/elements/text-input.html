@@ -1,0 +1,108 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<dom-module id='text-input'>
+    <template>
+        <style>
+        :host {
+            display: flex;
+            flex-direction: column;
+            color: var(--text-color);
+            padding: 8px 16px;
+            background-color: var(--gray-color);
+            border-radius: 4px;
+        }
+        :host([focused]) {
+            outline: none;
+        } 
+        #input, 
+        #input:focus {
+            padding-left: 16px;
+            flex-grow: 1;
+          appearance: none;
+          -moz-appearance: none;
+          -webkit-appearance: none;
+          border: none;
+          outline: none;
+          background-color: inherit;
+          color: inherit;
+          font: inherit;
+          text-align: start;
+          text-overflow: ellipsis;
+        }
+        
+        #input:focus {
+          color: var(--app-primary-color);
+        }
+        
+        #input[type=number]::-webkit-inner-spin-button,
+        #input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            margin: 0;
+        }
+        
+        #input:focus {
+          appearance: none;
+          -moz-appearance: none;
+          -webkit-appearance: none;
+        }  
+        
+        #label {
+            padding-bottom: 4px;
+          text-transform: capitalize;
+          white-space: nowrap;
+          font-weight: 500;
+          font-size: 14px;
+        }
+    </style>
+    
+        <div id='label'>[[label]]</div>
+        
+        <input
+            id='input' 
+            type="text" 
+            value='{{value}}' 
+            size='1'
+            autocapitalize='words'
+            list='list'
+            on-change='_inputChange'
+            on-focus='_inputFocus'
+            on-blur='_inputBlur'>
+        
+        <datalist id='list'>
+            <template is='dom-repeat' items='[[options]]'>
+                <option value='[[item]]'></option>
+            </template>
+        </datalist>
+        
+    </template>
+    <script>
+        class TextInput extends Polymer.Element {
+            static get is() { return 'text-input';}
+            
+            static get properties() {
+                return {
+                    value: {type: String},
+                    label: {type: String},
+                    options: {type: Array}
+                };
+            }
+            
+            _inputFocus() {
+                this.setAttribute('focused', '');
+            }
+            
+            _inputBlur() {
+                this.removeAttribute('focused');
+            }
+            
+            _inputChange(e) {
+                this.dispatchEvent(new CustomEvent('value-changed', {detail: {value: e.target.value}}));
+            }
+        }
+        
+        window.customElements.define(TextInput.is, TextInput);
+    </script>
+</dom-module>

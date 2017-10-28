@@ -1,0 +1,76 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="basic-card">
+  <template>
+    <style>
+      :host {
+            display: flex;
+            flex-direction: column;
+            border-radius: 6px;
+            background-color: var(--white-color);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+      :host([disabled]) {
+        color: var(--text-disabled-color);
+      }
+      #title-container {
+        display: flex;
+        align-items: center;
+        border-radius: 6px 6px 0px 0px;
+        padding: 16px 16px 16px 16px;
+        @apply --paper-font-title;
+      }
+      #content-container {
+        padding: 0px 16px;
+      }
+      #button-container {
+          display: flex;
+          justify-content: flex-end;
+          padding: 0px 16px 16px 16px;
+      }
+      #content-container ::slotted(.text) {
+        @apply --paper-font-body1;
+        color: var(--text-light-color);
+        text-align: justify;
+      }
+      #flex-spacer {
+        flex-grow: 1;
+      }
+    </style>
+    
+    
+    <div id='title-container'>
+      
+      <slot name='title'></slot>
+      
+    </div>
+    
+    <div id='content-container'>
+      
+      <slot></slot>
+      
+    </div>
+    
+    <div id='flex-spacer'></div>
+    
+    <div id='button-container'>
+        
+      <slot name='button'></slot>
+      
+    </div>
+      
+    
+  </template>
+
+  <script>
+    class BasicCard extends Polymer.Element {
+      static get is() { return 'basic-card'; }
+    }
+
+    window.customElements.define(BasicCard.is, BasicCard);
+  </script>
+</dom-module>

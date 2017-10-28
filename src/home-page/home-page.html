@@ -1,0 +1,173 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<link rel="import" href="../elements/basic-card.html">
+<link rel="import" href="../elements/page-header.html">
+<link rel="import" href="../elements/page-layout.html">
+<link rel="import" href="../elements/slide-open-icon-button.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="home-page">
+  <template>
+    <style>
+      :host {
+            display: block;
+      }
+      .card-container {
+            display: grid;
+            grid-template-rows: auto auto;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 32px;
+      }
+      .section-title {
+          grid-column: 1 / 13;
+          @apply --paper-font-headline;
+          color: var(--text-light-color);
+          margin: 24px 0px;
+      }
+      .card-subtitle {
+          @apply --paper-font-subhead;
+          display: flex;
+          margin: 24px 24px 16px 24px;
+          align-items: center;
+      }
+      .card-subtitle iron-icon {
+          margin-right: 8px;
+      }
+      @media(min-width: 1440px) {
+          .card-container {
+              grid-template-columns: repeat(4, 1fr);
+          }
+      }
+    </style>
+    
+    <page-layout>
+        
+        <page-header slot='header' title='Coating Toolbox' icon='my-icons:toolbox'>
+            <div>Created By: Jason Hansell</div>
+        </page-header>
+        
+        <div sticky slot='header'></div>
+    
+        <div class='section-title'>Materials & Equipment</div>
+        
+        <div class='card-container'>
+            
+                <basic-card>
+                    <div slot='title'>Coating Pan</div>
+                    <div class='text'>
+                        The coating pan detemines the batch size and many coating process parameters including mixing uniformity, spray optimization and
+                        thermodynamics. Choose a pan from the library and/or design a customs coating pan. 
+                    </div>
+                    <div class='card-subtitle'>
+                        <iron-icon icon='my-icons:check'></iron-icon>
+                        <div>[[_pan.vendorName]] [[_pan.equipmentName]] - [[_pan.nickname]]</div>
+                    </div>
+                    <a href='#/pan-designer-page' slot='button'>
+                        <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>
+                    </a>
+                    <a href='#/pan-library-page' slot='button'>
+                        <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>
+                    </a>
+                    <a href='#/pan-designer-page' slot='button'>
+                        <slide-open-icon-button icon='my-icons:info' label='Overview'></slide-open-icon-button>
+                    </a>
+                </basic-card>
+            
+            <basic-card disabled>
+                <div slot='title'>Tablet</div>
+                <div class='text'>
+                    The tablet shape, size and other physical properties effect the coating uniformity, coating coverage and 
+                    more. Choose a tablet from the library or design a custom tablet formulation.
+                </div>
+                <div class='card-subtitle'>
+                    <iron-icon icon='my-icons:info'></iron-icon>
+                    <div>Coming Soon...</div>
+                </div>
+                <a href='#/home-page' slot='button'>
+                    <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>
+                </a>
+                <a href='#/home-page' slot='button'>
+                    <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>
+                </a>
+                <a href='#/home-page' slot='button'>
+                    <slide-open-icon-button icon='my-icons:info' label='Overview'></slide-open-icon-button>
+                </a>
+            </basic-card>
+            
+            <basic-card disabled>
+                <div slot='title'>Coating Formulation</div>
+                <div class='text'>
+                    The coating formulation determines the dispersion solids, coating coverage, opacity and more. 
+                    Select a coating formulation from the library or design a custom formulation.
+                </div>
+                <div class='card-subtitle'>
+                    <iron-icon icon='my-icons:info'></iron-icon>
+                    <div>Coming Soon...</div>
+                </div>
+                <a href='#/home-page' slot='button'>
+                    <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>
+                </a>
+                <a href='#/home-page' slot='button'>
+                    <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>
+                </a>
+                <a href='#/home-page' slot='button'>
+                    <slide-open-icon-button icon='my-icons:info' label='Overview'></slide-open-icon-button>
+                </a>
+            </basic-card>
+            
+        </div>
+        
+        <div class='section-title'>Process Parameters</div>
+        
+        <div class='card-container'>
+            
+            <basic-card>
+                <div slot='title'>Coating Pan Fill</div>
+                <div class='text'>
+                    The coating pan detemines the batch size and many coating process parameters including mixing uniformity, spray optimization and
+                    thermodynamics. Choose a pan from the library and/or design a customs coating pan. 
+                </div>
+                <div class='card-subtitle'>
+                    <iron-icon icon='my-icons:check'></iron-icon>
+                    <div>Batch Size: [[_panFillWeight]] kg</div>
+                </div>
+                <a href='#/pan-fill-page' slot='button'>
+                    <slide-open-icon-button opened icon='my-icons:weight' label='Pan Fill'></slide-open-icon-button>
+                </a>
+            </basic-card>
+            
+        </div>
+    
+        
+    </page-layout>
+    
+  </template>
+
+  <script>
+    class HomePage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'home-page'; }
+      static get properties() { 
+          return {
+              _pan: {
+                  type: Object,
+                  statePath: 'pan'
+              },
+              _panFillWeight: {
+                  type: String,
+                  computed: "_computePanFillWeight(_pan.fillWeight)"
+              }
+          };
+      }
+      
+      _computePanFillWeight(weight) {
+          return (weight / 1000).toFixed(1);
+      }
+      
+    }
+
+    window.customElements.define(HomePage.is, HomePage);
+  </script>
+</dom-module>

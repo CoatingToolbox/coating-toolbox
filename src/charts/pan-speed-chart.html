@@ -1,0 +1,191 @@
+
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="chart-styles.html">
+
+<dom-module id='pan-speed-chart'>
+    <template>
+        <style include='chart-styles'>
+        :host {
+            min-height: 300px;
+        }
+        </style>
+            
+        <div id='tooltip' class='hide'>
+            <div>Density</div>
+            <!--<div>[[_convertToGMLString(pan.fillDensity)]] g/ml</div>-->
+        </div>
+            
+        <svg id='chart' width='400'>
+            <g class='chart'>
+                <g class='x axis'></g>
+                <g class='y axis'></g>
+                <text class='x title'>Linear Velocity (fpm)</text>
+                <text class='y title'>Pan Speed (rpm)</text>
+                <path class='main-line line dotted'></path>
+                <path class='recommend-line line'></path>
+                <circle class='circle pan-speed'  on-track='_trackSpeed'></circle>
+            </g>
+        </svg>
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer */
+        class PanSpeedChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+            
+            static get is() { return 'pan-speed-chart'; }
+            
+            connectedCallback() {
+                super.connectedCallback();
+                window.addEventListener('resize', () => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                window.requestAnimationFrame(() => {
+                    this.height = this.$.chart.clientHeight - this.margin.top - this.margin.bottom;
+                    this.width = this.$.chart.clientWidth - this.margin.left - this.margin.right;
+                });
+            }
+            
+            static get properties() {
+                return {
+                    pan: {type: Object, statePath: 'pan'},
+                    margin: {type: Object, value: function() {
+                        return {top: 20, right: 20, bottom: 50, left: 50};
+                    }},
+                    height: {type: Number},
+                    width: {type: Number},
+                    minLinearVelocity: {type: Number, value: 50},
+                    maxLinearVelocity: {type: Number, value: 100},
+                    minRecommendLinearVelocity: {type: Number, value: 70},
+                    maxRecommendLinearVelocity: {type: Number, value: 80},
+                    xScale: {type: Object, computed: '_computeXScale(width, chart)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, chart, pan.panDiameter, minLinearVelocity, maxLinearVelocity)'},
+                    d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
+                    d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'},
+                    chart: {type: Object, computed: '_computeChart(margin, height, width)'}
+                };
+            }
+            _computeXScale(chartWidth, chart) {
+                if(!chartWidth || !chart) { return };
+                let xScale = d3.scaleLinear().range([0, chartWidth]).domain([this.minLinearVelocity, this.maxLinearVelocity]).nice();
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+                return xScale;
+            }
+            _computeYScale(chartHeight, chart, diameter, minLinearVelocity, maxLinearVelocity) {
+                if(!chartHeight || !chart || !diameter || !minLinearVelocity || !maxLinearVelocity) { return; }
+                let min = this._calcPanSpeed(diameter, minLinearVelocity);
+                let max = this._calcPanSpeed(diameter, maxLinearVelocity);
+                let yScale =  d3.scaleLinear().range([chartHeight, 0]).domain([min, max]).nice();
+                chart.select(".y.axis").call(d3.axisLeft(yScale)); 
+                return yScale;
+            }
+            _computeD3Line(xScale, yScale) {
+                return d3.line()
+                    .x(function(d) { return xScale(d.x); })
+                    .y(function(d) { return yScale(d.y); })
+                    .curve(d3.curveNatural);
+            }
+            _computeD3Area(xScale, yScale, height) {
+                return d3.area()
+                         .x(function(d) { return xScale(d.x); })
+                         .y0(height)
+                         .y1(function(d) { return yScale(d.y); }); 
+            }
+            _computeChart(margin, height, width) {
+                if(!margin || !height || !width) {
+                    return;
+                }
+                let chart = d3.select(this.$.chart)
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                .select(".chart")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                                
+                chart.select(".x.axis").attr("transform", "translate(0," + height + ")");
+                chart.select(".x.title").attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 25) + ")");
+                chart.select(".y.title").attr("y", 0 - margin.left).attr("x",0 - (height / 2)).attr("dy", "1em");      
+                
+                // set the chart object
+                return chart;
+            }
+        
+            static get observers() {
+                return [
+                    '_drawMainLine(pan.panDiameter, chart, d3Line)',
+                    '_drawRecommendLine(pan.panDiameter, chart, d3Line, minRecommendLinearVelocity, maxRecommendLinearVelocity, xScale, yScale)'
+                ];
+            }
+            _drawMainLine(diameter, chart, lineFunction) {
+                if(!chart || !diameter || !lineFunction) { return; }
+                let data = [];
+                for(let i = this.minLinearVelocity; i <= this.maxLinearVelocity; i = i + 5) {
+                    let panSpeed = this._calcPanSpeed(diameter, i);
+                    data.push({
+                        x: i,
+                        y: panSpeed
+                    });
+                }
+                let line = chart.select('.main-line').data([data]);
+                line.enter()
+                    .append('path')
+                    .attr('class', 'main-line line dotted')
+                    .merge(line)
+                    .attr('d', lineFunction);
+                line.exit().remove();
+            }
+            _drawRecommendLine(diameter, chart, lineFunction, min, max, xScale, yScale) {
+                if(!chart || !diameter || !lineFunction || !min || !max || !xScale || !yScale) { return; }
+                
+                let data = [];
+                data.push({
+                    x: min,
+                    y: this._calcPanSpeed(diameter, min)
+                });
+                data.push({
+                    x: max,
+                    y: this._calcPanSpeed(diameter, max)
+                });
+                
+                let line = chart.select('.recommend-line').data([data]);
+                line.enter()
+                    .append('path')
+                    .attr('class', 'recommend-line line')
+                    .merge(line)
+                    .attr('d', lineFunction);
+                line.exit().remove();
+                
+                let points = chart.selectAll('.recommend-point').data(data);
+                points.enter()
+                      .append('circle')
+                      .attr('class', 'recommmend-point circle')
+                      .merge(points)
+                      .attr('r', 7)
+                      .attr('cx', function(d) { return xScale(d.x); })
+                      .attr('cy', function(d) { return yScale(d.y); });
+                points.exit().remove();
+            }
+            
+            _calcPanSpeed(diameter, linearVelocity) {
+                // linear velocity in inches per minut in inches
+                let inchesPerMinute = linearVelocity * 12;
+                let panCircumference = Math.PI * diameter * 39.3701;
+                let panSpeed = inchesPerMinute / panCircumference;
+                return panSpeed;
+            }
+
+        }
+        
+        window.customElements.define(PanSpeedChart.is, PanSpeedChart);
+        
+    </script>
+</dom-module>

@@ -1,0 +1,132 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="shared-card-styles.html">
+
+<dom-module id='pan-designer-height-card'>
+    <template>
+        <style include='shared-card-styles'>
+             :host {
+                display: grid;
+                grid-template-columns: 1.5fr 2fr;
+                grid-template-rows: auto auto auto;
+            } 
+            .section-title {
+                grid-column: 1 / 2;
+                grid-row: 2 / 3;
+                max-width: 300px;
+            }
+            .text-container {
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+            }
+            iron-selector {
+                grid-column: 1 / 2;
+                grid-row: 3 / 4;
+            }
+            coating-pan-graphic {
+                grid-column: 2 / 3;
+                grid-row: 1 / 4;
+                --pan-size: 300px
+            }
+            unit-input + unit-input {
+                margin-top: 16px;
+                
+            }
+        </style>
+        
+        <div class='text-container'>
+            <div class='subtitle'>Dimensions - Height</div>
+            <div class='caption'>Pan Diameter and Brim Height</div>
+            <div class='description'>
+                The main diameter of is often you describe the coating pan size. But the diameter of the opening
+                also plays an important role. These two diameters set height of the pan and fill.
+                
+            </div>
+        </div>
+        
+        <div class='section-title'>Pan Diameters - <i>Inputs</i></div>
+       
+        <iron-selector selected='{{selected}}' attr-for-selected='dimen'>
+            <unit-input 
+                dimen='pan-diameter'
+                value='[[pan.panDiameter]]' 
+                on-value-changed='_setPanDiameter'
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                title='Main Diameter' 
+                details='The diameter of the coating pan drum.'>
+            </unit-input>
+            <unit-input 
+                dimen='opening-diameter'
+                value='[[pan.openingDiameter]]' 
+                on-value-changed='_setOpeningDiameter'
+                type='length'
+                selected-units='{{lengthUnits}}' 
+                title='Opening Diameter' 
+                details='The diameter of the coating pan drum.'>
+            </unit-input>
+        </iron-selector>
+        
+        <coating-pan-graphic pan='[[pan]]' line-type='[[selected]]'></coating-pan-graphic> 
+            
+        
+    </template>
+
+    <script>
+        class PanDesignerHeightCard extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'pan-designer-height-card';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    },
+                    page: {type: Number, value: 0},
+                    lengthUnits: {type: String, value: 'in'},
+                    selected: {type: String, value: "pan-diameter"}
+                };
+            }
+      
+          _setPanDiameter(e) {
+            this.pan.panDiameter = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setOpeningDiameter(e) {
+            this.pan.openingDiameter = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setBrimWidth(e) {
+            this.pan.brimWidth = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+          
+          _setWallWidth(e) {
+            this.pan.wallWidth = e.detail.value;
+            this.dispatch({
+              type: "SET_PAN",
+              value: this.pan
+            });
+          }
+        }
+        window.customElements.define(PanDesignerHeightCard.is, PanDesignerHeightCard);
+    </script>
+
+</dom-module>

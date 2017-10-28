@@ -1,0 +1,170 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/basic-card.html">
+<link rel="import" href="../elements/slide-open-icon-button.html">
+<link rel="import" href="../redux/redux-mixin.html">
+
+<dom-module id='pan-library-card'>
+    <template>
+        <style>
+            :host {
+              display: flex;
+              flex-direction: column;
+              border-radius: 6px;
+              background-color: var(--white-color);
+              box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                          0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                          0 3px 1px -2px rgba(0, 0, 0, 0.2);
+            }
+            #title {
+              @apply --paper-font-title;
+            }
+            #subtitle {
+              @apply --paper-font-body1;
+              color: var(--app-primary-color);
+            }
+            .card-subtitle {
+                @apply --paper-font-body1;
+                display: flex;
+                margin: 8px 16px;
+                align-items: center;
+                color: var(--text-light-color);
+            }
+            basic-card .card-subtitle:last-of-type {
+              margin-bottom: 16px;
+            }
+            [spacer] {
+              flex-grow: 1;
+            }   
+        </style>
+    
+    <basic-card>
+        
+        <div slot='title'>
+          <div id='subtitle'>[[pan.vendorName]]</div>
+          <div id='title'>[[pan.equipmentName]] [[pan.nickname]]</div>
+        </div>
+      
+      
+        <div class='card-subtitle'>
+            <div>Diameter: </div>
+            <div spacer></div>
+            <div>[[_getPanDiameterString(pan.panDiameter)]]</div>
+        </div>
+        
+        <div class='card-subtitle'>
+            <div>Working Volume:</div>
+            <div spacer></div>
+            <div>[[_getPanVolumeString(pan)]]</div>
+        </div>
+      
+        <slide-open-icon-button slot='button' icon="my-icons:edit" label='Edit' on-tap='_editPan'></slide-open-icon-button>
+        <slide-open-icon-button slot='button' icon="my-icons:load" label='Load' on-tap='_loadPan'></slide-open-icon-button>
+        <slide-open-icon-button slot='button' icon="my-icons:details" label='Details' on-tap='_toggleDialog'></slide-open-icon-button>
+        
+    </basic-card>
+          
+        
+    </template>
+    
+    <script>
+        
+        /*global Polymer */
+        class PanLibraryCard extends ReduxMixin(Polymer.Element) {
+            
+            static get is() { return 'pan-library-card';}
+            
+            static get properties() {
+                return {
+                    pan: Object
+                };
+            }
+            
+            _toggleDialog () {
+              this.dispatchEvent(new CustomEvent('show-details'));
+            }
+            
+            _loadPan() {
+              this.dispatch( {
+                type: "LOAD_PAN",
+                value: this.pan
+              });
+              window.location = '#/home-page';
+            }
+            
+            _editPan() {
+              this.dispatch( {
+                type: "LOAD_PAN",
+                value: this.pan
+              });
+              window.location = '#/pan-designer-page';
+            }
+            
+            _toInches(val) {
+              return (val * 39.3701).toFixed(1);
+            }
+            
+            _getPanDiameterString(val) {
+               return this._toInches(val) + ' in';
+            }
+            
+            _getString(val) {
+              let string = '- - - ';
+              if(val) {
+                string = val;
+              }
+              return string;
+            }
+            
+            _getPanVolumeString(pan) {
+              
+              if(pan.minFillVolume && pan.maxFillVolume) {
+                return `${this._toLiters(pan.minFillVolume)} - ${this._toLiters(pan.maxFillVolume)} L`;
+                
+              } else {
+                return ' - - -';
+              }
+            }
+            
+            _getBaffleString(pan) {
+              let string = ' - - -';
+              if(pan.baffleType) {
+                string = pan.baffleType;
+              }
+              if(pan.baffleCount) {
+                string = `${string} x(${pan.baffleCount})`;
+              }
+              return string;
+            }
+            
+            _getSprayGunString(pan) {
+              let string = ' - - -';
+              if(pan.gunType) {
+                string = pan.gunType;
+              }
+              if(pan.gunModel) {
+                string = `${string} ${pan.gunModel}`;
+              }
+              if(pan.gunCount) {
+                string = `${string} x(${pan.gunCount})`;
+              }
+              return string;
+            }
+            
+            _getPerforationString(pan) {
+              let string = ' - - -';
+              if(pan.perforationType) {
+                string = pan.perforationType;
+              }
+              return string;
+            }
+            
+            _toLiters(val) {
+              return (val * 1000).toFixed(1);
+            }
+        }
+        
+        window.customElements.define(PanLibraryCard.is, PanLibraryCard);
+        
+    </script>
+</dom-module>

@@ -1,11 +1,7 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
+  "shell": "src/coating-toolbox.html",
   "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
   ],
   "sources": [
     "src/**/*",
@@ -13,6 +9,8 @@
   ],
   "extraDependencies": [
     "manifest.json",
+    "node_modules/redux/dist/redux.js",
+    "node_modules/d3/build/d3.js",
     "bower_components/webcomponentsjs/*.js"
   ],
   "lint": {

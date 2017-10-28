@@ -1,0 +1,164 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="chart-styles.html">
+
+<dom-module id='spray-distribution-chart'>
+    <template>
+        <style include='chart-styles'>
+            :host {
+                padding: 16px;
+            }
+        </style>
+        
+        <svg id="chart">
+            <g class="chart">
+                <g class="x axis"></g>
+                <text class="x title">Spray Pattern (inches)</text>
+                <path class="area"></path>
+                <path class="line"></path>
+            </g>
+        </svg>
+        
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer */
+        class SprayDistributionChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+            
+            static get is() { return 'spray-distribution-chart'; }
+            
+            connectedCallback() {
+                super.connectedCallback();
+                window.addEventListener('resize', () => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                window.requestAnimationFrame(() => {
+                    this.height = this.$.chart.clientHeight - this.margin.top - this.margin.bottom;
+                    this.width = this.$.chart.clientWidth - this.margin.left - this.margin.right;
+                });
+            }
+            
+            static get properties() {
+                return {
+                    pan: {type: Object, statePath: 'pan'},
+                    chart: {type: Object},
+                    data: {type: Object, computed: '_computeData(pan.sprayLength)'},
+                    margin: {type: Object, value: function() {
+                        return {top: 20, right: 20, bottom: 50, left: 20};
+                    }},
+                    height: {type: Number},
+                    width: {type: Number},
+                    xScale: {type: Object, computed: '_computeXScale(width, pan.sprayLength)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, data)'},
+                    d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
+                    d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
+                };
+            }
+            _computeXScale(chartWidth, sprayLength) {
+                // let limit = sprayLength / 2;
+                let limit = 16 / 2;
+                return d3.scaleLinear().range([0, chartWidth]).domain([-limit, limit]).nice();
+            }
+            _computeYScale(chartHeight, data) {
+                // let max = (data) ? d3.max(data, function(d) { return d.y }) : 0.5;
+                let max = 15;
+                return d3.scaleLinear().range([chartHeight, 0]).domain([0, max]).nice();
+            }
+            _computeD3Line(xScale, yScale) {
+                return d3.line()
+                    .x(function(d) { return xScale(d.x * 39.3701); })
+                    .y(function(d) { return yScale(d.y); })
+                    .curve(d3.curveNatural);
+            }
+        
+            _computeD3Area(xScale, yScale, height) {
+                return d3.area()
+                         .x(function(d) { return xScale(d.x * 39.3701); })
+                         .y0(height)
+                         .y1(function(d) { return yScale(d.y); }); 
+            }
+        
+            static get observers() {
+                return [
+                    '_initChart(margin, height, width)',
+                    '_updateAxis(xScale, yScale, chart)',
+                    '_updateLine(data, chart, d3Line, d3Area)'
+                ];
+            }
+            
+            _initChart(margin, height, width) {
+                if(!margin || !height || !width) {
+                    return;
+                }
+                let chart = d3.select(this.$.chart)
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                .select(".chart")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                                
+                chart.select(".x.axis").attr("transform", "translate(0," + height + ")");
+                chart.select(".x.title").attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 25) + ")");
+                chart.select(".y.title").attr("y", 0 - margin.left).attr("x",0 - (height / 2)).attr("dy", "1em");      
+                
+                // set the chart object
+                this.chart = chart;
+            }
+            _updateAxis(xScale, yScale, chart) {
+                if(!xScale || !yScale || !chart) {
+                    return;
+                }
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+                // chart.select(".y.axis").call(d3.axisLeft(yScale));  
+            }
+            _updateLine(data, chart, line, area) {
+                if(!data || !chart || !line || !area) {
+                    return;
+                }
+                // Add the line
+                let lines = chart.select('.line').data([data]);
+                lines.enter()
+                    .merge(lines)
+                        .attr("d", line);  
+                lines.exit().remove();
+                
+                // Add the area
+                let areas = chart.select('.area').data([data]);
+                areas.enter()
+                    .merge(areas)
+                        .attr("d", area);  
+                areas.exit().remove();
+            }
+            _computeData(spray) {
+                let limit = spray / 2;
+                
+                let stdev = limit / 2;
+                let vals = [];
+                for(let i = -limit * 1.5; i <= limit * 1.5; i = i + limit / 100) {
+                    let temp = { x: i, y: this._gaussian_pdf(i, 0, stdev)};
+                    vals.push(temp);
+                }
+                return vals;
+            }
+            //taken from Jason Davies science library
+            // https://github.com/jasondavies/science.js/blob/master/src/stats/distribution/gaussian.js
+            _gaussian_pdf(x, mean, sigma) {
+            	var gaussianConstant = 1 / Math.sqrt(2 * Math.PI),
+                x = (x - mean) / sigma;
+                return gaussianConstant * Math.exp(-.5 * x * x) / sigma;
+            }
+        }
+        
+        window.customElements.define(SprayDistributionChart.is, SprayDistributionChart);
+        
+    </script>
+</dom-module>

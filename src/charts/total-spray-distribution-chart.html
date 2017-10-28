@@ -1,0 +1,226 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="chart-styles.html">
+
+<dom-module id='total-spray-distribution-chart'>
+    <template>
+        <style include='chart-styles'>
+            :host {
+                padding: 16px;
+            }
+            .border {
+                fill: var(--app-border-color);
+                opacity: 0.5;
+            }
+        </style>
+        
+        <svg id="chart">
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                </linearGradient>
+              </defs>
+            <g class="chart">
+                <g class="x axis"></g>
+                <text class="x title">Spray Pattern (inches)</text>
+                <path class="border"></path>
+                <path class="border"></path>
+                <path class="area"></path>
+                <path class="line"></path>
+                
+            </g>
+        </svg>
+        
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer */
+        class TotalSprayDistributionChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+            
+            static get is() { return 'total-spray-distribution-chart'; }
+            
+            connectedCallback() {
+                super.connectedCallback();
+                window.addEventListener('resize', () => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                window.requestAnimationFrame(() => {
+                    this.height = this.$.chart.clientHeight - this.margin.top - this.margin.bottom;
+                    this.width = this.$.chart.clientWidth - this.margin.left - this.margin.right;
+                });
+            }
+            
+            static get properties() {
+                return {
+                    pan: {type: Object, statePath: 'pan'},
+                    chart: {type: Object},
+                    data: {type: Object, computed: '_computeData(pan.sprayLength, pan.gunCount, pan.gun2gun, pan.brimWidth)'},
+                    margin: {type: Object, value: function() {
+                        return {top: 20, right: 20, bottom: 50, left: 20};
+                    }},
+                    height: {type: Number},
+                    width: {type: Number},
+                    xScale: {type: Object, computed: '_computeXScale(width, pan.brimWidth)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, data)'},
+                    d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
+                    d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
+                };
+            }
+            _computeXScale(chartWidth, length) {
+                let limit = 1 * length / 2 * 39.3701;
+                return d3.scaleLinear().range([0, chartWidth]).domain([-limit, limit]).nice();
+            }
+            _computeYScale(chartHeight, data) {
+                // let max = (data) ? d3.max(data, function(d) { return d.y }) : 0.5;
+                let max = 15;
+                return d3.scaleLinear().range([chartHeight, 0]).domain([0, max]).nice();
+            }
+            _computeD3Line(xScale, yScale) {
+                return d3.line()
+                    .x(function(d) { return xScale(d.x * 39.3701); })
+                    .y(function(d) { return yScale(d.y); })
+                    .curve(d3.curveNatural);
+            }
+        
+            _computeD3Area(xScale, yScale, height) {
+                return d3.area()
+                         .x(function(d) { return xScale(d.x * 39.3701); })
+                         .y0(height)
+                         .y1(function(d) { return yScale(d.y); }); 
+            }
+            
+            static get observers() {
+                return [
+                    '_initChart(margin, height, width)',
+                    '_updateAxis(xScale, yScale, chart)',
+                    '_updateLine(data, chart, d3Line, d3Area)',
+                    '_updateOverspraySection(pan.brimWidth, pan.fillWidth, chart, d3Area)'
+                ];
+            }
+            
+            _initChart(margin, height, width) {
+                if(!margin || !height || !width) {
+                    return;
+                }
+                let chart = d3.select(this.$.chart)
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                .select(".chart")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                                
+                chart.select(".x.axis").attr("transform", "translate(0," + height + ")");
+                chart.select(".x.title").attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 25) + ")");
+                chart.select(".y.title").attr("y", 0 - margin.left).attr("x",0 - (height / 2)).attr("dy", "1em");      
+                
+                // set the chart object
+                this.chart = chart;
+            }
+            _updateAxis(xScale, yScale, chart) {
+                if(!xScale || !yScale || !chart) {
+                    return;
+                }
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+                // chart.select(".y.axis").call(d3.axisLeft(yScale));  
+            }
+            _updateLine(data, chart, line, area) {
+                if(!data || !chart || !line || !area) {
+                    return;
+                }
+                // Add the line
+                let lines = chart.selectAll('.line').data([data]);
+                lines.enter().append('path').attr('class', 'line')
+                    .merge(lines)
+                        .attr("d", line);  
+                lines.exit().remove();
+                
+                // Add the area
+                let areas = chart.select('.area').data([data]);
+                areas.enter()
+                    .merge(areas)
+                        .attr("d", area);  
+                areas.exit().remove();
+            }
+            _updateOverspraySection(brimWidth, fillWidth, chart, area) {
+                if(!brimWidth || !fillWidth || !chart || !area) {
+                    return;
+                }
+                
+                brimWidth = brimWidth / 2;
+                fillWidth = fillWidth / 2;
+                
+                let line_data = [
+                    [{x: -brimWidth, y: 15}, {x: -fillWidth, y: 15}],
+                    [{x: brimWidth, y: 15}, {x: fillWidth, y: 15}]
+                ];
+                
+                let border_lines = chart.selectAll('.border').data(line_data);
+                
+                border_lines.enter().append('path').attr('class', 'border')
+                    .merge(border_lines)
+                        .attr('d', area);
+                border_lines.exit().remove();
+                
+            }
+            _computeData(spray, count, distance, totalLength) {
+                
+                // initialize an empty array for our data
+                let data = [];
+                
+                // each spray zone has the same stdev/
+                // divide by 2 to get half the spray zone.
+                // We assume a 95% CI so we assume the half spray zone is 2 stdev so divide by 2
+                // width divided by 2
+                let stdev = spray  / 2 / 2;
+                
+                // get the range of distance we will process the spray rate over
+                // we get 1.25 time to get extra
+                // divide by 2 because 0 will be center
+                // 39.2701 convert meters to inches
+                let limit = 1 * totalLength / 2 ;
+                
+                // loop through the range of values as set by the limit
+                for(let i = -limit; i <= limit; i = i + limit / 100) {
+                    
+                    // initialize y to hold our y values;
+                    let y = 0;
+                    
+                    // each spray gun has the same pdf but they start at different zones;
+                    // the start value allows us to center the guns appropriately
+                    let start = count / 2 - 0.5;
+                    // loop through each gun and it's starting position and add up the y probability
+                    for(let j = -start; j <= start; j++) {
+                        let mean = j * distance;
+                        y = y + this._gaussian_pdf(i, mean, stdev);
+                    
+                    }
+                    let temp = { x: i, y: y};
+                    data.push(temp);
+                }
+                
+                return data;
+                
+            }
+            //taken from Jason Davies science library
+            // https://github.com/jasondavies/science.js/blob/master/src/stats/distribution/gaussian.js
+            _gaussian_pdf(x, mean, sigma) {
+            	var gaussianConstant = 1 / Math.sqrt(2 * Math.PI),
+                x = (x - mean) / sigma;
+                return gaussianConstant * Math.exp(-.5 * x * x) / sigma;
+            }
+        }
+        
+        window.customElements.define(TotalSprayDistributionChart.is, TotalSprayDistributionChart);
+        
+    </script>
+</dom-module>

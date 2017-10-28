@@ -1,0 +1,124 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../elements/text-input.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="shared-card-styles.html">
+
+<dom-module id='pan-designer-baffle-card'>
+    <template>
+        <style include='shared-card-styles'>
+            :host {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: repeat(4, auto);
+            }
+            .section-title {
+                grid-column: 1 / 3;
+                grid-row: 2 / 3;
+            }
+            .text-container {
+                grid-column: 1 / 3;
+                grid-row: 1 / 2;
+            }
+            text-input[label='Type'] {
+                grid-column: 1 / 3;
+                grid-row: 3 / 4;
+            }
+            unit-input {
+                grid-column: 1 / 2;
+                grid-row: 4 / 5;
+            }
+            text-input[label='# of Baffles'] {
+                grid-column: 2 / 3;
+                grid-row: 4 / 5;
+            }
+        </style>
+        
+        
+        <div class='text-container'>
+            <div class='subtitle'>Baffles</div>
+            <div class='caption'>Mixing and Min Volume</div>
+            <div class='description'>
+                The number and type of baffles have been shown to improve mixing of tablets. In addition to ensure good product flow, the
+                product fill is required to be above the baffle height. Therefore we can use the baffle height to provide a minimum pan volume.
+            </div>
+        </div>
+        
+        <div class='section-title'>Configuration<i> - Inputs</i></div>
+        <text-input
+            value='[[pan.baffleType]]'
+            label='Type'
+            options='[[typeOptions]]'
+            on-value-changed='_setBaffleType'>
+        </text-input>
+        
+        <unit-input 
+            value='[[pan.baffleHeight]]' 
+            on-value-changed='_setBaffleHeight'
+            type='length'
+            selected-units='in' 
+            title='Baffle Height' >
+        </unit-input>
+        
+        <text-input
+            value='[[pan.baffleCount]]'
+            label='# of Baffles'
+            on-value-changed='_setBaffleCount'>
+        </text-input>
+        
+    </template>
+
+    <script>
+        class PanDesignerBaffleCard extends ReduxMixin(Polymer.Element) {
+            static get is() {
+                return 'pan-designer-baffle-card';
+            }
+
+            static get properties() {
+                return {
+                    pan: {
+                        type: Object, 
+                        statePath: 'pan'
+                    }, 
+                    typeOptions: {
+                        type: Array,
+                        value: function() {
+                            return [
+                                'Ploughshare',
+                                'Sharkfin',
+                                'Helical'
+                                ];
+                        }
+                    }
+                };
+            }
+            
+            _setBaffleType(e) {
+                this.pan.baffleType = e.detail.value;
+                this.dispatch({
+                  type: "SET_PAN",
+                  value: this.pan
+                });
+            }
+            
+            _setBaffleCount(e) {
+                this.pan.baffleCount = parseInt(e.detail.value);
+                this.dispatch({
+                  type: "SET_PAN",
+                  value: this.pan
+                });
+            }
+            
+            _setBaffleHeight(e) {
+                this.pan.baffleHeight = e.detail.value;
+                this.dispatch({
+                  type: "SET_PAN",
+                  value: this.pan
+                });
+            }
+        }
+        window.customElements.define(PanDesignerBaffleCard.is, PanDesignerBaffleCard);
+    </script>
+
+</dom-module>
