@@ -2,6 +2,10 @@
   "entrypoint": "index.html",
   "shell": "src/coating-toolbox.html",
   "fragments": [
+    "src/home-page/home-page.html",
+    "src/coating-pan-library/coating-pan-library.html",
+    "src/coating-pan-designer/coating-pan-designer.html",
+    "src/coating-pan-fill/coating-pan-fill.html"
   ],
   "sources": [
     "src/**/*",

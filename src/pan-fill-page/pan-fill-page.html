@@ -1,0 +1,224 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/page-section-header.html">
+<link rel="import" href="../elements/page-section.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../charts/bulk-density-chart.html">
+<link rel="import" href="../charts/pan-fill-chart.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="pan-fill-page">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        max-width: 900px;
+        margin: 48px auto;
+        border-radius: 6px;
+        background-color: var(--white-color);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+      text-input,
+      unit-input {
+        grid-column: 1 / 5;
+      }
+      .row-spacer {
+        grid-column: 1 / 5;
+        height: 48px;
+      }
+      bulk-density-chart {
+        grid-column: 5 / 13;
+        grid-row: 1 / 4;
+      }
+      pan-fill-chart {
+        grid-column: 5 / 13;
+        grid-row: 1 / 5;
+        max-height: 300px;
+      }
+      coating-pan-graphic {
+        grid-column: 5 / 9;
+        grid-row: 1 / 4;
+        max-height: 300px;
+      }
+      coating-pan-graphic[view] {
+        grid-column: 9 / 13;
+      }
+    </style>
+    
+    <page-section-header title='Coating Pan Fill'>
+      <p>
+        A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, 
+        the the diameter does not provide a useful way to compare the shape and size of different coating pans. 
+        Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+        From these dimensions we can later explore batch size, pan speed and more.
+      </p>
+    </page-section-header>
+    
+    <page-section title='Product Details' icon='my-icons:weight'>
+      <p slot='description'>
+        We start with a some basic information on the product you are coating. Since coating pans are based on 
+        volume we need to convert the product into volume. This is done by using the product bulk density. You can
+        also include core weight if you want to calculate the count.
+      </p>
+      <unit-input 
+          value='[[pan.fillDensity]]' 
+          on-value-changed='_setFillDensity'
+        type='density'
+        selected-units='g/ml' 
+        title='Bulk Density' >
+      </unit-input>
+      <unit-input 
+            value='[[pan.tabletWeight]]' 
+          on-value-changed='_setTabletWeight'
+        type='weight'
+        selected-units='mg' 
+        title='Tablet Weight'>
+      </unit-input>
+      <div class='row-spacer'></div>
+      
+      <bulk-density-chart></bulk-density-chart>
+      
+    </page-section>
+    
+    <page-section title='Batch Size' icon='my-icons:weight'>
+      <p slot='description'>
+        There are many ways to describe the batch size below we look at Percent, Volume, Weight and Unit Count. Change one
+        value to see effect on the others. Be sure to keep the batch size within the working volume of the coating pan for 
+        optimal performance.
+      </p>
+      <unit-input 
+          value='[[pan.fillPercent]]' 
+          on-value-changed='_setFillPercent'
+          type='percent'
+          selected-units='%' 
+          title='Percent'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillVolume]]' 
+          on-value-changed='_setFillVolume'
+          type='volume'
+          selected-units='l' 
+          title='Product Volume' >
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillWeight]]' 
+          on-value-changed='_setFillWeight'
+          type='weight'
+          selected-units='kg' 
+          title='Weight'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillCount]]' 
+          on-value-changed='_setFillCount'
+          type='count'
+          selected-units='tablets' 
+          title='Unit Count'>
+      </unit-input>
+      
+      <pan-fill-chart></pan-fill-chart>
+      
+    </page-section>
+    
+    <page-section title='Product Fill Dimensions' icon='my-icons:ruler'>
+      <p slot='description'>
+        The estimtate bed depth, product width provide insight into other process conditons.
+      </p>
+      <unit-input 
+          value='[[pan.fillHeight]]' 
+          no-input
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          title='Bed Height'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillWidth]]' 
+          no-input
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          title='Fill Width'>
+      </unit-input>
+      <unit-input 
+          value='[[pan.fillLength]]' 
+          no-input
+          type='length'
+          selected-units='{{lengthUnits}}' 
+          title='Fill Length'>
+      </unit-input>
+      </iron-selector>
+      
+      <coating-pan-graphic pan='[[pan]]'></coating-pan-graphic> 
+      <coating-pan-graphic pan='[[pan]]' view='side'></coating-pan-graphic>
+      
+    </page-section>
+    
+    
+  </template>
+
+  <script>
+    class PanFillPage extends ReduxMixin(Polymer.Element) {
+
+      static get is() { return 'pan-fill-page'; }
+
+      static get properties() {
+        return {
+          pan: { type: Object, statePath: "pan" },
+          lengthUnits: { type: String, value: 'in' },
+        };
+      }
+      _setFillDensity(e) {
+        this.pan.fillDensity = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+
+      _setTabletWeight(e) {
+        this.pan.tabletWeight = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+      _setFillPercent(e) {
+        this.pan.fillPercent = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+
+      _setFillVolume(e) {
+        this.pan.fillVolume = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+
+      _setFillWeight(e) {
+        this.pan.fillWeight = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+
+      _setFillCount(e) {
+        this.pan.fillCount = e.detail.value;
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+      }
+    }
+
+    window.customElements.define(PanFillPage.is, PanFillPage);
+  </script>
+</dom-module>

@@ -1,138 +1,292 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../elements/page-layout.html">
-<link rel="import" href="../elements/page-header.html">
-<link rel="import" href="../elements/basic-card.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../elements/page-section.html">
+<link rel="import" href="../elements/page-section-header.html">
+<link rel="import" href="../elements/text-input.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../my-icons.html">
-<link rel="import" href="pan-designer-make-model-card.html">
-<link rel="import" href="pan-designer-height-card.html">
-<link rel="import" href="pan-designer-depth-card.html">
-<link rel="import" href="pan-designer-perforation-card.html">
-<link rel="import" href="pan-designer-baffle-card.html">
-<link rel="import" href="pan-designer-spray-gun-card.html">
-<link rel="import" href="pan-designer-save-card.html">
-<link rel="import" href="pan-designer-nav.html">
 
 <dom-module id="pan-designer-page">
   <template>
     <style>
       :host {
-        display: block;
-      }
-      #content {
-        display: grid;
-        grid-template-columns: auto 1fr 1fr;
-        grid-auto-rows: auto;
-        grid-gap: 32px;
-        padding: 32px 0px;
+        display: flex;
+        flex-direction: column;
         max-width: 900px;
-        margin: auto;
+        margin: 48px auto;
+        border-radius: 6px;
+        background-color: var(--white-color);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
       }
-      pan-designer-make-model-card,
-      pan-designer-height-card, 
-      pan-designer-depth-card {
-        grid-column: 1 / 3;
+      text-input,
+      unit-input {
+        grid-column: 1 / 5;
       }
-      basic-card {
+      coating-pan-graphic {
+        grid-column: 5 / 9;
+        grid-row: 1 / 5;
+        max-height: 300px;
+      }
+      coating-pan-graphic[view] {
+        grid-column: 9 / 13;
+      }
+       paper-button {
+        background-color: var(--app-primary-color);
+        color: white;
         grid-column: 1 / 4;
+        @apply --paper-font-button;
       }
-      .section {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        grid-auto-rows: auto;
-        grid-gap: 16px;
-        /*white-space: nowrap;*/
-      }
-      .section + .section {
-        margin-top: 32px;
-      }
-      .section-title {
-        grid-row: 1 / 2;
-        grid-column: 1 / 2;
-        /*@apply --paper-font-title;*/
-      }
-      .title {
-        grid-column: 2 / 3;
-        /*padding: 16px;*/
-      }
-      .input {
-        grid-column: 3 / 4;
-        /*padding: 16px;*/
-        /*@apply --paper-font-body2;*/
-      }
+      
     </style>
     
     
-    <page-layout>
-      
-      
-      <page-header slot='header' title='Coating Pan Designer' icon='my-icons:ruler'>
-        <p>
-          Build your own coating pan from four simple dimensions. 
-          Followed by details on baffle design and spray guns.
         
-        </p>
-      </page-header>
-      <div slot='header' sticky></div>
-      <!--<pan-designer-nav slot='header' sticky selected='[[section]]' on-selected-changed='_scrollToSection'></pan-designer-nav>-->
-  
-  
-    <div id='content'>
-      
-      <basic-card>
-        <div class='section'>
-          <div class='section-title'>Coating Pan Description</div>
-          <div class='title'>Manufacturer: </div>
-          <div class='input'>O'Hara</div>
-          <div class='title'>Model: </div>
-          <div class='input'>Fastcoat</div>
-          <div class='title'>Nickname: </div>
-          <div class='input'>48" Room</div>
-        </div>
-        
-        <div class='section'>
-          <div class='section-title'>Equipment Information</div>
-          
-          <div class='input'>O'Hara</div>
-          <div class='input'>Fastcoat</div>
-          <div class='input'>48" Room</div>
-        </div>
-      </basic-card>
-      
-     <pan-designer-make-model-card></pan-designer-make-model-card>
-     <pan-designer-height-card></pan-designer-height-card>
-     <pan-designer-depth-card></pan-designer-depth-card>
-     <pan-designer-baffle-card></pan-designer-baffle-card>
-     <pan-designer-spray-gun-card></pan-designer-spray-gun-card>
-     <pan-designer-save-card></pan-designer-save-card>
+    <page-section-header title='Coating Pan Designer'>
+      <p>Provide information like make and model, shape and size, company information, baffle and spray gun confirguration.</p>
+    </page-section-header>
     
-    </div>   
+   <page-section icon='my-icons:details' title='Make & Model'>
+       <p slot='description'>
+         Not all coating pans are the same. Beyond the range
+        of manufactures and the coating pan models they offer each pan is unqiue.
+        Even when comparing the same manufacutre and model the baffle design, 
+        the spray gun configuration and even the dimensions can be different.
+        </p>
+      <text-input
+          class='small-left'
+          value='{{pan.vendorName}}'
+          label='Manufacture'
+          options='[[makeOptions]]'>
+      </text-input>
+        <text-input
+          class='large'
+          value='{{pan.equipmentName}}'
+          label='Coating Pan Model'
+          options='[[modelOptions]]'>
+      </text-input>
+      <text-input
+          class='small-right'
+          value='{{pan.nickname}}'
+          label='Nickname'></text-input>
+    </page-section>
+    
+    <page-section icon='my-icons:details' title='Company & Contact'>
+       <p slot='description'>
+         Not all coating pans are the same. Beyond the range
+        of manufactures and the coating pan models they offer each pan is unqiue.
+        Even when comparing the same manufacutre and model the baffle design, 
+        the spray gun configuration and even the dimensions can be different.
+        </p>
+        <text-input
+          class='small-left'
+          value='{{pan.companyName}}'
+          label='Company'>
+      </text-input>
+      <text-input
+          class='small-right'
+          value='{{pan.locationName}}'
+          label='Location'>
+      </text-input>
+      <text-input
+          class='small-left'
+          value='{{pan.contactName}}'
+          label='Contact'>
+      </text-input>
+    </page-section>
+    
+    <page-section icon='my-icons:ruler' title='Shape & Size'>
+       <p slot='description'>
+         Not all coating pans are the same. Beyond the range
+        of manufactures and the coating pan models they offer each pan is unqiue.
+        Even when comparing the same manufacutre and model the baffle design, 
+        the spray gun configuration and even the dimensions can be different.
+        </p>
+        <unit-input 
+            dimen='pan-diameter'
+            value='{{pan.panDiameter}}' 
+            type='length'
+            selected-units='{{lengthUnits}}' 
+            title='Main Diameter' 
+            details='The diameter of the coating pan drum.'>
+        </unit-input>
+        <unit-input 
+            dimen='opening-diameter'
+            value='{{pan.openingDiameter}}' 
+            type='length'
+            selected-units='{{lengthUnits}}' 
+            title='Opening Diameter' 
+            details='The diameter of the coating pan drum.'>
+        </unit-input>
+        <unit-input 
+            dimen='brim-width'
+            value='{{pan.brimWidth}}' 
+            type='length'
+            selected-units='{{lengthUnits}}' 
+            title='Brim Width' 
+            details='The width of the pan at the brim height.'>
+        </unit-input>
+        <unit-input 
+            dimen='wall-width'
+            value='{{pan.wallWidth}}' 
+            type='length'
+            selected-units='{{lengthUnits}}' 
+            title='Wall Width' 
+            details='The width of the pan at the perforated wall.'>
+        </unit-input>
+          <coating-pan-graphic pan='[[pan]]'></coating-pan-graphic>
+          <coating-pan-graphic pan='[[pan]]' view='side'></coating-pan-graphic>
+    </page-section>
+    
+    <page-section icon='my-icons:mix' title='Baffles'>
+       <p slot='description'>
+         Not all coating pans are the same. Beyond the range
+        of manufactures and the coating pan models they offer each pan is unqiue.
+        Even when comparing the same manufacutre and model the baffle design, 
+        the spray gun configuration and even the dimensions can be different.
+        </p>
+        <text-input
+          value='{{pan.baffleType}}'
+          label='Type'
+          options='[[baffleOptions]]'>
+      </text-input>
       
-    </page-layout>
-   
+      <unit-input 
+          value='{{pan.baffleHeight}}' 
+          on-value-changed='_setBaffleHeight'
+          type='length'
+          selected-units='in' 
+          title='Baffle Height' >
+      </unit-input>
+      
+      <text-input
+          value='{{pan.baffleCount}}'
+          label='# of Baffles'>
+      </text-input>
+    </page-section>
+    
+    <page-section icon='my-icons:spray' title='Spray Guns'>
+     <p slot='description'>
+       Not all coating pans are the same. Beyond the range
+      of manufactures and the coating pan models they offer each pan is unqiue.
+      Even when comparing the same manufacutre and model the baffle design, 
+      the spray gun configuration and even the dimensions can be different.
+      </p>
+      <text-input
+          value='{{pan.gunType}}'
+          label='Manufacture'
+          options='[[gunTypeOptions]]'>
+      </text-input>
+      
+      <text-input
+          value='{{pan.gunModel}}'
+          label='Model'
+          options='[[gunModelOptions]]'>
+      </text-input>
+      
+      <text-input
+          value='{{pan.gunCount}}'
+          label='# of Spray Guns'>
+      </text-input>
+      <unit-input
+          value='{{pan.gun2gun}}'
+          title='Gun to Gun Distance'
+          type='length'
+          selected-units='in'>
+      </unit-input>
+    </page-section>
+    
+    <page-section icon='my-icons:save' title='Save & Explore'>
+         <p slot='description'>
+           Not all coating pans are the same. Beyond the range
+          of manufactures and the coating pan models they offer each pan is unqiue.
+          Even when comparing the same manufacutre and model the baffle design, 
+          the spray gun configuration and even the dimensions can be different.
+          </p>
+          <paper-button on-tap='_savePan'>Save</paper-button>
+        </page-section>
+        
     
   </template>
 
   <script>
-    class PanDesignerPage extends Polymer.Element {
+    class PanDesignerPage extends ReduxMixin(Polymer.Element) {
       static get is() { return 'pan-designer-page'; }
       
       static get properties() {
         return {
-          section: {
-            type: Number,
-            value: 0,
+          pan: { type: Object, statePath: "pan" }, 
+          lengthUnits: { type: String, value: 'in' },
+          makeOptions: {
+              type: Array,
+              value: function() {
+                  return [
+                      "O'Hara", 
+                      "Thomas Engineering", 
+                      "IMA", 
+                      "Bohle", 
+                      "Manhesty", 
+                      "Freund-Vector", 
+                      "GEA", 
+                      "DRIAM",
+                      "Glatt"
+                      ];
+              }
+          },
+          modelOptions: {
+              type: Array,
+              value: function() {
+                  return [
+                      'Fastcoat',
+                      "Accela-cota 60DXL",
+                      "Accela-cota 60DXXL",
+                      "Accela-cota 60D",
+                      'Labcoat II',
+                      'Labcoat III',
+                      "Flex 500",
+                      "BFC 600", 
+                      "BFC 400", 
+                      "BFC 200", 
+                      "Consigma"
+                      ];
+              }
+          },
+          gunModelOptions: {
+              type: Array,
+              value: function() {
+                  return [
+                      'Schlick',
+                      'Vector',
+                      'Spraying Systems',
+                      'Binks'
+                      ];
+              }
+          },
+          baffleOptions: {
+            type: Array,
+            value: function() {
+                return [
+                    'Ploughshare',
+                    'Sharkfin',
+                    'Helical',
+                    'Rabbit Ear'
+                    ];
+            }
           }
         };
       }
       
-      
-      _scrollToSection(e) {
-        // const index = e.target.selected;
-        // const cards = this.$.content.children;
-        // cards[index].scrollIntoView();
-        // const scroll = this.$.layout.shadowRoot.querySelector('#contentContainer');
-        // if(cards.length > index + 1)
-        // scroll.scrollTop = scroll.scrollTop - 100;
+      _savePan() {
+        this.dispatch({
+          type: "SET_PAN",
+          value: this.pan
+        });
+        window.location = '#/home-page';
       }
       
     }

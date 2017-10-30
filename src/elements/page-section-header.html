@@ -1,0 +1,59 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id='page-section-header'>
+    <template>
+        <style>
+            :host {
+              display: flex;
+              flex-direction: column;
+              padding: 32px;
+            }
+            
+            #title-layout {
+                display: flex;
+                align-items: center;
+            }
+            
+            #title {
+                @apply --paper-font-headline;
+            }
+            #description-layout {
+                margin-top: 16px;
+            }
+            
+            #description-layout ::slotted(p) {
+                @apply --paper-font-body1;
+                color: var(--text-light-color);
+                text-align: justfy;
+                margin: 0px;
+            }
+        </style>
+        
+       <div id='title'>[[title]]</div>
+        
+        <div id='description-layout'>
+            <slot></slot>
+        </div>
+        
+    </template>
+    
+    <script>
+        
+        /*global Polymer */
+        class PageSectionHeader extends Polymer.Element {
+            
+            static get is() { return 'page-section-header'; }
+            
+            static get properties() {
+                return {
+                    title: String
+                };
+            }
+            
+        }
+        
+        window.customElements.define(PageSectionHeader.is, PageSectionHeader);
+        
+    </script>
+</dom-module>

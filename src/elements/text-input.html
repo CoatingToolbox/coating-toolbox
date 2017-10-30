@@ -8,26 +8,22 @@
         :host {
             display: flex;
             flex-direction: column;
-            color: var(--text-color);
-            padding: 8px 16px;
-            background-color: var(--gray-color);
-            border-radius: 4px;
         }
         :host([focused]) {
             outline: none;
         } 
         #input, 
         #input:focus {
-            padding-left: 16px;
-            flex-grow: 1;
-          appearance: none;
-          -moz-appearance: none;
-          -webkit-appearance: none;
+            padding: 12px 16px;
+              appearance: none;
+              -moz-appearance: none;
+              -webkit-appearance: none;
+            background-color: var(--gray-color);
+            border-radius: 4px;
+            color: var(--text-light-color);
+            @apply --paper-font-body2;
           border: none;
           outline: none;
-          background-color: inherit;
-          color: inherit;
-          font: inherit;
           text-align: start;
           text-overflow: ellipsis;
         }
@@ -50,11 +46,8 @@
         }  
         
         #label {
+            @apply --paper-font-body2;
             padding-bottom: 4px;
-          text-transform: capitalize;
-          white-space: nowrap;
-          font-weight: 500;
-          font-size: 14px;
         }
     </style>
     
@@ -63,11 +56,10 @@
         <input
             id='input' 
             type="text" 
-            value='{{value}}' 
+            value='{{value::change}}' 
             size='1'
             autocapitalize='words'
             list='list'
-            on-change='_inputChange'
             on-focus='_inputFocus'
             on-blur='_inputBlur'>
         
@@ -84,9 +76,9 @@
             
             static get properties() {
                 return {
-                    value: {type: String},
-                    label: {type: String},
-                    options: {type: Array}
+                    value: { type: String, notify: true },
+                    label: { type: String },
+                    options: { type: Array }
                 };
             }
             
@@ -96,10 +88,6 @@
             
             _inputBlur() {
                 this.removeAttribute('focused');
-            }
-            
-            _inputChange(e) {
-                this.dispatchEvent(new CustomEvent('value-changed', {detail: {value: e.target.value}}));
             }
         }
         

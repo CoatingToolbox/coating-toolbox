@@ -76,7 +76,6 @@
             state = JSON.parse(state);
             let pan = Object.assign(new CoatingPan, state.pan);
             state = Object.assign(state, {pan: pan});
-            console.log(state);
             return state;
         } else {
             return {

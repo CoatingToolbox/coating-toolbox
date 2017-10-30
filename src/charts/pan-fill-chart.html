@@ -2,7 +2,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="d3-import.html">
-<link rel="import" href="../redux-mixin.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../models/coating-pan-class.html">
 <link rel="import" href="chart-styles.html">
 
 <dom-module id='pan-fill-chart'>
@@ -26,9 +27,9 @@
             <g class="chart">
                 <g class="x axis"></g>
                 <g class="y axis"></g>
-                <text class="x title">Bed Depth (inches)</text>
-                <text class="y title">Batch Size (kg)</text>
-                <path class="total-volume dotted line"></path>
+                <text class="x title">Batch Size (kg)</text>
+                <text class="y title">Pan Fill Height (in)</text>
+                <path class="dotted line"></path>
                 <path class="working-volume area"></path>
                 <path class="working-volume line"></path>
                 <g class="volume-circles circle"></g>
@@ -75,18 +76,18 @@
                     }},
                     height: {type: Number},
                     width: {type: Number},
-                    xScale: {type: Object, computed: '_computeXScale(width, pan.brimHeight)'},
-                    yScale: {type: Object, computed: '_computeYScale(height, pan.brimWeight)'},
+                    xScale: {type: Object, computed: '_computeXScale(width, pan.brimWeight)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, pan.brimHeight)'},
                     d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
                     d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
                 };
             }
             _computeXScale(chartWidth, domain) {
-                let max = this._convertToInches(domain) * 1.1;
+                let max = this._convertToKG(domain) * 1.1;
                 return d3.scaleLinear().range([0, chartWidth]).domain([0, max]).nice();
             }
             _computeYScale(chartHeight, domain) {
-                let max = this._convertToKG(domain) * 1.1;
+                let max = this._convertToInches(domain) * 1.1;
                 return d3.scaleLinear().range([chartHeight, 0]).domain([0, max]).nice();
             }
             _computeD3Line(xScale, yScale) {
@@ -106,7 +107,7 @@
                 return [
                     '_initChart(margin, height, width)',
                     '_updateAxis(xScale, yScale, chart)',
-                    '_updateTotalVolume(pan, chart, d3Line, d3Area)',
+                    '_updateDottedLine(pan, chart, d3Line, d3Area)',
                     '_updateWorkingVolume(pan, chart, d3Line, d3Area)',
                     '_updateVolumePoints(pan, chart, xScale, yScale)',
                     '_updateBatchPoint(pan, pan.fillWeight, chart, xScale, yScale)'
@@ -137,7 +138,7 @@
                 chart.select(".x.axis").call(d3.axisBottom(xScale));
                 chart.select(".y.axis").call(d3.axisLeft(yScale));  
             }
-            _updateTotalVolume(pan, chart, line, area) {
+            _updateDottedLine(pan, chart, line, area) {
                 if(!pan || !chart || !line || !area) {
                     return;
                 }
@@ -152,24 +153,17 @@
                 // loop through different volumes and store the volume and height values
                 for(var i=0; i < pan.brimWeight; i = i + step) {
                     p.fillWeight = i;
-                    vals.push({y: this._convertToKG(p.fillWeight), x: this._convertToInches(p.fillHeight)});
+                    vals.push({x: this._convertToKG(p.fillWeight), y: this._convertToInches(p.fillHeight)});
                 }
                 // finally store the max values 
-                vals.push({y: this._convertToKG(pan.brimWeight), x: this._convertToInches(pan.brimHeight)});
+                vals.push({x: this._convertToKG(pan.brimWeight), y: this._convertToInches(pan.brimHeight)});
                 
                 // Add the line
-                let lines = chart.select('.total-volume.line').data([vals]);
+                let lines = chart.select('.dotted.line').data([vals]);
                 lines.enter()
                     .merge(lines)
                         .attr("d", line);  
                 lines.exit().remove();
-                                
-                // Add the area
-                // let areas = chart.select('.total-volume.area').data([vals]);
-                // areas.enter()
-                //     .merge(areas)
-                //         .attr("d", area);  
-                // areas.exit().remove();
             }
             _updateWorkingVolume(pan, chart, line, area) {
                 if(!pan || !chart || !line || !area) {
@@ -186,10 +180,10 @@
                 // loop through different volumes and store the volume and height values
                 for(var i=pan.minFillWeight; i < pan.maxFillWeight; i = i + step) {
                     p.fillWeight = i;
-                    vals.push({y: this._convertToKG(p.fillWeight), x: this._convertToInches(p.fillHeight)});
+                    vals.push({x: this._convertToKG(p.fillWeight), y: this._convertToInches(p.fillHeight)});
                 }
                 // finally store the max values 
-                vals.push({y: this._convertToKG(pan.maxFillWeight), x: this._convertToInches(pan.maxFillHeight)});
+                vals.push({x: this._convertToKG(pan.maxFillWeight), y: this._convertToInches(pan.maxFillHeight)});
                 
                 // Add the line
                 let lines = chart.select('.working-volume.line').data([vals]);
@@ -210,9 +204,9 @@
                     return;
                 }
                 let vals = [];
-                vals.push({y: this._convertToKG(pan.minFillWeight), x: this._convertToInches(pan.minFillHeight)});
-                vals.push({y: this._convertToKG(pan.maxFillWeight), x: this._convertToInches(pan.maxFillHeight)});
-                vals.push({y: this._convertToKG(pan.brimWeight), x: this._convertToInches(pan.brimHeight)});
+                vals.push({x: this._convertToKG(pan.minFillWeight), y: this._convertToInches(pan.minFillHeight)});
+                vals.push({x: this._convertToKG(pan.maxFillWeight), y: this._convertToInches(pan.maxFillHeight)});
+                vals.push({x: this._convertToKG(pan.brimWeight), y: this._convertToInches(pan.brimHeight)});
                 
                 // Add the dots
                 let circles = chart.select('.volume-circles').selectAll('circle').data(vals);
@@ -231,7 +225,7 @@
                     return;
                 }
                 let vals = [];
-                vals.push({y: this._convertToKG(fillWeight), x: this._convertToInches(pan.fillHeight)});
+                vals.push({x: this._convertToKG(fillWeight), y: this._convertToInches(pan.fillHeight)});
                 
                 // Add the dots
                 let circles = chart.selectAll('circle.batch-volume').data(vals);
@@ -256,11 +250,11 @@
             _trackBatch(e) {
                 switch(e.detail.state) {
                     case 'start':
-                        this.startFill = this.pan.fillPercent;
+                        this.startFill = this.pan.fillWeight;
                         this.$.tooltip.classList.remove('hide');
                         break;
                     case 'track':
-                        this.pan.fillPercent = this.startFill + e.detail.dx / 600;
+                        this.pan.fillWeight = this.startFill + (this.xScale.invert(e.detail.dx) * 1000);
                         
                         this.dispatch({
                             type: "SET_PAN", 

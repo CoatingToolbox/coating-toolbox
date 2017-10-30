@@ -1,11 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../elements/page-header.html">
-<link rel="import" href="../elements/page-layout.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../my-icons.html">
 <link rel="import" href="pan-library-card.html">
@@ -18,22 +15,25 @@
             :host {
                 display: block;
             }
-            #filters {
+            app-toolbar {
               background-color: var(--white-color);
               color: var(--text-color);
               height: 72px;
             }
-            #content {
+            #content-layout {
               display: grid;
               grid-template-columns: repeat(3, 1fr);
               grid-auto-rows: auto;
               grid-gap: 32px;
+              max-width: 1200px;
+              margin: 48px auto;
             }
-            #search-container {
+            #search-layout {
               flex-grow: 1;
               max-width: 1200px;
               margin: auto;
             }
+            
             iron-icon {
               color: var(--text-light-color);
               padding: 16px;
@@ -51,38 +51,26 @@
               border-bottom: 1px solid var(--app-primary-color);
             }
             @media(min-width: 1440px) {
-                #content {
-                grid-template-columns: repeat(5, 1fr);
+                #content-layout {
+                grid-template-columns: repeat(4, 1fr);
               }
             }
         </style>
         
-        <page-layout>
+       <app-toolbar>
+          <div id='search-layout'>
+            <iron-icon icon='my-icons:search'></iron-icon>
+            <input id='filterInput' on-input='_filterPanLibrary' placeholder='Search Coating Pans...'>
+          </div>
+        </app-toolbar>
+       
+       <div id='content-layout'>
             
-            <page-header slot='header' title='Coating Pan Library' icon='my-icons:library'>
-                <p>
-                A collection of common coating pans from various equipment 
-                manufactures. Select one or choose to customize it.
-               </p>
-            </page-header>
-            
-            
-            <app-toolbar slot='header' sticky id='filters'>
-              <div id='search-container'>
-                <iron-icon icon='my-icons:search'></iron-icon>
-                <input id='filterInput' on-input='_filterPanLibrary' placeholder='Search Coating Pans...'>
-              </div>
-            </app-toolbar>
+          <template is='dom-repeat' items='[[filteredLibrary]]'>
+            <pan-library-card pan='[[item]]' on-show-details='_toggleDialog'></pan-library-card>
+          </template>
         
-          <div id='content'>
-            
-            <template is='dom-repeat' items='[[filteredLibrary]]'>
-              <pan-library-card pan='[[item]]' on-show-details='_toggleDialog'></pan-library-card>
-            </template>
-            
-            </div>
-            
-        </page-layout>
+        </div>
         
         <pan-details-dialog id='dialog' pan='[[selectedPan]]'></pan-details-dialog>
         

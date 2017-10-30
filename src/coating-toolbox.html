@@ -13,7 +13,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
@@ -23,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="pages/home-page.html">
 <link rel="lazy-import" href="pages/pan-library-page.html">
 <link rel="lazy-import" href="pages/pan-designer-page.html">
+<link rel="lazy-import" href="pages/pan-fill-page.html">
 
 <dom-module id="coating-toolbox">
   <template>
@@ -65,8 +70,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .drawer-list a.iron-selected {
-        color: black;
+        color: var(--app-primary-color);
         font-weight: bold;
+      }
+     app-header {
+        display: block;
+        color: var(--white-color);
+        background-color: var(--app-primary-color);
+      }
+      app-toolbar div {
+        @apply --paper-font-subhead;
+        margin-right: 16px;
+        padding: 8px 16px;
+      }
+      
+      [main-title] {
+        @apply --paper-font-title;
       }
       
     </style>
@@ -89,15 +108,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home-page" href="#/home-page">Home</a>
           <a name="pan-library-page" href="#/pan-library-page">Coating Pan Library</a>
+          <a name="pan-designer-page" href="#/pan-designer-page">Coating Pan Designer</a>
+          <a name="pan-fill-page" href="#/pan-fill-page">Coating Pan Fill</a>
         </iron-selector>
       </app-drawer>
-
-      <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home-page'>
-        <home-page name='home-page'></home-page>
-        <pan-library-page name='pan-library-page'></pan-library-page>
-        <pan-designer-page name='pan-designer-page'></pan-designer-page>
-      </iron-pages>
+      
+      <app-header-layout>
         
+        <app-header slot='header' fixed effects='waterfall'>
+          
+          <app-toolbar sticky>
+            <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
+            <div main-title>Coating Toolbox</div>
+            <div>Tablet</div>
+            <div>Pan</div>
+            <div>Coating</div>
+          </app-toolbar>
+          
+        </app-header>
+        
+        <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home-page'>
+          <home-page name='home-page'></home-page>
+          <pan-library-page name='pan-library-page'></pan-library-page>
+          <pan-designer-page name='pan-designer-page'></pan-designer-page>
+          <pan-fill-page name='pan-fill-page'></pan-fill-page>
+        </iron-pages>
+        
+      </app-header-layout>
     </app-drawer-layout>
   </template>
 

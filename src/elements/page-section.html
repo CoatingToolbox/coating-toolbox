@@ -1,0 +1,83 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+
+<dom-module id='page-section'>
+    <template>
+        <style>
+            :host {
+              display: flex;
+              flex-direction: column;
+              padding: 32px;
+              border-top: 0.5px solid var(--border-color, #BDBDBD);
+            }
+            
+            #title-layout {
+                display: flex;
+                align-items: center;
+            }
+            
+            #title {
+                @apply --paper-font-title;
+            }
+            
+            iron-icon {
+                color: var(--text-light-color, #818181);
+                margin-right: 16px;
+              }
+            
+            #description-layout {
+                margin: 16px 40px;
+            }
+            
+            #description-layout ::slotted(p) {
+                @apply --paper-font-body1;
+                color: var(--text-light-color);
+                text-align: justfy;
+                margin: 0px;
+            }
+            
+            #content-grid {
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-auto-rows: auto;
+                grid-gap: 16px;
+                margin: 0px 40px;
+            }
+        </style>
+        
+        <div id='title-layout'>
+           <iron-icon icon='[[icon]]'></iron-icon>
+           <div id='title'>[[title]]</div>
+        </div>
+        
+        <div id='description-layout'>
+            <slot name='description'></slot>
+        </div>
+        
+        <div id='content-grid'>
+            <slot></slot>
+        </div>
+        
+    </template>
+    
+    <script>
+        
+        /*global Polymer */
+        class PageSection extends Polymer.Element {
+            
+            static get is() { return 'page-section'; }
+            
+            static get properties() {
+                return {
+                    title: String,
+                    icon: String
+                };
+            }
+            
+        }
+        
+        window.customElements.define(PageSection.is, PageSection);
+        
+    </script>
+</dom-module>
