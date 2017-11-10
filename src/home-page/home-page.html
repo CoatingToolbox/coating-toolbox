@@ -13,119 +13,240 @@
       :host {
             display: block;
             margin: 32px;
+            /*--app-primary-color: #607D8B;*/
       }
-      .card-container {
-            display: grid;
-            grid-template-rows: auto auto;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 32px;
+      #page-title {
+          @apply --paper-font-display2;
+          max-width: 450px;
+          margin-bottom: 12px;
+          color: var(--app-primary-color);
+      }
+      #page-description {
+            text-align: justify;
+            max-width: 550px;
+            margin-right: auto;
+      }
+      .section-title-layout {
+        display: flex;
+        align-items: center;
+        margin: 64px 0px 16px;
       }
       .section-title {
-          grid-column: 1 / 13;
-          @apply --paper-font-headline;
-          margin: 24px 0px;
+          @apply --paper-font-title;
+          flex-grow: 1;
       }
-      .card-subtitle {
-          display: flex;
-          align-items: center;
+      .edit-button {
+        padding: 4px 24px;
+        border-radius: 12px;
+        color: var(--white-color);
+        background-color: var(--green-color);
+        /*border: 2px solid var(--text-light-color);*/
+        @apply --paper-font-button;
       }
-      .card-subtitle iron-icon {
-          margin-right: 8px;
+      .section {
+          background-color: var(--white-color);
+          border-radius: 6px;
       }
-      @media(min-width: 1440px) {
-          .card-container {
-              /*grid-template-columns: repeat(4, 1fr);*/
+      .row {
+        min-height: 76px;
+        display: grid;
+        grid-template-rows: auto auto auto;
+        grid-template-columns: 1fr auto auto auto auto;
+        padding: 16px 32px;
+      }
+      .row + .row {
+        border-top: 2px solid var(--border-color);
+      }
+      .row-label {
+        grid-row: 1 / 2;
+        grid-column: 1 / 2;
+        @apply --paper-font-subhead;
+        /*color: var(--text-light-color);*/
+        margin-bottom: 4px;
+      }
+      .row-title {
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+        align-self: end;
+        @apply --paper-font-headline;
+        color: var(--app-primary-color);
+      }
+      .row-subtitle {
+        grid-row: 3 / 4;
+        grid-column: 1 / 2;
+        @apply --paper-font-body1;
+        color: var(--text-light-color);
+      }
+      .value-layout {
+        grid-row: 1 / 4;
+        grid-column: 5 / 6;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-left: 24px;
+        min-width: 96px;
+        border-radius: 12px;
+        background-color: var(--gray-color);
+      }
+      .position-one {
+        grid-column: 2 / 3;
+      }
+      .position-two {
+        grid-column: 3 / 4;
+      }
+      .position-three {
+        grid-column: 4 / 5;
+      }
+      .position-four {
+        grid-column: 5 / 6;
+      }
+      .value-number {
+        @apply --paper-font-title;
+      }
+      .value-number span {
+        @apply --paper-font-body2;
+      }
+      .value-label {
+        @apply --paper-font-caption;
+        color: var(--text-light-color);
+      }
+      @media(min-width: 964px) {
+          :host {
+              max-width: 900px;
+              margin: 64px auto;
           }
       }
     </style>
-        
-        <div sticky slot='header'></div>
     
-        <div class='section-title'>Materials & Equipment</div>
-        
-        <div class='card-container'>
-            
-            <home-page-card title='Coating Pan'>
-                <div slot='description'>
-                    The coating pan detemines the batch size and many coating process parameters including mixing uniformity, spray optimization and
-                    thermodynamics. Choose a pan from the library and/or design a customs coating pan. 
-                </div>
-                <div class='card-subtitle'>
-                    <iron-icon icon='my-icons:check'></iron-icon>
-                    <div>[[_pan.vendorName]] [[_pan.equipmentName]] - [[_pan.nickname]]</div>
-                </div>
-                <a href='#/pan-designer-page' slot='button'>
-                    <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>
-                </a>
-                <a href='#/pan-library-page' slot='button'>
-                    <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>
-                </a>
-                <!--<a href='#/pan-designer-page' slot='button'>-->
-                <!--    <slide-open-icon-button icon='my-icons:info' label='Overview'></slide-open-icon-button>-->
-                <!--</a>-->
-            </home-page-card>
-            
-            <home-page-card disabled title='Tablet'>
-                <div slot='description'>
-                    The tablet shape, size and other physical properties effect the coating uniformity, coating coverage and 
-                    more. Choose a tablet from the library or design a custom tablet formulation.
-                </div>
-                <div class='card-subtitle'>
-                    <iron-icon icon='my-icons:info'></iron-icon>
-                    <div>Coming Soon...</div>
-                </div>
-                <!--<a href='#/home-page' slot='button'>-->
-                <!--    <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>-->
-                <!--</a>-->
-                <!--<a href='#/home-page' slot='button'>-->
-                <!--    <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>-->
-                <!--</a>-->
-                <!--<a href='#/home-page' slot='button'>-->
-                <!--    <slide-open-icon-button icon='my-icons:info' label='Overview'></slide-open-icon-button>-->
-                <!--</a>-->
-            </home-page-card>
-            
-            <home-page-card disabled title='Coating Formulation'>
-                <div slot='description'>
-                    The coating formulation determines the dispersion solids, coating coverage, opacity and more. 
-                    Select a coating formulation from the library or design a custom formulation.
-                </div>
-                <div class='card-subtitle'>
-                    <iron-icon icon='my-icons:info'></iron-icon>
-                    <div>Coming Soon...</div>
-                </div>
-                <!--<a href='#/home-page' slot='button'>-->
-                <!--    <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>-->
-                <!--</a>-->
-                <!--<a href='#/home-page' slot='button'>-->
-                <!--    <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>-->
-                <!--</a>-->
-                <!--<a href='#/home-page' slot='button'>-->
-                <!--    <slide-open-icon-button icon='my-icons:info' label='Overview'></slide-open-icon-button>-->
-                <!--</a>-->
-            </home-page-card>
-            
+    <div id='page-title'>
+        <div>Coating</div>
+        <div>Process Overview</div>
+    </div>
+    <p id='page-description'>
+        The coating process is made up of several materials, pieces of equipment and process parameters.
+        With the coating parameters bringing together the process. Below is a snapshot of the current process and equipment and materials. 
+        Customize your process and than check out the process checks to see the results.
+    </p>
+    
+    <div class='section-title-layout'>
+      <div class='section-title'>Materials & Equipment</div>
+      <div class='edit-button'>Customize</div>
+    </div>
+    <div class='section'>
+      
+        <div class='row'>
+          
+          <div class='row-label'>Tablet</div>
+          <div class='row-title'>Placebo - 10 mm Round</div>
+          <div class='row-subtitle'>Colorcon</div>
+          
+          <div class='value-layout position-three'>
+            <div class='value-number'>400 <span>mg</span></div>
+            <div class='value-label'>Tablet Weight</div>
+          </div>
+          
+          <div class='value-layout position-four'>
+            <div class='value-number'>9.2 <span>kg</span></div>
+            <div class='value-label'>Batch Weight</div>
+          </div>
+          
         </div>
         
-        <div class='section-title'>Process Parameters</div>
+        <div class='row'>
+          
+          <div class='row-label'>Coating Formulation</div>
+          <div class='row-title'>Opadry II</div>
+          <div class='row-subtitle'>85F - PVA Based</div>
+          
+          <div class='value-layout position-three'>
+            <div class='value-number'>10%</div>
+            <div class='value-label'>Solids</div>
+          </div>
+          
+          <div class='value-layout position-four'>
+            <div class='value-number'>3.0%</div>
+            <div class='value-label'>Weight Gain</div>
+          </div>
         
-        <div class='card-container'>
-            
-            <home-page-card title='Coating Pan Fill'>
-                <div slot='description'>
-                    The coating pan detemines the batch size and many coating process parameters including mixing uniformity, spray optimization and
-                    thermodynamics. Choose a pan from the library and/or design a customs coating pan. 
-                </div>
-                <div class='card-subtitle'>
-                    <iron-icon icon='my-icons:check'></iron-icon>
-                    <div>Batch Size: [[_panFillWeight]] kg</div>
-                </div>
-                <a href='#/pan-fill-page' slot='button'>
-                    <slide-open-icon-button opened icon='my-icons:weight' label='Pan Fill'></slide-open-icon-button>
-                </a>
-            </home-page-card>
-            
         </div>
+        
+        <div class='row'>
+          
+          <div class='row-label'>Coating Pan</div>
+          <div class='row-title'>O'Hara Fastcoat - 48" Room</div>
+          <div class='row-subtitle'>Colorcon - West Point, PA</div>
+          
+          <div class='value-layout position-three'>
+            <div class='value-number'>48"</div>
+            <div class='value-label'>Diameter</div>
+          </div>
+          
+          <div class='value-layout position-four'>
+            <div class='value-number'>160 <span>liters</span></div>
+            <div class='value-label'>Brim Volume</div>
+          </div>
+          
+        </div>
+        
+    </div>
+    
+    <div class='section-title-layout'>
+      <div class='section-title'>Process Parameters</div>
+      <div class='edit-button'>Customize</div>
+    </div>
+    
+    <div class='section'>
+      
+        <div class='row'>
+          
+          <div class='row-title'>Thermodynamics</div>
+          <div class='row-subtitle'>Key parameters related to evaporation of water.</div>
+          
+          <div class='value-layout position-two'>
+            <div class='value-number'>48 <span>C</span></div>
+            <div class='value-label'>Product Temp</div>
+          </div>
+          
+          <div class='value-layout position-three'>
+            <div class='value-number'>1800 <span>cfm</span></div>
+            <div class='value-label'>Airflow</div>
+          </div>
+          
+          <div class='value-layout position-four'>
+            <div class='value-number'>350 <span>g/min</span></div>
+            <div class='value-label'>Spray Rate</div>
+          </div>
+          
+        </div>
+        
+        <div class='row'>
+          
+          <div class='row-title'>Uniformity</div>
+          <div class='row-subtitle'>Key parameters related to coating uniformity.</div>
+          
+          <div class='value-layout position-two'>
+            <div class='value-number'>5.5 <span>rpm</span></div>
+            <div class='value-label'>Pan Speed</div>
+          </div>
+          
+          <div class='value-layout position-three'>
+            <div class='value-number'>45 / 45 <span>psi</span></div>
+            <div class='value-label'>Atom / Pattern</div>
+          </div>
+          
+          <!--<div class='value-layout position-three'>-->
+          <!--  <div class='value-number'>45 <span>psi</span></div>-->
+          <!--  <div class='value-label'>Pattern</div>-->
+          <!--</div>-->
+          
+          <div class='value-layout position-four'>
+            <div class='value-number'>8"</div>
+            <div class='value-label'>Gun to Bed</div>
+          </div>
+        </div>
+        
+    </div>
     
   </template>
 
@@ -141,12 +262,19 @@
               _panFillWeight: {
                   type: String,
                   computed: "_computePanFillWeight(_pan.fillWeight)"
+              },
+              _sprayPatternWidth: {
+                  type: String,
+                  computed: "_computeSprayPatternWidth(_pan.totalSprayLength)"
               }
           };
       }
       
       _computePanFillWeight(weight) {
           return (weight / 1000).toFixed(1);
+      }
+      _computeSprayPatternWidth(width) {
+          return (width * 39.37).toFixed(1);
       }
       
     }

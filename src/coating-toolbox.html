@@ -24,32 +24,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="my-icons.html">
 
-<link rel="lazy-import" href="pages/home-page.html">
-<link rel="lazy-import" href="pages/pan-library-page.html">
-<link rel="lazy-import" href="pages/pan-designer-page.html">
-<link rel="lazy-import" href="pages/pan-fill-page.html">
+<link rel="lazy-import" href="home-page/home-page.html">
+<link rel="lazy-import" href="pan-library-page/pan-library-page.html">
+<link rel="lazy-import" href="pan-designer-page/pan-designer-page.html">
+<link rel="lazy-import" href="pan-fill-page/pan-fill-page.html">
+<link rel="lazy-import" href="spray-distribution-page/spray-distribution-page.html">
 
 <dom-module id="coating-toolbox">
   <template>
     <style>
       :host {
       
-        --app-primary-color: #3F72AF;
+        --app-primary-color: #3F72AF; /*#3F72AF;607D8B*/
         --app-dark-color: #1a4578;
         --app-light-color: #6f99cb;
         
         --text-color: #5b5b5b;
-        --text-dark-color: #353535;
-        --text-light-color: #818181;
+        --text-dark-color: #818181;
+        --text-light-color: #a7a7a7;
         --text-disabled-color: #BDBDBD;
         
-        --border-color: #BDBDBD;
-        --background-color: #E6E6EA;
+        --border-color: #E8E8E8;
+        --background-color: #E8E8E8;
         
         --red-color: #FE4A49;
         --blue-color: #2AB7CA;
         --yellow-color: #FED766;
-        --gray-color: #E6E6EA;
+        --green-color: #01a956;
+        --gray-color: #ededef;
         --white-color: #F4F4F8;
 
         display: block;
@@ -87,7 +89,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       [main-title] {
         @apply --paper-font-title;
       }
-      
     </style>
 
     <app-location
@@ -110,6 +111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a name="pan-library-page" href="#/pan-library-page">Coating Pan Library</a>
           <a name="pan-designer-page" href="#/pan-designer-page">Coating Pan Designer</a>
           <a name="pan-fill-page" href="#/pan-fill-page">Coating Pan Fill</a>
+          <a name='spray-distribution-page' href='#/spray-distribution-page'>Spray Distribution</a>
         </iron-selector>
       </app-drawer>
       
@@ -120,9 +122,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar sticky>
             <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
             <div main-title>Coating Toolbox</div>
-            <div>Tablet</div>
-            <div>Pan</div>
-            <div>Coating</div>
+            <div>Overview</div>
+            <div>Audit</div>
+            <div>Report</div>
           </app-toolbar>
           
         </app-header>
@@ -132,6 +134,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <pan-library-page name='pan-library-page'></pan-library-page>
           <pan-designer-page name='pan-designer-page'></pan-designer-page>
           <pan-fill-page name='pan-fill-page'></pan-fill-page>
+          <spray-distribution-page name='spray-distribution-page'></spray-distribution-page>
         </iron-pages>
         
       </app-header-layout>

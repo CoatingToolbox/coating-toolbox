@@ -1,0 +1,187 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/page-section-header.html">
+<link rel="import" href="../elements/page-section.html">
+<link rel="import" href="../elements/unit-input.html">
+<link rel="import" href="../elements/text-input.html">
+<link rel="import" href="../charts/spray-distribution-chart.html">
+<link rel="import" href="../charts/total-spray-distribution-chart.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="spray-distribution-page">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        max-width: 900px;
+        margin: 48px auto;
+        border-radius: 6px;
+        background-color: var(--white-color);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+      text-input,
+      unit-input {
+        grid-column: 1 / 5;
+      }
+      .row-spacer {
+        grid-column: 1 / 5;
+        height: 48px;
+      }
+      spray-distribution-chart,
+      total-spray-distribution-chart {
+        grid-column: 5 / 13;
+        grid-row: 1 / 4;
+        max-height: 300px;
+      }
+    </style>
+    
+    <page-section-header title='Spray Distribution'>
+      <p>
+        A coating pan is commonly described by the pan diameter but with a variety of coating pan manufactures, 
+        the the diameter does not provide a useful way to compare the shape and size of different coating pans. 
+        Below we will use four ease to measure dimensions to characterize the shape and size of a coating pan. 
+        From these dimensions we can later explore batch size, pan speed and more.
+      </p>
+    </page-section-header>
+    
+    <page-section icon='my-icons:spray' title='Spray Guns'>
+     <p slot='description'>
+       Not all coating pans are the same. Beyond the range
+      of manufactures and the coating pan models they offer each pan is unqiue.
+      Even when comparing the same manufacutre and model the baffle design, 
+      the spray gun configuration and even the dimensions can be different.
+      </p>
+      <text-input
+          value='[[pan.gunType]]'
+          label='Manufacture'
+          options='[[gunTypeOptions]]'
+          on-value-changed='_setGunType'>
+      </text-input>
+      
+      <text-input
+          value='[[pan.gunModel]]'
+          label='Model'
+          options='[[gunModelOptions]]'
+          on-value-changed='_setGunModel'>
+      </text-input>
+      
+      <text-input
+          value='[[pan.gunCount]]'
+          label='# of Spray Guns'
+          on-value-changed='_setGunCount'>
+      </text-input>
+      <unit-input
+          value='[[pan.gun2gun]]'
+          title='Gun to Gun Distance'
+          type='length'
+          selected-units='in'
+          on-value-changed='_setGun2Gun'>
+      </unit-input>
+    </page-section>
+    
+    
+    <page-section title='Single Gun Spray Pattern' icon='my-icons:ruler'>
+      <p slot='description'>
+        We start with a some basic information on the product you are coating. Since coating pans are based on 
+        volume we need to convert the product into volume. This is done by using the product bulk density. You can
+        also include core weight if you want to calculate the count.
+      </p>
+      <unit-input 
+        value='[[pan.sprayLength]]' 
+        type='length' 
+        selected-units='{{lengthUnits}}' 
+        decimals='1' title='Spray Width' 
+        details='The spray pattern width of one gun.' 
+        on-value-changed='_setSprayLength'>
+      </unit-input>
+      
+      <div class='row-spacer'></div>
+      <div class='row-spacer'></div>
+      
+      <spray-distribution-chart></spray-distribution-chart>
+      
+    </page-section>
+    
+    <page-section title='Total Spray Pattern' icon='my-icons:ruler'>
+      <p slot='description'>
+        There are many ways to describe the batch size below we look at Percent, Volume, Weight and Unit Count. Change one
+        value to see effect on the others. Be sure to keep the batch size within the working volume of the coating pan for 
+        optimal performance.
+      </p>
+      
+      <unit-input 
+        value='[[pan.totalSprayLength]]' 
+        type='length' 
+        selected-units='{{lengthUnits}}' 
+        decimals='1' 
+        title='Total Spray Width' 
+        detail='- Calculated'
+        no-input>
+      </unit-input>
+      
+      <div class='row-spacer'></div>
+      <div class='row-spacer'></div>
+      
+      <total-spray-distribution-chart></total-spray-distribution-chart>
+      
+    </page-section>
+    
+    
+  </template>
+
+  <script>
+    class SprayDistributionPage extends ReduxMixin(Polymer.Element) {
+
+      static get is() { return 'spray-distribution-page'; }
+
+      static get properties() {
+        return {
+          pan: { type: Object, statePath: "pan" },
+          lengthUnits: { type: String, value: 'in' },
+        };
+      }
+      _setSprayLength(e) {
+          this.pan.sprayLength = e.detail.value;
+          this.dispatch({
+            type: "SET_PAN",
+            value: this.pan
+          });
+      }
+      _setGunType(e) {
+          this.pan.gunType = e.detail.value;
+          this.dispatch({
+            type: "SET_PAN",
+            value: this.pan
+          });
+      }
+      _setGunModel(e) {
+          this.pan.gunModel = e.detail.value;
+          this.dispatch({
+            type: "SET_PAN",
+            value: this.pan
+          });
+      }
+      _setGun2Gun(e) {
+          this.pan.gun2gun = e.detail.value;
+          this.dispatch({
+            type: "SET_PAN",
+            value: this.pan
+          });
+      }
+      _setGunCount(e) {
+          this.pan.gunCount = parseInt(e.detail.value);
+          this.dispatch({
+            type: "SET_PAN",
+            value: this.pan
+          });
+      }
+    }
+
+    window.customElements.define(SprayDistributionPage.is, SprayDistributionPage);
+  </script>
+</dom-module>

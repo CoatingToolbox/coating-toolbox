@@ -1,10 +1,6 @@
 {
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  },
   "hosting": {
-    "public": "build/es6-unbundled",
+    "public": "build/es6-bundled",
     "ignore": [
       "firebase.json",
       "**/.*",

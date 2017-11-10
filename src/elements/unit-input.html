@@ -13,8 +13,14 @@
           flex-direction: column;
         }
         #title {
+          display: flex;
+          align-items: center;
           @apply --paper-font-body2;
           padding-bottom: 4px;
+        }
+        #title i {
+          @apply --paper-font-caption;
+          margin-left: 4px;
         }
         #input-layout {
           display: flex;
@@ -88,7 +94,7 @@
     </style>
     
       
-      <div id='title'>[[title]]</div>
+      <div id='title'>[[title]] <i>[[detail]]</i></div>
       
       <div id='input-layout'>
       
@@ -131,7 +137,7 @@
           title: {
             type: String
           },
-          details: {
+          detail: {
             type: String
           },
           step: {
