@@ -1,0 +1,137 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="pan-designer-nav">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: var(--white-color);
+        color: var(--text-color);
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        --selected-color: var(--app-primary-color);
+        --line-color: var(--border-color, #BDBDBD);
+        --unselected-color: var(--gray-color);
+        --number-color: var(--white-color);
+      }
+      iron-selector {
+        display: flex;
+      }
+      .item {
+        display: grid;
+        grid-template-columns: 24px auto 1fr;
+        grid-template-rows: auto;
+        align-items: center;
+        padding: 8px 4px;
+      }
+      .line {
+        grid-column: 3 / 4;
+        border-bottom: 1px solid var(--line-color);
+        min-width: 48px;
+        height: 1px;
+        flex-grow: 1;
+      }
+      .circle {
+        grid-column: 1 / 2;
+        height: 24px;
+        width: 24px;
+        font-size :12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: var(--selected-color);
+        color: var(--number-color);
+        transition: all 0.3s;
+      }
+      
+      .iron-selected .title {
+        font-weight: 500;
+      }
+      .iron-selected ~ .item .circle{
+        background-color: var(--unselected-color);
+        transition: all 0.2s;
+      }
+      .text-container {
+        padding: 0px 8px;
+        grid-column: 2 / 3;
+      }
+      .title {
+        font-size: 14px;
+      }
+      .optional {
+        opacity: 0.85;
+        font-size: 12px;
+      }
+      iron-selector .item:last-of-type .line {
+        display: none !important;
+      } 
+      [hidden] {
+        display: none !important;
+      }
+      
+    </style>
+    
+    <iron-selector id='selector' selected='{{selected}}'>
+      
+       <template is='dom-repeat' items='[[labels]]'>
+         
+         <div class='item'>
+             
+           <div class='circle'>[[_getNumber(index)]]</div>
+           
+           <div class='text-container'>
+             <div class='title'>[[item.label]]</div>
+             <div class='optional' hidden$=[[item.required]]>Optional</div>
+           </div>
+           
+           <div class='line'></div>
+           
+         </div>
+         
+       </template>
+       
+     </iron-selector>
+    
+  </template>
+
+  <script>
+    class PanDesignerNav extends Polymer.Element {
+      static get is() { return 'pan-designer-nav'; }
+      static get properties() {
+        return {
+          selected: {
+            type: Number, 
+            notify: true
+          },
+          labels: {
+            type: Array,
+            value: function() {
+              return [
+                {label: 'Make & Model', required: true},
+                {label: 'Dimension - Height', required: true},
+                {label: 'Dimension - Depth', required: true},
+                {label: 'Baffles', required: true},
+                {label: 'Spray Guns', required: true},
+                {label: 'Save & Explore', required: true}
+              ];
+            }
+          }
+        };
+      }
+      _getNumber(val) {
+        return val + 1;
+      }
+    }
+
+    window.customElements.define(PanDesignerNav.is, PanDesignerNav);
+  </script>
+</dom-module>
