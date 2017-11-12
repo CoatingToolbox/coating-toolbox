@@ -1,0 +1,215 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/list-unit-input.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="parameters-page">
+  <template>
+    <style>
+      :host {
+            display: block;
+            margin: 32px;
+      }
+      #page-title {
+          @apply --paper-font-display2;
+          max-width: 450px;
+          margin-bottom: 12px;
+          color: var(--app-primary-color);
+      }
+      #page-description {
+            text-align: justify;
+            max-width: 550px;
+            margin-right: auto;
+      }
+      .section-title-layout {
+        display: flex;
+        align-items: center;
+        margin: 64px 0px 16px;
+      }
+      .section-title {
+          @apply --paper-font-title;
+          flex-grow: 1;
+      }
+      .edit-button {
+        padding: 4px 24px;
+        border-radius: 12px;
+        color: var(--white-color);
+        background-color: var(--green-color);
+        /*border: 2px solid var(--text-light-color);*/
+        @apply --paper-font-button;
+      }
+      .section {
+          background-color: var(--white-color);
+          border-radius: 6px;
+      }
+      list-unit-input + list-unit-input {
+        border-top: 2px solid var(--border-color);
+      }
+      #button-layout {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 32px;
+      }
+      .button {
+        padding: 8px 24px;
+        margin-left: 32px;
+        background-color: var(--app-light-color);
+        border-radius: 12px;
+        color: var(--white-color);
+        @apply --paper-font-button;
+      }
+      .button:hover {
+        cursor: pointer;
+      }
+      .highlight {
+        color: var(--white-color);
+        background-color: var(--app-primary-color);
+      }
+      @media(min-width: 964px) {
+          :host {
+              max-width: 900px;
+              margin: 64px auto;
+          }
+      }
+    </style>
+    
+    <div id='page-title'>
+        <div>Customize</div>
+        <div>Process Parameters</div>
+    </div>
+    <p id='page-description'>
+        The coating process parameters can be broken into two key functions. The first is related to the thermodyamnices
+        which are key for evaporation of water. The second key parameters are to evenly distribute the coating material
+        across every tablet. 
+    </p>
+    
+    <div class='section-title-layout'>
+      <div class='section-title'>Thermodynamics</div>
+      <div class='edit-button'>Recommended</div>
+    </div>
+    <div class='section'>
+      
+        <list-unit-input
+          title='Airflow'
+          subtitle='The volume of air used to evaporate water.'
+          decimals='0'
+          selected-units='cfm'
+          value='1800' >
+        </list-unit-input>
+        
+        <list-unit-input
+          title='Spray Rate'
+          subtitle='The rate the coating dispersion is applied to the batch.'
+          decimals='1'
+          type='rate'
+          selected-units='g/min'
+          value='300' >
+        </list-unit-input>
+        
+        <list-unit-input
+          title='Product Temperature'
+          subtitle='The target temperature of the batch measured after the spray zone.'
+          decimals='1'
+          selected-units='C'
+          type='temperature'
+          value='45'>
+        </list-unit-input>
+        
+        <list-unit-input
+          title='Exhaust Temperature'
+          subtitle='The temperature of the air leaving the coating pan.'
+          decimals='1'
+          selected-units='C'
+          type='temperature'
+          value='50'>
+        </list-unit-input>
+        
+        <list-unit-input
+          title='Inlet Temperature'
+          subtitle='The temperature of the air coming into the coating pan.'
+          decimals='1'
+          selected-units='C'
+          type='temperature'
+          value='68'>
+        </list-unit-input>
+        
+    </div>
+    
+    <div class='section-title-layout'>
+      <div class='section-title'>Coating Uniformity</div>
+      <div class='edit-button'>Recommended</div>
+    </div>
+    
+    <div class='section'>
+      
+      <list-unit-input
+          title='Pan Speed'
+          subtitle='The number of pan rotations per minute.'
+          decimals='1'
+          selected-units='rpm'
+          type='rotation'
+          value='6'>
+        </list-unit-input>
+        
+        <list-unit-input
+          title='Atomization Air'
+          subtitle='The pressure of the air to atomize the coating dispersion.'
+          decimals='1'
+          selected-units='psi'
+          type='pressure'
+          value='45'>
+        </list-unit-input>
+        
+        <list-unit-input
+          title='Pattern Air'
+          subtitle='The pressure of the air to create the spray pattern.'
+          decimals='1'
+          selected-units='psi'
+          type='pressure'
+          value='45'>
+        </list-unit-input>
+        
+        <list-unit-input
+          title='Gun to Bed Distance'
+          subtitle='The distance between the spray gun nozzle and the product bed.'
+          decimals='1'
+          selected-units='in'
+          type='length'
+          value='0.2032'>
+        </list-unit-input>
+        
+        <list-unit-input
+          title='Spray Pattern Width'
+          subtitle='When width of the spray pattern from one spray gun using these parameters.'
+          decimals='1'
+          selected-units='in'
+          type='length'
+          value='0.1778'>
+        </list-unit-input>
+        
+    </div>
+    
+    <div id='button-layout'>
+      <div class='button' on-click='_gotoHomePage'>Cancel</div>
+      <div class='button highlight' on-click='_saveParameters'>Save Parameters</div>
+    </div>
+    
+  </template>
+
+  <script>
+    class ParametersPage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'parameters-page'; }
+      
+      _gotoHomePage() {
+        window.location = '#/home-page';
+      }
+      _saveParameters() {
+        this._gotoHomePage();
+      }
+    }
+
+    window.customElements.define(ParametersPage.is, ParametersPage);
+  </script>
+</dom-module>

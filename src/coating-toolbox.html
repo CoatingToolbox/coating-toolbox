@@ -25,6 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="home-page/home-page.html">
+<link rel="lazy-import" href="parameters-page/parameters-page.html">
 <link rel="lazy-import" href="pan-library-page/pan-library-page.html">
 <link rel="lazy-import" href="pan-designer-page/pan-designer-page.html">
 <link rel="lazy-import" href="pan-fill-page/pan-fill-page.html">
@@ -131,6 +132,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home-page'>
           <home-page name='home-page'></home-page>
+          <parameters-page name='parameters-page'></parameters-page>
           <pan-library-page name='pan-library-page'></pan-library-page>
           <pan-designer-page name='pan-designer-page'></pan-designer-page>
           <pan-fill-page name='pan-fill-page'></pan-fill-page>

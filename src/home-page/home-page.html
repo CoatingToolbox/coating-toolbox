@@ -2,10 +2,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 
-<link rel="import" href="../elements/slide-open-icon-button.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../my-icons.html">
-<link rel="import" href="home-page-card.html">
 
 <dom-module id="home-page">
   <template>
@@ -42,6 +40,9 @@
         background-color: var(--green-color);
         /*border: 2px solid var(--text-light-color);*/
         @apply --paper-font-button;
+      }
+      .edit-button:hover {
+        cursor: pointer;
       }
       .section {
           background-color: var(--white-color);
@@ -110,6 +111,26 @@
       .value-label {
         @apply --paper-font-caption;
         color: var(--text-light-color);
+      }
+      #button-layout {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 32px;
+      }
+      .button {
+        padding: 8px 24px;
+        margin-left: 32px;
+        background-color: var(--app-light-color);
+        border-radius: 12px;
+        color: var(--white-color);
+        @apply --paper-font-button;
+      }
+      .button:hover {
+        cursor: pointer;
+      }
+      .highlight {
+        color: var(--white-color);
+        background-color: var(--app-primary-color);
       }
       @media(min-width: 964px) {
           :host {
@@ -193,7 +214,7 @@
     
     <div class='section-title-layout'>
       <div class='section-title'>Process Parameters</div>
-      <div class='edit-button'>Customize</div>
+      <div class='edit-button' on-click='_gotoParametersPage'>Customize</div>
     </div>
     
     <div class='section'>
@@ -222,7 +243,7 @@
         
         <div class='row'>
           
-          <div class='row-title'>Uniformity</div>
+          <div class='row-title'>Coating Uniformity</div>
           <div class='row-subtitle'>Key parameters related to coating uniformity.</div>
           
           <div class='value-layout position-two'>
@@ -248,33 +269,22 @@
         
     </div>
     
+    <div id='button-layout'>
+      <!--<div class='button'>Cancel</div>-->
+      <div class='button highlight' on-click='_gotoChecksPage'>Process Checks</div>
+    </div>
+    
   </template>
 
   <script>
     class HomePage extends ReduxMixin(Polymer.Element) {
       static get is() { return 'home-page'; }
-      static get properties() { 
-          return {
-              _pan: {
-                  type: Object,
-                  statePath: 'pan'
-              },
-              _panFillWeight: {
-                  type: String,
-                  computed: "_computePanFillWeight(_pan.fillWeight)"
-              },
-              _sprayPatternWidth: {
-                  type: String,
-                  computed: "_computeSprayPatternWidth(_pan.totalSprayLength)"
-              }
-          };
-      }
       
-      _computePanFillWeight(weight) {
-          return (weight / 1000).toFixed(1);
+      _gotoParametersPage() {
+        window.location = '#/parameters-page';
       }
-      _computeSprayPatternWidth(width) {
-          return (width * 39.37).toFixed(1);
+      _gotoChecksPage() {
+        window.location = '#/checks-page';
       }
       
     }
