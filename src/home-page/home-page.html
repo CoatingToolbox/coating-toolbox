@@ -152,7 +152,7 @@
     
     <div class='section-title-layout'>
       <div class='section-title'>Materials & Equipment</div>
-      <div class='edit-button'>Customize</div>
+      <div class='edit-button' on-click='_gotoMaterialsPage'>Customize</div>
     </div>
     <div class='section'>
       
@@ -285,6 +285,9 @@
       }
       _gotoChecksPage() {
         window.location = '#/checks-page';
+      }
+      _gotoMaterialsPage() {
+        window.location = '#/materials-page';
       }
       
     }

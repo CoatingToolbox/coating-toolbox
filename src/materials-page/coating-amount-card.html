@@ -1,0 +1,55 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../elements/list-unit-input.html">
+<link rel="import" href="../redux/redux-mixin.html">
+
+<dom-module id="coating-amount-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: var(--white-color);
+        border-radius: 6px;
+      }
+      list-unit-input + list-unit-input {
+        border-top: 2px solid var(--border-color);
+      }
+    </style>
+      
+    <list-unit-input
+      title='Volume'
+      subtitle='The volume of material to be coated.'
+      decimals='1'
+      selected-units='l'
+      value='120' >
+    </list-unit-input>
+    
+    <list-unit-input
+      title='Weight'
+      subtitle='The weight of material to be coated with a 1.25 g/ml density.'
+      decimals='1'
+      type='weight'
+      selected-units='kg'
+      value='125' >
+    </list-unit-input>
+    
+    <list-unit-input
+      title='Tablet Count'
+      subtitle='The number of tablets in the batch at a 400 mg weight.'
+      decimals='0'
+      selected-units='tabs'
+      type='count'
+      value='4500'>
+    </list-unit-input>
+    
+  </template>
+
+  <script>
+    class CoatingAmountCard extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'coating-amount-card'; }
+      
+    }
+
+    window.customElements.define(CoatingAmountCard.is, CoatingAmountCard);
+  </script>
+</dom-module>

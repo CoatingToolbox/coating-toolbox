@@ -1,0 +1,52 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="detail-item.html">
+
+<dom-module id="coating-formulation-card">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--white-color);
+        border-radius: 6px;
+        padding: 16px;
+      }
+      .label {
+        @apply --paper-font-subhead;
+        margin-bottom: 4px;
+      }
+      .title {
+        @apply --paper-font-headline;
+        color: var(--app-primary-color);
+        margin-bottom: 16px;
+      }
+      .subtitle {
+        @apply --paper-font-body1;
+        color: var(--text-light-color);
+        margin-bottom: 16px;
+      }
+    </style>
+    
+
+    <!--<div class='label'></div>-->
+    <div class='label'>Opadry II</div>
+    <div class='title'>85F PVA Based</div>
+    <detail-item label='Formula' value='85F18422'></detail-item>
+    <detail-item label='Film Density' value='1.1 g/ml'></detail-item>
+    <detail-item label='Solids' value='10%'></detail-item>
+    <detail-item label='Viscosity' value='164 cps'></detail-item>
+    
+  </template>
+
+  <script>
+    class CoatingFormulationCard extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'coating-formulation-card'; }
+      
+    }
+
+    window.customElements.define(CoatingFormulationCard.is, CoatingFormulationCard);
+  </script>
+</dom-module>

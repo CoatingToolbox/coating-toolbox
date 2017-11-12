@@ -3,6 +3,8 @@
   "shell": "src/coating-toolbox.html",
   "fragments": [
     "src/home-page/home-page.html",
+    "src/parameters-page/parameters-page.html",
+    "src/materials-page/materials-page.html",
     "src/pan-library-page/pan-library-page.html",
     "src/pan-designer-page/pan-designer-page.html",
     "src/pan-fill-page/pan-fill-page.html",
