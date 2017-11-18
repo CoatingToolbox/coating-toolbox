@@ -1,0 +1,244 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../elements/coating-pan-graphic.html">
+<link rel="import" href="../redux/redux-mixin.html">
+
+<dom-module id='pan-details-dialog'>
+    <template>
+        
+        <style>
+            :host {
+                display: block;
+            }
+            paper-dialog {
+              display: grid;
+              grid-template-columns: 1fr auto 1fr;
+              grid-template-rows: repeat(5, auto);
+              border-radius: 4px;
+              max-width: 1000px;
+              @apply --paper-font-body1;
+              color: var(--text-color);
+            }
+            #pan-title {
+              grid-row: 2 / 3;
+              grid-column: 1 / 2;
+              @apply --paper-font-display2;
+              margin-bottom: 24px;
+            }
+            #pan-subtitle {
+              grid-row: 1 / 2;
+              grid-column: 1 / 2;
+              margin-bottom: 4px;
+              @apply --paper-font-subhead;
+            }
+            #company-container {
+              display: flex;
+              grid-row: 3 / 4;
+              grid-column: 1 / 3;
+              margin-bottom: 16px;
+            }
+            #dimensions-container {
+              display: flex;
+              grid-row: 4 / 5;
+              grid-column: 1 / 3;
+              margin-bottom: 16px;
+            }
+            #graphic-container {
+              grid-column: 3 / 4;
+              grid-row: 1 / 6;
+              display: flex;
+              margin: 16px 16px;
+              background-color: var(--gray-color);
+              border-radius: 12px;
+            }
+            #button-container {
+              grid-row: 5 / 6;
+              grid-column: 1 / 3;
+              display: flex;
+              max-width: 800px;
+              margin-top: 12px;
+            }
+            .label {
+              @apply --paper-font-caption;
+            }
+            paper-button {
+              color: var(--text-dark-color);
+              background-color: var(--gray-color);
+              @apply --paper-font-button;
+            } 
+            paper-button:hover {
+              background-color: var(--app-primary-color);
+              color: var(--gray-color);
+            }
+            coating-pan-graphic {
+              --pan-color: #bdbdbd;
+              --pan-outline-color: var(--text-dark-color);
+              --pan-fill-color: var(--red-color);
+              --pan-size: 100%;
+            }
+            
+            .value-cont + .value-cont {
+              margin-left: 48px;
+            }
+            
+        </style>
+          
+          <paper-dialog id='dialog'>
+            
+            <div id='pan-subtitle'>[[pan.vendorName]]</div>
+            
+            <div id='pan-title'>[[pan.equipmentName]]</div>
+            
+            <iron-icon icon='my-icons:close' on-tap='toggle'></iron-icon>
+            
+            <div id='graphic-container'>
+              <coating-pan-graphic pan='[[pan]]' volume-type='max' view='front'></coating-pan-graphic>
+              <coating-pan-graphic pan='[[pan]]' volume-type='max' view='side'></coating-pan-graphic>
+            </div>
+            
+            <div id='company-container'>
+              <div class='value-cont'>
+                <div class='label'>Nickname</div>
+                <div class='value'>[[_getString(pan.nickname)]]</div>
+              </div>
+              <div class='value-cont'>
+                <div class='label'>Company</div>
+                <div class='value'>[[_getString(pan.companyName)]]</div>
+              </div>
+              <div class='value-cont'>
+                <div class='label'>Location</div>
+                <div class='value'>[[_getString(pan.locationName)]]</div>
+              </div>
+              <div class='value-cont'>
+                <div class='label'>Contact</div>
+                <div class='value'>[[_getString(pan.contactName)]]</div>
+              </div>
+              
+          </div>
+            <div id='dimensions-container'>
+              
+              <div class='value-cont'>
+                <div class='label'>Main Diameter</div>
+                <div class='value'>[[_getPanDiameterString(pan.panDiameter)]]</div>
+              </div>
+              
+              <div class='value-cont'>
+                <div class='label'>Working Volume</div>
+                <div class='value'>[[_getPanVolumeString(pan)]]</div>
+              </div>
+              
+              <div class='value-cont'>
+                <div class='label'>Baffles</div>
+                <div class='value'>[[_getBaffleString(pan)]]</div>
+              </div>
+              
+              <div class='value-cont'>
+                <div class='label'>Spray Gun Setup</div>
+                <div class='value'>[[_getSprayGunString(pan)]]</div>
+              </div>
+              
+            </div>
+            <div id='button-container'>
+              <paper-button on-tap='_customizePan'>Customize</paper-button>
+              <paper-button on-tap='_loadPan'>Load</paper-button>
+            </div>
+            
+          </paper-dialog>
+          
+        
+    </template>
+    
+    <script>
+        
+        /*global Polymer */
+        class PanDetailsDialog extends ReduxMixin(Polymer.Element) {
+            
+            static get is() { return 'pan-details-dialog';}
+            
+            static get properties() {
+                return {
+                    pan: Object
+                };
+            }
+            toggle() {
+              this.$.dialog.toggle();
+            }
+            _loadPan() {
+              this.dispatch( {
+                type: "LOAD_PAN",
+                value: this.pan
+              });
+              this.$.dialog.toggle();
+              window.location = '#/home-page';
+            }
+            _customizePan() {
+              this.dispatch( {
+                type: "LOAD_PAN",
+                value: this.pan
+              });
+              this.$.dialog.toggle();
+              window.location = '#/pan-designer-page';
+            }
+            _toInches(val) {
+              return (val * 39.3701).toFixed(1);
+            }
+            _getPanDiameterString(val) {
+               return this._toInches(val) + ' in';
+            }
+            _getString(val) {
+              let string = '- - - ';
+              if(val) {
+                string = val;
+              }
+              return string;
+            }
+            _getPanVolumeString(pan) {
+              
+              if(pan.minFillVolume && pan.maxFillVolume) {
+                return `${this._toLiters(pan.minFillVolume)} - ${this._toLiters(pan.maxFillVolume)} L`;
+                
+              } else {
+                return ' - - -';
+              }
+            }
+            _getBaffleString(pan) {
+              let string = ' - - -';
+              if(pan.baffleType) {
+                string = pan.baffleType;
+              }
+              if(pan.baffleCount) {
+                string = `${string} x(${pan.baffleCount})`;
+              }
+              return string;
+            }
+            _getSprayGunString(pan) {
+              let string = ' - - -';
+              if(pan.gunType) {
+                string = pan.gunType;
+              }
+              if(pan.gunModel) {
+                string = `${string} ${pan.gunModel}`;
+              }
+              if(pan.gunCount) {
+                string = `${string} x(${pan.gunCount})`;
+              }
+              return string;
+            }
+            _getPerforationString(pan) {
+              let string = ' - - -';
+              if(pan.perforationType) {
+                string = pan.perforationType;
+              }
+              return string;
+            }
+            _toLiters(val) {
+              return (val * 1000).toFixed(1);
+            }
+        }
+        
+        window.customElements.define(PanDetailsDialog.is, PanDetailsDialog);
+        
+    </script>
+</dom-module>

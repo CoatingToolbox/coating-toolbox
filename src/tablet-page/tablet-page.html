@@ -4,37 +4,27 @@
 <link rel="import" href="../elements/slide-open-icon-button.html">
 <link rel="import" href="tablet-card.html">
 <link rel="import" href="batch-card.html">
-<link rel="import" href="coating-formulation-card.html">
-<link rel="import" href="coating-amount-card.html">
-<link rel="import" href="coating-pan-card.html">
 
-<dom-module id="materials-page">
+<dom-module id="tablet-page">
   <template>
     <style>
       :host {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr;
-            grid-auto-rows: auto;
-            grid-gap: 0px 48px;
+            display: flex;
+            flex-direction: column;
             margin: 32px;
       }
       #page-title {
-        grid-column: 1 / 3;
-        grid-row: 1 / 2;
           @apply --paper-font-display2;
           max-width: 450px;
           margin-bottom: 12px;
           color: var(--app-primary-color);
       }
       #page-description {
-        grid-column: 1 / 3;
-        grid-row: 2 / 3;
             text-align: justify;
             max-width: 550px;
             margin-right: auto;
       }
       .section-title-layout {
-        grid-column: 1 / 4;
         display: flex;
         align-items: center;
         margin: 32px 0px 16px;
@@ -80,33 +70,13 @@
       .button:hover {
         cursor: pointer;
       }
-      
-      
-      
-      tablet-card,
-      batch-card,
-      coating-pan-card,
-      .section-title-layout,
-      #button-layout {
-        grid-column: 1 / 4;
+      app-toolbar {
+        border-bottom: 2px solid div(--gray-color);
       }
-      coating-formulation-card,
-      .section-title-layout.coating-formulation {
-        grid-column: 1 / 2;
+      app-toolbar div {
+        margin-right: 32px;
+        @apply --paper-font-subhead;
       }
-      coating-amount-card,
-      .section-title-layout.coating-amount {
-        grid-column: 2 / 4;
-      }
-      .coating-formulation,
-      .coating-amount {
-        grid-row: 7 / 8
-      }
-      coating-formulation-card,
-      coating-amount-card {
-        grid-row: 8 / 9;
-      }
-      
       @media(min-width: 964px) {
           :host {
               max-width: 900px;
@@ -116,18 +86,21 @@
     </style>
     
     <div id='page-title'>
-        <div>Customize</div>
-        <div>Materials & Equipment</div>
+        <div>Coating Substrate</div>
     </div>
     <p id='page-description'>
         Materials like the tablet and coating formulations greatly influence the coating process. In addition
         the type and scale of coating pan will effect the process parameters required to be succesfull.
     </p>
     
+    <app-toolbar>
+      <div>Overview</div>
+      <div>Design</div>
+      <div>Library</div>
+    </app-toolbar>
+    
     <div class='section-title-layout'>
       <div class='section-title'>Substrate</div>
-      <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>
-      <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>
     </div>
     <tablet-card></tablet-card>
     
@@ -138,38 +111,16 @@
     </div>
     <batch-card></batch-card>
     
-    <div class='section-title-layout coating-formulation'>
-      <div class='section-title'>Coating</div>
-      <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>
-      <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>
-    </div>
-    <coating-formulation-card></coating-formulation-card>
-    
-    <div class='section-title-layout coating-amount'>
-      <div class='section-title'>Coating Amount</div>
-      <slide-open-icon-button icon='my-icons:calculator' label='Recommended'></slide-open-icon-button>
-    </div>
-    <coating-amount-card></coating-amount-card>
-    
-    
-    <div class='section-title-layout'>
-      <div class='section-title'>Coating Pan</div>
-      <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>
-      <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>
-    </div>
-    <coating-pan-card></coating-pan-card>
-    
     <div id='button-layout'>
       <div class='light-blue-button' on-click='_gotoHomePage'>Cancel</div>
       <div class='blue-button' on-click='_saveChanges'>Save Changes</div>
     </div>
     
-    
   </template>
 
   <script>
-    class MaterialsPage extends Polymer.Element {
-      static get is() { return 'materials-page'; }
+    class TabletPage extends Polymer.Element {
+      static get is() { return 'tablet-page'; }
       
       _gotoHomePage() {
         window.location = '#/home-page';
@@ -179,6 +130,6 @@
       }
     }
 
-    window.customElements.define(MaterialsPage.is, MaterialsPage);
+    window.customElements.define(TabletPage.is, TabletPage);
   </script>
 </dom-module>

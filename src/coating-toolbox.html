@@ -24,13 +24,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="my-icons.html">
 
-<link rel="lazy-import" href="home-page/home-page.html">
+<link rel="lazy-import" href="pages/home-page.html">
+<link rel="lazy-import" href="pages/pan-page.html">
+<link rel="lazy-import" href="tablet-page/tablet-page.html">
+<link rel="lazy-import" href="coating-formulation-page/coating-formulation-page.html">
 <link rel="lazy-import" href="parameters-page/parameters-page.html">
-<link rel="lazy-import" href="materials-page/materials-page.html">
-<link rel="lazy-import" href="pan-library-page/pan-library-page.html">
-<link rel="lazy-import" href="pan-designer-page/pan-designer-page.html">
-<link rel="lazy-import" href="pan-fill-page/pan-fill-page.html">
-<link rel="lazy-import" href="spray-distribution-page/spray-distribution-page.html">
 
 <dom-module id="coating-toolbox">
   <template>
@@ -77,6 +75,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--app-primary-color);
         font-weight: bold;
       }
+     
      app-header {
         display: block;
         color: var(--white-color);
@@ -109,38 +108,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home-page" href="#/home-page">Coating Process Overview</a>
-          <a name="materials-page" href="#/materials-page">Materials & Equipment</a>
-          <a name="parameters-page" href="#/parameters-page">Process Parameters</a>
-          <a name="pan-library-page" href="#/pan-library-page">Coating Pan Library</a>
-          <a name="pan-designer-page" href="#/pan-designer-page">Coating Pan Designer</a>
-          <a name="pan-fill-page" href="#/pan-fill-page">Coating Pan Fill</a>
-          <a name='spray-distribution-page' href='#/spray-distribution-page'>Spray Distribution</a>
+          <a name="home-page" href="#/home-page">Overview</a>
+          <a name="tablet-page" href="#/tablet-page">Subtrate</a>
+          <a name="coating-formulation-page" href="#/coating-formulation-page">Coating Formulation</a>
+          <a name="coating-pan-page" href="#/coating-pan-page">Coating Pan</a>
+          <a name="parameters-page" href="#/parameters-page">Coating Parameter</a>
         </iron-selector>
       </app-drawer>
       
       <app-header-layout>
         
-        <app-header slot='header' fixed effects='waterfall'>
+        <app-header slot='header' reveals>
           
           <app-toolbar sticky>
             <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
-            <div main-title>Coating Toolbox</div>
-            <div>Overview</div>
-            <div>Checks</div>
-            <div>Report</div>
+            <div main-title></div>
+            <div>Substrate</div>
+            <div>Coating</div>
+            <div>Pan</div>
+            <div>Parameters</div>
           </app-toolbar>
           
         </app-header>
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home-page'>
           <home-page name='home-page'></home-page>
+          <tablet-page name='tablet-page'></tablet-page>
+          <coating-formulation-page name='coating-formulation-page'></coating-formulation-page>
+          <pan-page name='pan-page'></pan-page>
           <parameters-page name='parameters-page'></parameters-page>
-          <materials-page name='materials-page'></materials-page>
-          <pan-library-page name='pan-library-page'></pan-library-page>
-          <pan-designer-page name='pan-designer-page'></pan-designer-page>
-          <pan-fill-page name='pan-fill-page'></pan-fill-page>
-          <spray-distribution-page name='spray-distribution-page'></spray-distribution-page>
         </iron-pages>
         
       </app-header-layout>
@@ -181,7 +177,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl(`${page}/${page}.html`);
+        var resolvedPageUrl = this.resolveUrl(`pages/${page}.html`);
         Polymer.importHref(
             resolvedPageUrl,
             null,

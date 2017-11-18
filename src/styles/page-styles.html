@@ -1,0 +1,128 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="page-styles">
+  <template>
+    <style>
+    /*Main Layout Components*/
+      :host {
+            display: block
+      }
+      #header-background {
+        color: var(--white-color);
+        background-color: var(--app-primary-color);
+      }
+      #header-layout {
+        display: flex;
+        flex-direction: column;
+        padding: 32px;
+      }
+      #main-layout {
+        margin: 32px;
+      }
+      .section-layout {
+          background-color: var(--white-color);
+          border-radius: 6px;
+          margin-bottom: 64px;
+      }
+      
+      /*Button*/      
+      .button {
+        padding: 4px 24px;
+        border-radius: 12px;
+        color: var(--text--light-color);
+        border: 2px solid var(--text-light-color);
+        @apply --paper-font-button;
+      }
+      .highlight {
+        color: var(--white-color);
+        background-color: var(--green-color);
+        border: 2px solid var(--green-color);
+      }
+      .primary {
+        color: var(--white-color);
+        background-color: var(--app-primary-color);
+        border: 2px solid var(--app-primary-color);
+      }
+      .light {
+        color: var(--white-color);
+        background-color: var(--app-light-color);
+        border: 2px solid var(--app-light-color);
+      }
+      .button-layout {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 32px;
+      }
+      .button:hover {
+        cursor: pointer;
+      }
+      .button + .button {
+        margin-left: 32px;
+      }
+      
+      /*Tab Navigation*/
+      #tab-background {
+        display: flex;
+        background-color: var(--white-color);
+        color: var(--text-color);
+      }
+      #tab-selector {
+        flex-grow: 1;
+        height: 64px;
+        display: flex;
+        justify-content: flex-start;
+      }
+      #tab-selector .tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 48px;
+        padding: 8px 24px 8px 16px;
+        border-bottom: 2px solid var(--white-color);
+        @apply --paper-font-body1;
+      }
+      .tab iron-icon {
+        margin-right: 16px;
+      }
+      .tab.iron-selected {
+        color: var(--app-primary-color);
+        border-bottom: 2px solid var(--app-light-color);
+      }
+      
+      /*Text styles*/
+      #page-title {
+          @apply --paper-font-display2;
+          max-width: 450px;
+          margin-bottom: 12px;
+      }
+      #page-description {
+            text-align: justify;
+            max-width: 550px;
+            margin-right: auto;
+      }
+      .section-title {
+          margin-bottom: 16px;
+          @apply --paper-font-title;
+      }
+      
+      /*Additional Styles*/
+      list-unit-input + list-unit-input {
+        border-top: 2px solid var(--border-color);
+      }
+
+      /*Media Queries*/
+      @media(min-width: 964px) {
+          
+          #tab-selector,
+          #header-layout,
+          #main-layout {
+              max-width: 900px;
+              margin-left: auto;
+              margin-right: auto;
+          }
+      }
+    </style>
+  </template>
+</dom-module>

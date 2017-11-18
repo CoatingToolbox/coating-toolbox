@@ -2,19 +2,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../elements/list-unit-input.html">
 <link rel="import" href="../redux/redux-mixin.html">
-
+<link rel='import' href='../styles/card-styles.html'>
 <dom-module id="batch-card">
   <template>
-    <style>
-      :host {
-        display: block;
-        background-color: var(--white-color);
-        border-radius: 6px;
-      }
-      list-unit-input + list-unit-input {
-        border-top: 2px solid var(--border-color);
-      }
-    </style>
+    <style include='card-styles'></style>
       
     <list-unit-input
       title='Volume'

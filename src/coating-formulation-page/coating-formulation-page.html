@@ -1,0 +1,62 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/slide-open-icon-button.html">
+<link rel="import" href="../styles/page-styles.html">
+<link rel="import" href="coating-formulation-card.html">
+<link rel="import" href="coating-amount-card.html">
+
+<dom-module id="coating-formulation-page">
+  <template>
+    
+    <style include='page-styles'></style>
+    
+    <div id='page-title'>
+        <div>Coating Formulation</div>
+    </div>
+    <p id='page-description'>
+        Materials like the tablet and coating formulations greatly influence the coating process. In addition
+        the type and scale of coating pan will effect the process parameters required to be succesfull.
+    </p>
+    
+    <app-toolbar>
+      <div>Overview</div>
+      <div>Design</div>
+      <div>Library</div>
+    </app-toolbar>
+    
+    <div class='section-title-layout coating-formulation'>
+      <div class='section-title'>Coating</div>
+      <slide-open-icon-button icon='my-icons:ruler' label='Designer'></slide-open-icon-button>
+      <slide-open-icon-button icon='my-icons:library' label='Library'></slide-open-icon-button>
+    </div>
+    <coating-formulation-card></coating-formulation-card>
+    
+    <div class='section-title-layout coating-amount'>
+      <div class='section-title'>Coating Amount</div>
+      <slide-open-icon-button icon='my-icons:calculator' label='Recommended'></slide-open-icon-button>
+    </div>
+    <coating-amount-card></coating-amount-card>
+    
+    <div id='button-layout'>
+      <div class='light-blue-button' on-click='_gotoHomePage'>Cancel</div>
+      <div class='blue-button' on-click='_saveChanges'>Save Changes</div>
+    </div>
+    
+  </template>
+
+  <script>
+    class CoatingFormulationPage extends Polymer.Element {
+      static get is() { return 'coating-formulation-page'; }
+      
+      _gotoHomePage() {
+        window.location = '#/home-page';
+      }
+      _saveChanges() {
+        this._gotoHomePage();
+      }
+    }
+
+    window.customElements.define(CoatingFormulationPage.is, CoatingFormulationPage);
+  </script>
+</dom-module>

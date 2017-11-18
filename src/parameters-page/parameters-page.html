@@ -4,77 +4,11 @@
 <link rel="import" href="../elements/list-unit-input.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../my-icons.html">
+<link rel="import" href="../styles/page-styles.html">
 
 <dom-module id="parameters-page">
   <template>
-    <style>
-      :host {
-            display: block;
-            margin: 32px;
-      }
-      #page-title {
-          @apply --paper-font-display2;
-          max-width: 450px;
-          margin-bottom: 12px;
-          color: var(--app-primary-color);
-      }
-      #page-description {
-            text-align: justify;
-            max-width: 550px;
-            margin-right: auto;
-      }
-      .section-title-layout {
-        display: flex;
-        align-items: center;
-        margin: 64px 0px 16px;
-      }
-      .section-title {
-          @apply --paper-font-title;
-          flex-grow: 1;
-      }
-      .edit-button {
-        padding: 4px 24px;
-        border-radius: 12px;
-        color: var(--white-color);
-        background-color: var(--green-color);
-        /*border: 2px solid var(--text-light-color);*/
-        @apply --paper-font-button;
-      }
-      .section {
-          background-color: var(--white-color);
-          border-radius: 6px;
-      }
-      list-unit-input + list-unit-input {
-        border-top: 2px solid var(--border-color);
-      }
-      #button-layout {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 32px;
-      }
-      .button {
-        padding: 8px 24px;
-        margin-left: 32px;
-        background-color: var(--app-light-color);
-        border-radius: 12px;
-        color: var(--white-color);
-        @apply --paper-font-button;
-      }
-      .edit-button:hover,
-      .button:hover {
-        cursor: pointer;
-      }
-      .highlight {
-        color: var(--white-color);
-        background-color: var(--app-primary-color);
-      }
-      @media(min-width: 964px) {
-          :host {
-              max-width: 900px;
-              margin: 64px auto;
-          }
-      }
-    </style>
+    <style include='page-styles'></style>
     
     <div id='page-title'>
         <div>Customize</div>
@@ -193,8 +127,8 @@
     </div>
     
     <div id='button-layout'>
-      <div class='button' on-click='_gotoHomePage'>Cancel</div>
-      <div class='button highlight' on-click='_saveParameters'>Save Parameters</div>
+      <div class='light-blue-button' on-click='_gotoHomePage'>Cancel</div>
+      <div class='blue-button' on-click='_saveParameters'>Save Parameters</div>
     </div>
     
   </template>

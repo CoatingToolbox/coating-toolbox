@@ -1,0 +1,74 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../styles/page-styles.html">
+<link rel="import" href="../my-icons.html">
+<link rel="import" href="../pan/pan-overview-section.html">
+<!--<link rel="import" href="pan-designer-page.html">-->
+<!--<link rel="import" href="pan-library-page.html">-->
+
+<dom-module id="pan-page">
+  <template>
+    
+    <style include='page-styles'></style>
+    
+    <div id='header-background'>
+      <div id='header-layout'>
+        
+        <div id='page-title'>
+            <div>Coating Pan</div>
+        </div>
+        <p id='page-description'>
+            Materials like the tablet and coating formulations greatly influence the coating process. In addition
+            the type and scale of coating pan will effect the process parameters required to be succesfull.
+        </p>
+      </div>
+    </div>
+    
+    <div id='tab-background'>
+      <iron-selector id='tab-selector' selected='{{_selectedSubpage}}'>
+        <div class='tab'>
+          <iron-icon icon='my-icons:info'></iron-icon>
+          Overview
+        </div>
+        <div class='tab'>
+          <iron-icon icon='my-icons:ruler'></iron-icon>
+          Design
+        </div>
+        <div class='tab'>
+          <iron-icon icon='my-icons:library'></iron-icon>
+          Library
+        </div>
+      </iron-selector>
+    </div>  
+    
+    <iron-pages id='main-layout' selected='[[_selectedSubpage]]'>
+      <pan-overview-section></pan-overview-section>
+      <pan-designer-page></pan-designer-page>
+      <pan-library-page></pan-library-page>
+    </iron-pages>
+    
+  </template>
+
+  <script>
+    class PanPage extends Polymer.Element {
+      static get is() { return 'pan-page'; }
+      
+      static get properties() {
+        return {
+          _selectedSubpage: {type: Number, value: 0}
+        };
+      }
+      
+      _gotoHomePage() {
+        window.location = '#/home-page';
+      }
+      _saveChanges() {
+        this._gotoHomePage();
+      }
+    }
+
+    window.customElements.define(PanPage.is, PanPage);
+  </script>
+</dom-module>
