@@ -7,16 +7,7 @@
     <style>
     /*Main Layout Components*/
       :host {
-            display: block
-      }
-      #header-background {
-        color: var(--white-color);
-        background-color: var(--app-primary-color);
-      }
-      #header-layout {
-        display: flex;
-        flex-direction: column;
-        padding: 32px;
+            display: block;
       }
       #main-layout {
         margin: 32px;
@@ -62,46 +53,7 @@
         margin-left: 32px;
       }
       
-      /*Tab Navigation*/
-      #tab-background {
-        display: flex;
-        background-color: var(--white-color);
-        color: var(--text-color);
-      }
-      #tab-selector {
-        flex-grow: 1;
-        height: 64px;
-        display: flex;
-        justify-content: flex-start;
-      }
-      #tab-selector .tab {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 48px;
-        padding: 8px 24px 8px 16px;
-        border-bottom: 2px solid var(--white-color);
-        @apply --paper-font-body1;
-      }
-      .tab iron-icon {
-        margin-right: 16px;
-      }
-      .tab.iron-selected {
-        color: var(--app-primary-color);
-        border-bottom: 2px solid var(--app-light-color);
-      }
-      
       /*Text styles*/
-      #page-title {
-          @apply --paper-font-display2;
-          max-width: 450px;
-          margin-bottom: 12px;
-      }
-      #page-description {
-            text-align: justify;
-            max-width: 550px;
-            margin-right: auto;
-      }
       .section-title {
           margin-bottom: 16px;
           @apply --paper-font-title;
@@ -114,9 +66,6 @@
 
       /*Media Queries*/
       @media(min-width: 964px) {
-          
-          #tab-selector,
-          #header-layout,
           #main-layout {
               max-width: 900px;
               margin-left: auto;

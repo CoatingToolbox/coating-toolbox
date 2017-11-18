@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 
+<link rel="import" href="../elements/page-header.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../elements/large-list-item.html">
 <link rel="import" href="../my-icons.html">
@@ -66,18 +67,13 @@
       }
     </style>
     
-    <div id='header-background'>
-      <div id='header-layout'>
-        <div id='page-title'>
-            <div>Coating Toolbox</div>
-        </div>
-        <p id='page-description'>
+    <page-header title='Coating Toolbox'>
+      <p>
             The coating process is made up of several materials, pieces of equipment and process parameters.
             With the coating parameters bringing together the process. Below is a snapshot of the current process and equipment and materials. 
             Customize your process and than check out the process checks to see the results.
         </p>
-      </div>
-    </div>
+    </page-header>
     
     <div id='main-layout'>
       
@@ -108,7 +104,7 @@
               <div class='value-label'>Weight Gain</div>
             </div>
           
-            <div class='edit-overlay' data-link='coating-formulation-page' on-click='_gotoPage'>Click to Customize</div>
+            <div class='edit-overlay' data-link='coating-page' on-click='_gotoPage'>Click to Customize</div>
           </large-list-item>
           <large-list-item title="O'Hara Fastocat - 48 Room" subtitle='Coating Pan' tagline='Colorcon - West Point, PA'>
             <div class='value-layout position-three'>

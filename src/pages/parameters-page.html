@@ -1,6 +1,7 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/tab-navigation.html">
+<link rel="import" href="../elements/page-header.html">
 <link rel="import" href="../elements/list-unit-input.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../my-icons.html">
@@ -10,21 +11,18 @@
   <template>
     <style include='page-styles'></style>
     
-    <div id='page-title'>
-        <div>Customize</div>
-        <div>Process Parameters</div>
-    </div>
-    <p id='page-description'>
-        The coating process parameters can be broken into two key functions. The first is related to the thermodyamnices
+    <page-header title='Process Parameters'>
+      <p>The coating process parameters can be broken into two key functions. The first is related to the thermodyamnices
         which are key for evaporation of water. The second key parameters are to evenly distribute the coating material
-        across every tablet. 
-    </p>
+        across every tablet.</p>
+    </page-header>
     
-    <div class='section-title-layout'>
+    
+    <div id='main-layout'>
+      
       <div class='section-title'>Thermodynamics</div>
-      <div class='edit-button'>Recommended</div>
-    </div>
-    <div class='section'>
+      
+    <div class='section-layout'>
       
         <list-unit-input
           title='Airflow'
@@ -72,12 +70,11 @@
         
     </div>
     
-    <div class='section-title-layout'>
+      
       <div class='section-title'>Coating Uniformity</div>
-      <div class='edit-button'>Recommended</div>
-    </div>
+      
     
-    <div class='section'>
+    <div class='section-layout'>
       
       <list-unit-input
           title='Pan Speed'
@@ -126,9 +123,10 @@
         
     </div>
     
-    <div id='button-layout'>
-      <div class='light-blue-button' on-click='_gotoHomePage'>Cancel</div>
-      <div class='blue-button' on-click='_saveParameters'>Save Parameters</div>
+    <div class='button-layout'>
+      <div class='button' on-click='_gotoHomePage'>Cancel</div>
+      <div class='button highlight' on-click='_saveParameters'>Save Parameters</div>
+    </div>
     </div>
     
   </template>

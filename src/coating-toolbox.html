@@ -26,9 +26,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="lazy-import" href="pages/home-page.html">
 <link rel="lazy-import" href="pages/pan-page.html">
-<link rel="lazy-import" href="tablet-page/tablet-page.html">
-<link rel="lazy-import" href="coating-formulation-page/coating-formulation-page.html">
-<link rel="lazy-import" href="parameters-page/parameters-page.html">
+<link rel="lazy-import" href="pages/tablet-page.html">
+<link rel="lazy-import" href="pages/coating-page.html">
+<link rel="lazy-import" href="pages/parameters-page.html">
 
 <dom-module id="coating-toolbox">
   <template>
@@ -110,8 +110,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home-page" href="#/home-page">Overview</a>
           <a name="tablet-page" href="#/tablet-page">Subtrate</a>
-          <a name="coating-formulation-page" href="#/coating-formulation-page">Coating Formulation</a>
-          <a name="coating-pan-page" href="#/coating-pan-page">Coating Pan</a>
+          <a name="coating-page" href="#/coating-page">Coating Formulation</a>
+          <a name="pan-page" href="#/pan-page">Coating Pan</a>
           <a name="parameters-page" href="#/parameters-page">Coating Parameter</a>
         </iron-selector>
       </app-drawer>
@@ -134,7 +134,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home-page'>
           <home-page name='home-page'></home-page>
           <tablet-page name='tablet-page'></tablet-page>
-          <coating-formulation-page name='coating-formulation-page'></coating-formulation-page>
+          <coating-page name='coating-page'></coating-page>
           <pan-page name='pan-page'></pan-page>
           <parameters-page name='parameters-page'></parameters-page>
         </iron-pages>

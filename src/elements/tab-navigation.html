@@ -1,0 +1,72 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="tab-navigation">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: flex;
+        background-color: var(--white-color);
+        color: var(--text-color);
+      }
+      #tab-selector {
+        flex-grow: 1;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 64px;
+        display: flex;
+        justify-content: flex-start;
+      }
+      #tab-selector .tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 48px;
+        padding: 8px 24px 8px 16px;
+        border-bottom: 2px solid var(--white-color);
+        @apply --paper-font-body1;
+      }
+      .tab iron-icon {
+        margin-right: 16px;
+      }
+      .tab.iron-selected {
+        color: var(--app-primary-color);
+        border-bottom: 2px solid var(--app-light-color);
+      }
+    </style>
+      <iron-selector id='tab-selector' selected='{{selectedPage}}'>
+        <div class='tab'>
+          <iron-icon icon='my-icons:info'></iron-icon>
+          Overview
+        </div>
+        <div class='tab'>
+          <iron-icon icon='my-icons:ruler'></iron-icon>
+          Design
+        </div>
+        <div class='tab'>
+          <iron-icon icon='my-icons:library'></iron-icon>
+          Library
+        </div>
+      </iron-selector>
+    
+  </template>
+  <script>
+    class TabNavigation extends Polymer.Element {
+      static get is() { return 'tab-navigation'; }
+      
+      static get properties() {
+        return {
+          selectedPage: {type: Number, value: 0, notify: true}
+        };
+      }
+    }
+
+    window.customElements.define(TabNavigation.is, TabNavigation);
+  </script>
+</dom-module>
