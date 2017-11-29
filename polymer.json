@@ -2,11 +2,7 @@
   "entrypoint": "index.html",
   "shell": "src/coating-toolbox.html",
   "fragments": [
-    "src/pages/home-page.html",
-    "src/pages/tablet-page.html",
-    "src/pages/coating-page.html",
-    "src/pages/pan-page.html",
-    "src/pages/parameters-page.html"
+    "src/tablet-page.html"
   ],
   "sources": [
     "src/**/*",

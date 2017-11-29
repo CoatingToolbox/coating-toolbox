@@ -1,0 +1,57 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="elements/section-toolbar.html">
+<link rel="import" href="elements/section-button.html">
+<link rel="import" href="sections/tablet-overview-section.html">
+<link rel="import" href="sections/batch-size-section.html">
+<link rel="import" href="sections/tablet-next-step-section.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="tablet-page">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: block;
+      }
+      section-toolbar section-button {
+        margin: 0px;
+        margin-right: 16px;
+      }
+      
+    </style>
+    
+    <section-toolbar title='Substrate Overview'>
+      <section-button no-border>
+          <iron-icon icon='my-icons:library'></iron-icon>
+          <div>Load</div>
+      </section-button>
+      <section-button no-border>
+          <iron-icon icon='my-icons:edit'></iron-icon>
+          <div>Edit</div>
+      </section-button>
+    </section-toolbar>
+    
+    <tablet-overview-section></tablet-overview-section>
+    
+    <section-toolbar title='Batch Size'></section-toolbar>
+    
+    <batch-size-section></batch-size-section>
+    
+    <section-toolbar title='Next Step'></section-toolbar>
+    
+    <tablet-next-step-section></tablet-next-step-section>
+    
+  </template>
+
+  <script>
+    class TabletPage extends Polymer.Element {
+      static get is() { return 'tablet-page'; }
+      
+    }
+
+    window.customElements.define(TabletPage.is, TabletPage);
+  </script>
+</dom-module>

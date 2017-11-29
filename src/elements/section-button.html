@@ -1,0 +1,62 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="section-button">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        color: var(--text-light-color);
+      }
+      #button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 16px;
+        border: 2px solid var(--text-light-color);
+        background-color: var(--white-color);
+        border-radius: 12px;
+        @apply --paper-font-button;
+      }
+      
+      #button:hover {
+        color: var(--white-color);
+        border-color: var(--green-color);
+        background-color: var(--green-color);
+      }
+      
+      :host([no-border]) #button {
+        border: none;
+      }
+      
+      #button ::slotted(div) {
+        margin: 0px 8px;
+      }
+    </style>
+      
+    
+    <div id='button'>
+        <slot></slot>
+    </div>
+      
+  </template>
+
+  <script>
+    class SectionButton extends Polymer.Element {
+      static get is() { return 'section-button'; }
+      static get properties() {
+        return {
+          noBorder: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          }
+        };
+      }
+      
+    }
+
+    window.customElements.define(SectionButton.is, SectionButton);
+  </script>
+</dom-module>

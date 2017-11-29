@@ -22,17 +22,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="elements/coating-app-navigation.html">
 <link rel="import" href="my-icons.html">
 
-<link rel="lazy-import" href="pages/home-page.html">
-<link rel="lazy-import" href="pages/pan-page.html">
-<link rel="lazy-import" href="pages/tablet-page.html">
-<link rel="lazy-import" href="pages/coating-page.html">
-<link rel="lazy-import" href="pages/parameters-page.html">
+<link rel="lazy-import" href="tablet-page.html">
 
-<dom-module id="coating-toolbox">
+<dom-module id="coating-app-shell">
   <template>
     <style>
+    /*CSS variables and default text*/
       :host {
       
         --app-primary-color: #3F72AF; /*#3F72AF;607D8B*/
@@ -52,17 +50,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --yellow-color: #FED766;
         --green-color: #01a956;
         --gray-color: #eeeef1;
+        --darker-gray-color: #e3e3e8;
         --white-color: #F4F4F8;
 
         display: block;
         color: var(--text-color);
         background-color: var(--background-color);
       }
+    
+    /*Main Layout Items*/
+      iron-pages {
+        background-color: var(--white-color);
+      }
+     app-header {
+        color: var(--white-color);
+        background-color: #46494C;
+      }
       
+    /*Drawer navigation styles*/
       .drawer-list {
         margin: 0 20px;
       }
-
       .drawer-list a {
         display: block;
         padding: 0 16px;
@@ -70,16 +78,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--app-secondary-color);
         line-height: 40px;
       }
-
       .drawer-list a.iron-selected {
         color: var(--app-primary-color);
         font-weight: bold;
       }
      
-     app-header {
-        display: block;
-        color: var(--white-color);
-        background-color: var(--app-primary-color);
+     /*Text Styles*/
+      [main-title] {
+        @apply --paper-font-title;
       }
       app-toolbar div {
         @apply --paper-font-subhead;
@@ -87,8 +93,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 8px 16px;
       }
       
-      [main-title] {
-        @apply --paper-font-title;
+      
+      /*Media Queries*/
+      @media(min-width: 964px) {
+          iron-pages {
+            max-width: 900px;
+            margin: 32px auto 64px;
+            border-radius: 6px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          }
       }
     </style>
 
@@ -108,35 +123,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home-page" href="#/home-page">Overview</a>
-          <a name="tablet-page" href="#/tablet-page">Subtrate</a>
-          <a name="coating-page" href="#/coating-page">Coating Formulation</a>
-          <a name="pan-page" href="#/pan-page">Coating Pan</a>
-          <a name="parameters-page" href="#/parameters-page">Coating Parameter</a>
+          <a name="home" href="#/home">Overview</a>
+          <a name="tablet" href="#/tablet">Subtrate</a>
+          <a name="coating" href="#/coating">Coating Formulation</a>
+          <a name="pan" href="#/pan">Coating Pan</a>
+          <a name="parameters" href="#/parameters">Coating Parameter</a>
         </iron-selector>
       </app-drawer>
       
       <app-header-layout>
         
-        <app-header slot='header' reveals>
+        <app-header slot='header' condenses>
           
-          <app-toolbar sticky>
+          <app-toolbar>
             <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
-            <div main-title></div>
-            <div>Substrate</div>
-            <div>Coating</div>
-            <div>Pan</div>
-            <div>Parameters</div>
+            <div main-title>Coating Toolbox</div>
+            <!--<div>Substrate</div>-->
+            <!--<div>Coating</div>-->
+            <!--<div>Pan</div>-->
+            <!--<div>Parameters</div>-->
           </app-toolbar>
           
+          <coating-app-navigation sticky selected-tab='{{selectedPage}}'></coating-app-navigation>
+        
         </app-header>
         
-        <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home-page'>
-          <home-page name='home-page'></home-page>
-          <tablet-page name='tablet-page'></tablet-page>
-          <coating-page name='coating-page'></coating-page>
-          <pan-page name='pan-page'></pan-page>
-          <parameters-page name='parameters-page'></parameters-page>
+        <iron-pages selected="[[selectedPage]]" attr-for-selected="name" role="main" fallback-selection='home'>
+          <div name='home'>Welcome to the Coating Toolbox.</div>
+          <tablet-page name='tablet'></tablet-page>
         </iron-pages>
         
       </app-header-layout>
@@ -144,14 +158,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    class CoatingToolbox extends Polymer.Element {
-      static get is() { return 'coating-toolbox'; }
+    class CoatingAppShell extends Polymer.Element {
+      static get is() { return 'coating-app-shell'; }
       
       static get properties() {
         return {
-          page: {
+          selectedPage: {
             type: String,
-            reflectToAttribute: true,
+            value: "tablet",
             observer: '_pageChanged',
           },
           routeData: Object,
@@ -167,7 +181,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
-        this.page = page || 'home-page';
+        this.page = page || 'home';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -177,23 +191,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl(`pages/${page}.html`);
+        var resolvedPageUrl = this.resolveUrl(`${page}-page.html`);
         Polymer.importHref(
             resolvedPageUrl,
             null,
-            this._pageNotFound.bind(this),
+            null,
             true);
-      }
-
-      _toggleDrawer() {
-        this.$.drawer.toggle();
       }
       
       _pageNotFound() {
-        this.page = 'home-page';
+        this.page = 'home';
       }
     }
 
-    window.customElements.define(CoatingToolbox.is, CoatingToolbox);
+    window.customElements.define(CoatingAppShell.is, CoatingAppShell);
   </script>
 </dom-module>

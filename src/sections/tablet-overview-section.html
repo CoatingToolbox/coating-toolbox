@@ -1,0 +1,64 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/icon-detail-value-chip.html">
+<link rel="import" href="../redux/redux-mixin.html">
+
+<dom-module id="tablet-overview-section">
+  <template>
+    <style>
+      :host {
+        padding: 48px 64px 96px 64px;
+        display: grid;
+        grid-template-columns: 216px auto auto auto;
+        grid-template-rows: auto auto auto auto;
+        grid-gap: 8px 12px;
+        align-items: center;
+      }
+      #icon {
+        grid-column: 1 / 2;
+        grid-row: 1 / 5;
+        @apply --paper-font-display1;
+        color: var(--text-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: url("../../images/colorcon logo tablet.jpg");
+        background-size: cover;
+        border-radius: 50%;
+        border: 8px solid var(--darker-gray-color);
+        box-shadow: inset 0 0 15px var(--darker-gray-color);
+        width: 175px;
+        height: 175px;
+      }
+      #title {
+        grid-column: 2 / 5;
+        grid-row: 1 / 2;
+        margin-top: 24px;
+        align-self: center;
+        @apply --paper-font-display2;
+        color: var(--app-primary-color);
+        
+      }
+    </style>
+    
+      <div id='icon'></div>
+      <div id='title'>Colorcon Placebo WP2</div>
+      <icon-detail-value-chip value='Colorcon' label='Company'></icon-detail-value-chip>
+      <icon-detail-value-chip value='Jason Hansell' label='Contact'></icon-detail-value-chip>
+      <icon-detail-value-chip value='Round Tablet' label='Core Type'></icon-detail-value-chip>
+      <icon-detail-value-chip value='11.0 mm x 6.2 mm' label='Dimensions'></icon-detail-value-chip>
+      <icon-detail-value-chip value='400 mg' label='Tablet Weight'></icon-detail-value-chip>
+      <icon-detail-value-chip value='0.76 g/ml' label='Bulk Density'></icon-detail-value-chip>
+      
+  </template>
+
+  <script>
+    class TabletOverviewSection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-overview-section'; }
+    }
+
+    window.customElements.define(TabletOverviewSection.is, TabletOverviewSection);
+  </script>
+</dom-module>

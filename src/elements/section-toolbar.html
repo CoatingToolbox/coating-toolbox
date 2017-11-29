@@ -1,0 +1,45 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="section-toolbar">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        justify-items: flex-start;
+        align-items: center;
+        width: 100%;
+        padding-right: 16px;
+      }
+      #flag {
+        @apply --paper-font-title;
+        background: linear-gradient(110deg, var(--app-light-color) 84%, var(--white-color) 84%);
+        color: white;
+        padding: 16px 64px 16px 24px;
+      }
+      #spacer {
+        flex-grow: 1;
+      }
+    </style>
+      
+    
+      <div id='flag'>[[title]]</div>
+      <div id='spacer'></div>
+      <slot></slot>
+      
+  </template>
+
+  <script>
+    class SectionToolbar extends Polymer.Element {
+      static get is() { return 'section-toolbar'; }
+      static get properties() {
+          return {
+              title: String
+          }
+      }
+    }
+
+    window.customElements.define(SectionToolbar.is, SectionToolbar);
+  </script>
+</dom-module>

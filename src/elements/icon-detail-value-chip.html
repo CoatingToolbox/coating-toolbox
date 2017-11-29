@@ -1,0 +1,59 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="icon-detail-value-chip">
+  <template>
+   
+    <style>
+      :host {
+        display: grid;
+        grid-template-columns: 24px auto;
+        grid-template-rows: auto auto;
+        align-items: center;
+      }
+      #icon {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+        width: 12px;
+        height: 12px;
+        align-self: center;
+        background-color: var(--gray-color);
+        border-radius: 20%;
+        border: 2px solid var(--text-light-color);
+      }
+      #value {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+        @apply --paper-font-body1;
+        color: var(--text-color);
+      }
+      #label {
+        grid-column: 1 / 3;
+        grid-row: 1 / 2;
+        color: var(--text-light-color);
+        @apply --paper-font-caption;
+      }
+    </style>
+      
+  <div id='icon'></div>
+  <div id='value'>[[value]]</div>
+  <div id='label'>[[label]]</div>
+    
+  </template>
+
+  <script>
+    class IconDetailValueChip extends Polymer.Element {
+      static get is() { return 'icon-detail-value-chip'; }
+      static get properties() {
+          return {
+              value: String,
+              label: String,
+              icon: String
+          };
+      }
+    }
+
+    window.customElements.define(IconDetailValueChip.is, IconDetailValueChip);
+  </script>
+</dom-module>
