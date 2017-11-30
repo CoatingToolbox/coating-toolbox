@@ -1,0 +1,52 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="section-header-button">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px 16px;
+        margin-right: 24px;
+        border: 2px solid var(--white-color);
+        border-radius: 24px;
+        @apply --paper-font-body1;
+        transition: background-color 0.2s;
+      }
+      :host(.iron-selected),
+      :host(:hover) {
+        color: var(--app-primary-color);
+        background-color: var(--white-color);
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      #label {
+        margin: 0px 8px;
+      }
+    </style>
+      
+    <iron-icon icon='[[icon]]'></iron-icon>
+    <div id='label'>[[label]]</div>
+      
+  </template>
+
+  <script>
+    class SectionHeaderButton extends Polymer.Element {
+      static get is() { return 'section-header-button'; }
+      static get properties() {
+        return {
+          icon: String,
+          label: String
+        };
+      }
+      
+    }
+
+    window.customElements.define(SectionHeaderButton.is, SectionHeaderButton);
+  </script>
+</dom-module>

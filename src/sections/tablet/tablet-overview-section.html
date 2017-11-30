@@ -49,6 +49,7 @@
         padding-left: 4px;
         @apply --paper-font-subhead;
         color: var(--text-light-color);
+        text-transform: capitalize;
       }
       .dot {
         margin: 0px 16px;
@@ -57,15 +58,15 @@
     </style>
     
       <div id='icon'></div>
-      <div id='title'>Colorcon Placebo WP2</div>
+      <div id='title'>[[productName]]</div>
       <div id='detail-layout'>
-        <div>Round Tablet</div>
+        <div>[[shape]] Tablet</div>
         <div class='dot'>&middot</div>
-        <div>Colorcon</div>
+        <div>[[productType]]</div>
         <div class='dot'>&middot</div>
-        <div>Irvine, CA</div>
+        <div>[[companyName]]</div>
         <div class='dot'>&middot</div>
-        <div>Jason Hansell</div>
+        <div>[[contactName]]</div>
       </div>
       
   </template>
@@ -73,6 +74,15 @@
   <script>
     class TabletOverviewSection extends ReduxMixin(Polymer.Element) {
       static get is() { return 'tablet-overview-section'; }
+      static get properties() {
+        return {
+          shape: {type: String, statePath: 'tablet.shape'},
+          productName: {type: String, statePath: 'tablet.productName'},
+          productType: {type: String, statePath: 'tablet.productType'},
+          companyName: {type: String, statePath: 'tablet.companyName'},
+          contactName: {type: String, statePath: 'tablet.contactName'},
+        };
+      }
     }
 
     window.customElements.define(TabletOverviewSection.is, TabletOverviewSection);

@@ -3,141 +3,33 @@
 
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
 <link rel="import" href="../models/coating-pan-class.html">
+<link rel="import" href="../models/tablet-class.html">
+<link rel="import" href="../models/batch-class.html">
 
 <script>
   
-    // define the parameters for the inital pan to show on load
-    const initialPan = {
-        panDiameter: 1.2192,
-        openingDiameter: 0.4826,
-        wallWidth: 0.508,
-        brimWidth: 0.93345,
-        fillVolume: 0.15,
-        baffleCount: 0,
-        baffleHeight: 0,
-        baffleType: 'Ploughshare',
-        gunType: 'Schlick',
-        gunModel: '930 Series',
-        gunCount: 3,
-        gun2gun: 0.1524,
-        equipmentName: 'Fastcoat',
-        vendorName: "O'Hara",
-        nickname: '48" Room',
-        companyName: "Colorcon",
-        locationName: "West Point, PA",
-        contactName: "Jason Hansell",
-    };
-    
-    // We have a library of pans that can be used
-    // since pan is a coating class we have an array of objects with the required inputs for each coating pan class. 
-    const panLibraryInputs = [
-      {nickname: '9" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
-      equipmentName: 'M Coater', panDiameter: 0.2286, openingDiameter: 0.127, brimWidth: 0.1651, wallWidth: 0.1143}, 
-      
-      {nickname: '12" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-      equipmentName: 'Labcoat IIX', panDiameter: 0.3048, openingDiameter: 0.1524, brimWidth: 0.2032, wallWidth: 0.1143},
-      
-      {nickname: '15" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-      equipmentName: 'Labcoat IIX', panDiameter: 0.381, openingDiameter: 0.2032, brimWidth: 0.31115, wallWidth: 0.2032},
-      
-      {nickname: '19" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-      equipmentName: 'Labcoat IIX', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794},
-      
-      {nickname: '24" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-      equipmentName: 'Labcoat IIX', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.508, wallWidth: 0.3302},
-      
-      {nickname: '30" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-      equipmentName: 'Labcoat IIX', panDiameter: 0.762, openingDiameter: 0.254, brimWidth: 0.6477, wallWidth: 0.381},
-      
-      {nickname: '48" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
-      equipmentName: 'Fastcoat', panDiameter: 1.2192, openingDiameter: 0.4826, brimWidth: 0.93345, wallWidth: 0.508},
-      
-      {nickname: '15" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-      equipmentName: 'Compu-Lab', panDiameter: 0.381, openingDiameter: 0.254, brimWidth: 0.2159, wallWidth: 0.1524}, 
-      
-      {nickname: '19" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-      equipmentName: 'Compu-Lab', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794}, 
-      
-      {nickname: '24" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-      equipmentName: 'Compu-Lab', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.53975, wallWidth: 0.3302},
-      
-      {nickname: '60" Pan', locationName: 'Irvine, CA', companyName: 'Par', vendorName: "Thomas Engineering", 
-      equipmentName: 'Accela-Cota', panDiameter: 1.524, openingDiameter: 0.4826, brimWidth: 1.2192, wallWidth: 0.635}
-    ];
-    const panLibrary = panLibraryInputs.map( pan => {
-        return Object.assign(new CoatingPan(), pan); /*global CoatingPan*/
-    });
-     
-    // create an inittal state with a pan object
-    const getInitialState = () => {
-        
-        let state = sessionStorage.getItem('coating-toolbox-state');
-        if(state) {
-            state = JSON.parse(state);
-            let pan = Object.assign(new CoatingPan, state.pan);
-            state = Object.assign(state, {pan: pan});
-            return state;
-        } else {
-            return {
-                pan: Object.assign(new CoatingPan(), initialPan),
-                panLibrary: panLibrary
-            };
-        }
-    };
-    
-    const storeState = (state) => {
-        let storeState = JSON.stringify(state);
-        sessionStorage.setItem('coating-toolbox-state', storeState);
+    // create an initial state 
+    const initialState = {
+        pan: new CoatingPan(),      /*global Tablet*/
+        tablet: new Tablet(),       /*global Tablet*/
+        batch: new Batch()          /*global Batch*/
     };
     
     // create a reducer for actions
-    const reducer = (state = getInitialState(), action) => {
-        
-        let newState, pan;
-        
+    const reducer = (state = initialState, action) => {
+        let newState = Object.assign({}, state);
         switch(action.type) {
-            
-            case 'SET_PAN':
-                // when setting a pan we create a new coating pan object and pass the pan object to set properties
-                pan = Object.assign(new CoatingPan(), action.value);
-                newState = Object.assign(state, {pan: pan});
-                storeState(newState);
-                return newState;
-                
-            case 'LOAD_PAN':
-                pan = Object.assign(
-                                    new CoatingPan(), 
-                                    {
-                                        panDiameter: action.value.panDiameter || 0,
-                                        openingDiameter: action.value.openingDiameter || 0,
-                                        wallWidth: action.value.wallWidth || 0,
-                                        brimWidth: action.value.brimWidth || 0,
-                                        fillVolume: action.value.fillVolume || 0,
-                                        baffleCount: action.value.baffleCount || 0,
-                                        baffleHeight: action.value.baffleHeight || 0,
-                                        baffleType: action.value.baffleType || '',
-                                        gunType: action.value.gunType || '',
-                                        gunModel: action.value.gunModel || '',
-                                        gunCount: action.value.gunCount || 1,
-                                        gun2gun: action.value.gun2gun || 0,
-                                        equipmentName: action.value.equipmentName || '',
-                                        vendorName: action.value.vendorName || '',
-                                        nickname: action.value.nickname || '',
-                                        companyName: action.value.companyName || '',
-                                        locationName: action.value.locationName || '',
-                                        contactName: action.value.contactName || '',
-                                    });
-                // when loading a new pan you may want to keep the old pan fill so we check to see if the pan fill is empty
-                // if empty we proide a recommended fill otherwise we use the previous amount;
-                pan.fillVolume = (pan.fillVolume <= 0) ? pan.maxFillVolume : pan.fillVolume;
-                
-                newState = Object.assign(state, {pan: pan});
-                storeState(newState);
-                return newState;
-                
-            default: 
-                return state;
+            case "SET_BATCH_COUNT":
+                newState.batch.count = action.value;
+                break;
+            case "SET_BATCH_VOLUME":
+                newState.batch.volume = action.value;
+                break;
+            case "SET_BATCH_WEIGHT":
+                newState.batch.weight = action.value;
+                break;
         }
+        return newState;
     };
     
     // create the redux store
@@ -148,4 +40,55 @@
     /* global PolymerRedux*/
     const ReduxMixin = PolymerRedux(store);
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // We have a library of pans that can be used
+    // since pan is a coating class we have an array of objects with the required inputs for each coating pan class. 
+    // const panLibraryInputs = [
+    //   {nickname: '9" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
+    //   equipmentName: 'M Coater', panDiameter: 0.2286, openingDiameter: 0.127, brimWidth: 0.1651, wallWidth: 0.1143}, 
+      
+    //   {nickname: '12" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+    //   equipmentName: 'Labcoat IIX', panDiameter: 0.3048, openingDiameter: 0.1524, brimWidth: 0.2032, wallWidth: 0.1143},
+      
+    //   {nickname: '15" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+    //   equipmentName: 'Labcoat IIX', panDiameter: 0.381, openingDiameter: 0.2032, brimWidth: 0.31115, wallWidth: 0.2032},
+      
+    //   {nickname: '19" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+    //   equipmentName: 'Labcoat IIX', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794},
+      
+    //   {nickname: '24" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+    //   equipmentName: 'Labcoat IIX', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.508, wallWidth: 0.3302},
+      
+    //   {nickname: '30" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+    //   equipmentName: 'Labcoat IIX', panDiameter: 0.762, openingDiameter: 0.254, brimWidth: 0.6477, wallWidth: 0.381},
+      
+    //   {nickname: '48" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
+    //   equipmentName: 'Fastcoat', panDiameter: 1.2192, openingDiameter: 0.4826, brimWidth: 0.93345, wallWidth: 0.508},
+      
+    //   {nickname: '15" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+    //   equipmentName: 'Compu-Lab', panDiameter: 0.381, openingDiameter: 0.254, brimWidth: 0.2159, wallWidth: 0.1524}, 
+      
+    //   {nickname: '19" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+    //   equipmentName: 'Compu-Lab', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794}, 
+      
+    //   {nickname: '24" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+    //   equipmentName: 'Compu-Lab', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.53975, wallWidth: 0.3302},
+      
+    //   {nickname: '60" Pan', locationName: 'Irvine, CA', companyName: 'Par', vendorName: "Thomas Engineering", 
+    //   equipmentName: 'Accela-Cota', panDiameter: 1.524, openingDiameter: 0.4826, brimWidth: 1.2192, wallWidth: 0.635}
+    // ];
+    // const panLibrary = panLibraryInputs.map( pan => {
+    //     return Object.assign(new CoatingPan(), pan); /*global CoatingPan*/
+    // });
+     
 </script>
+

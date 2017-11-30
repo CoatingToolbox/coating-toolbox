@@ -1,0 +1,32 @@
+<link rel='import' href="tablet-class.html">
+
+<script>
+    class Batch {
+        
+        constructor(weight = 120000, density = 760000, tablet= new Tablet()) {
+            this.weight = weight;
+            this.density = density;
+            this.tablet = tablet;
+        }
+        
+        get volume() {
+            return this.weight / this.density;
+        }
+        
+        set volume(value) {
+            this.weight = value * this.density;
+        }
+        
+        get count() {
+            return Math.ceil(this.weight / this.tablet.weight);
+        }
+        
+        set count(value) {
+            this.weight = value * this.tablet.weight;
+        }
+        
+        get surfaceArea() {
+            return this.count * this.tablet.totalArea;
+        }
+    }
+</script>

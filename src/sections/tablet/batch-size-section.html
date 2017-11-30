@@ -41,29 +41,36 @@
     <!--<div class='title'>Customize Batch Size</div>-->
     
     <list-unit-input
+      icon='my-icons:volume'
       title='Product Volume'
       subtitle='The volume of material.'
       decimals='1'
       selected-units='l'
-      value='120' >
+      type='volume'
+      value='[[volume]]'
+      on-value-changed='_volumeChanged' >
     </list-unit-input>
     
-    <list-unit-input
+    <list-unit-input 
+      icon='my-icons:weight'
       title='Product Weight'
       subtitle='With a 0.76 g/ml bulk density.'
       decimals='1'
       type='weight'
       selected-units='kg'
-      value='125' >
+      value='[[weight]]'
+      on-value-changed='_weightChanged' >
     </list-unit-input>
     
     <list-unit-input
+      icon='my-icons:count'
       title='Product Count'
       subtitle='With a 400 mg product weight.'
       decimals='0'
-      selected-units='tabs'
+      selected-units='tablets'
       type='count'
-      value='4500'>
+      value='[[count]]'
+      on-value-changed='_countChanged'>
     </list-unit-input>
 
   </template>
@@ -71,6 +78,34 @@
   <script>
     class BatchSizeSection extends ReduxMixin(Polymer.Element) {
       static get is() { return 'batch-size-section'; }
+      
+      static get properties() {
+        return {
+          volume: {type: Number, statePath: "batch.volume"},
+          weight: {type: Number, statePath: "batch.weight"},
+          count: {type: Number, statePath: "batch.count"},
+        };
+      }
+      
+    _countChanged(e) {
+      this.dispatch({
+        type: "SET_BATCH_COUNT",
+        value: e.target.value
+      }); 
+    }
+    _volumeChanged(e) {
+      this.dispatch({
+        type: "SET_BATCH_VOLUME",
+        value: e.target.value
+      }); 
+    }
+    _weightChanged(e) {
+      this.dispatch({
+        type: "SET_BATCH_WEIGHT",
+        value: e.target.value
+      }); 
+    }
+      
     }
 
     window.customElements.define(BatchSizeSection.is, BatchSizeSection);
