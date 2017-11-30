@@ -1,28 +1,32 @@
 
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../elements/list-unit-input.html">
-<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../elements/list-unit-input.html">
+<link rel="import" href="../../redux/redux-mixin.html">
 
 <dom-module id="batch-size-section">
   <template>
     <style>
       :host {
         display: block;
-        padding: 48px 64px 96px 64px;
+        padding: 48px 64px 72px 64px;
       }
       .title {
         @apply --paper-font-title;
-        padding-bottom: 16px;
       }
       #description {
         @apply --paper-font-body1;
-        margin: 0px auto 48px;
+        color: var(--text-light-color);
+        margin: 16px auto;
         max-width: 600px;
         text-align: justify;
       }
+      list-unit-input {
+        max-width: 600px;
+        margin: auto;
+      }
       list-unit-input + list-unit-input {
-        border-top: 2px solid var(--darker-gray-color);
+        border-top: 2px solid var(--border-color);
       }
     </style>
     
@@ -34,7 +38,7 @@
       we can see how the batch volume, weight and count are related below.
     </div>
     
-    <div class='title'>Customize Batch Size</div>
+    <!--<div class='title'>Customize Batch Size</div>-->
     
     <list-unit-input
       title='Product Volume'

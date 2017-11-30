@@ -33,25 +33,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     /*CSS variables and default text*/
       :host {
       
-        --app-primary-color: #3F72AF; /*#3F72AF;607D8B*/
-        --app-dark-color: #1a4578;
-        --app-light-color: #6f99cb;
+        --app-primary-color: #3B869C;
+        --app-dark-color: #415763;
+        --app-light-color: #B6CDD6;
+        --app-highlight-color: #FA696B;
         
-        --text-color: #5b5b5b;
-        --text-dark-color: #818181;
-        --text-light-color: #a7a7a7;
+        --text-color: #4F4F4F;
+        --text-light-color: #828282;
         --text-disabled-color: #BDBDBD;
         
-        --border-color: #E8E8E8;
-        --background-color: #E8E8E8;
-        
-        --red-color: #FE4A49;
-        --blue-color: #2AB7CA;
-        --yellow-color: #FED766;
-        --green-color: #01a956;
-        --gray-color: #eeeef1;
-        --darker-gray-color: #e3e3e8;
+        --border-color: #e3e3e8;
+        --background-color: #E0E0E0;
         --white-color: #F4F4F8;
+        --gray-color: #eeeef1;
+        --yellow-color: #24315e;
+        --yellow-color: #f65a5a;
 
         display: block;
         color: var(--text-color);
@@ -64,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
      app-header {
         color: var(--white-color);
-        background-color: #46494C;
+        background-color: var(--app-dark-color);
       }
       
     /*Drawer navigation styles*/
@@ -133,7 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       <app-header-layout>
         
-        <app-header slot='header' condenses>
+        <app-header slot='header' condenses fixed effects='waterfall'>
           
           <app-toolbar>
             <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
@@ -144,11 +140,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <!--<div>Parameters</div>-->
           </app-toolbar>
           
-          <coating-app-navigation sticky selected-tab='{{selectedPage}}'></coating-app-navigation>
+          <coating-app-navigation sticky selected-tab='[[page]]'></coating-app-navigation>
         
         </app-header>
         
-        <iron-pages selected="[[selectedPage]]" attr-for-selected="name" role="main" fallback-selection='home'>
+        <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
           <div name='home'>Welcome to the Coating Toolbox.</div>
           <tablet-page name='tablet'></tablet-page>
         </iron-pages>
@@ -163,9 +159,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       static get properties() {
         return {
-          selectedPage: {
+          page: {
             type: String,
-            value: "tablet",
             observer: '_pageChanged',
           },
           routeData: Object,
@@ -181,7 +176,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
-        this.page = page || 'home';
+        this.page = page || 'tablet';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -199,9 +194,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             true);
       }
       
-      _pageNotFound() {
-        this.page = 'home';
-      }
     }
 
     window.customElements.define(CoatingAppShell.is, CoatingAppShell);

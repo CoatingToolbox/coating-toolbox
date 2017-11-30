@@ -1,11 +1,13 @@
 
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="elements/section-toolbar.html">
-<link rel="import" href="elements/section-button.html">
-<link rel="import" href="sections/tablet-overview-section.html">
-<link rel="import" href="sections/batch-size-section.html">
-<link rel="import" href="sections/tablet-next-step-section.html">
+<link rel="import" href="sections/tablet/tablet-overview-section.html">
+<link rel="import" href="sections/tablet/tablet-details-section.html">
+<link rel="import" href="sections/tablet/batch-size-section.html">
+<link rel="import" href="sections/tablet/tablet-next-step-section.html">
 <link rel="import" href="my-icons.html">
 
 <dom-module id="tablet-page">
@@ -16,40 +18,99 @@
       :host {
         display: block;
       }
-      section-toolbar section-button {
-        margin: 0px;
-        margin-right: 16px;
+      
+      /* Styles for header section */
+      #header-layout {
+        color: white;
+        padding: 36px;
+        border-radius: 6px 6px 0px 0px;
+        background: linear-gradient(25deg, var(--app-primary-color), var(--app-light-color) 150%);
       }
+      #title {
+        @apply --paper-font-display2;
+        margin-bottom: 32px;
+      }
+      #description {
+        @apply --paper-font-body1;
+        margin: 24px;
+        max-width: 600px;
+        text-align: justify;
+      }
+      #button-layout {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px 16px;
+        border: 2px solid var(--white-color);
+        border-radius: 24px;
+        @apply --paper-font-body1;
+        transition: background-color 0.2s;
+      }
+      .button + .button {
+        margin-left: 24px;
+      }
+      .button div {
+        margin: 0px 8px;
+      }
+      .iron-selected.button,
+      .button:hover {
+        color: var(--app-primary-color);
+        background-color: var(--white-color);
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      
       
     </style>
     
-    <section-toolbar title='Substrate Overview'>
-      <section-button no-border>
+    <div id='header-layout'>
+      <div id='title'>Coating Substrate</div>
+      <div id='description'>
+        With the tablet and batch size determined let's choose the coating equipment. 
+      </div>
+      <iron-selector id='button-layout' selected='{{page}}'>
+        <div class='button'>
+          <iron-icon icon='my-icons:info'></iron-icon>
+          <div>Overview</div>
+        </div>
+        <div class='button'>
           <iron-icon icon='my-icons:library'></iron-icon>
-          <div>Load</div>
-      </section-button>
-      <section-button no-border>
+          <div>Tablet Library</div>
+        </div>
+        <div class='button'>
           <iron-icon icon='my-icons:edit'></iron-icon>
-          <div>Edit</div>
-      </section-button>
-    </section-toolbar>
+          <div>Tablet Designer</div>
+        </div>
+      </iron-selector>
+    </div>
     
-    <tablet-overview-section></tablet-overview-section>
-    
-    <section-toolbar title='Batch Size'></section-toolbar>
-    
-    <batch-size-section></batch-size-section>
-    
-    <section-toolbar title='Next Step'></section-toolbar>
-    
-    <tablet-next-step-section></tablet-next-step-section>
+    <iron-pages selected='[[page]]'>
+      <div>
+        <section-toolbar title='Substrate Overview'></section-toolbar>
+        <tablet-overview-section></tablet-overview-section>
+        <tablet-details-section></tablet-details-section>
+        <section-toolbar title='Batch Size'></section-toolbar>
+        <batch-size-section></batch-size-section>
+        <section-toolbar title='Next Step'></section-toolbar>
+        <tablet-next-step-section></tablet-next-step-section>
+      </div>
+    </iron-pages>
     
   </template>
 
   <script>
     class TabletPage extends Polymer.Element {
       static get is() { return 'tablet-page'; }
-      
+      static get properties() {
+        return {
+          page: {type: Number, value: 0}
+        };
+      }
     }
 
     window.customElements.define(TabletPage.is, TabletPage);

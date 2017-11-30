@@ -1,0 +1,80 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../elements/icon-detail-value-chip.html">
+<link rel="import" href="../../redux/redux-mixin.html">
+
+<dom-module id="tablet-overview-section">
+  <template>
+    <style>
+      :host {
+        padding: 64px 64px 24px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+        grid-gap: 4px 24px;
+        align-items: center;
+      }
+      #icon {
+        grid-column: 1 / 2;
+        grid-row: 1 / 3;
+        @apply --paper-font-display1;
+        color: var(--text-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: url("../../../images/colorcon logo tablet.jpg");
+        background-size: cover;
+        border-radius: 50%;
+        border: 8px solid var(--border-color);
+        box-shadow: inset 0 0 15px var(--border-color);
+        width: 175px;
+        height: 175px;
+      }
+      #title {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        align-self: end;
+        @apply --paper-font-display2;
+        color: var(--app-primary-color);
+      }
+      #detail-layout {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+        align-self: start;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 4px;
+        @apply --paper-font-subhead;
+        color: var(--text-light-color);
+      }
+      .dot {
+        margin: 0px 16px;
+      }
+      
+    </style>
+    
+      <div id='icon'></div>
+      <div id='title'>Colorcon Placebo WP2</div>
+      <div id='detail-layout'>
+        <div>Round Tablet</div>
+        <div class='dot'>&middot</div>
+        <div>Colorcon</div>
+        <div class='dot'>&middot</div>
+        <div>Irvine, CA</div>
+        <div class='dot'>&middot</div>
+        <div>Jason Hansell</div>
+      </div>
+      
+  </template>
+
+  <script>
+    class TabletOverviewSection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-overview-section'; }
+    }
+
+    window.customElements.define(TabletOverviewSection.is, TabletOverviewSection);
+  </script>
+</dom-module>

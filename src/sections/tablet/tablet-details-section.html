@@ -1,0 +1,86 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../elements/icon-detail-value-chip.html">
+<link rel="import" href="../../elements/coating-pan-graphic.html">
+<link rel="import" href="../../redux/redux-mixin.html">
+
+<dom-module id="tablet-details-section">
+  <template>
+    <style>
+      :host {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: auto auto auto auto;
+        padding: 36px 64px 72px 64px;
+        grid-gap: 24px 32px
+      }
+      .title {
+        grid-row: 1 / 2;
+        grid-column: 1 / 4;
+        @apply --paper-font-title;
+      }
+      icon-detail-value-chip {
+        padding-left: 16px;
+      }
+      
+      #schematic-layout {
+        grid-row: 4 / 5;
+        grid-column: 1 / 4;
+        align-self: center;
+        justify-self: center;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr auto;
+        grid-gap: 0px 32px;
+        align-items: center;
+        justify-items: center;
+        border-radius: 16px;
+        background-color: var(--gray-color);
+        border: 5px solid var(--border-color);
+        padding: 8px 16px 16px 16px;
+        /*max-width: 450px;*/
+        margin: 24px auto;
+      }
+      coating-pan-graphic {
+        width: 175px;
+        height: 175px;
+      }
+      .schematic-label {
+        @apply --paper-font-subhead;
+        text-align: center;
+      }
+    </style>
+    
+    <div class='title'>Tablet Properties</div>
+    <icon-detail-value-chip value='11.0 mm x 6.2 mm' label='Dimensions'></icon-detail-value-chip>
+    <icon-detail-value-chip value='400 mg' label='Tablet Weight'></icon-detail-value-chip>
+    <icon-detail-value-chip value='1.26 g/ml' label='Compressed Density'></icon-detail-value-chip>
+    <icon-detail-value-chip value='0.234 mm2' label='Surface Area'></icon-detail-value-chip>
+    <icon-detail-value-chip value='0.0234 mm3' label='Volume'></icon-detail-value-chip>
+    <icon-detail-value-chip value='0.76 g/ml' label='Bulk Density'></icon-detail-value-chip>
+    <div id='schematic-layout'>
+      <coating-pan-graphic pan='[[_pan]]'></coating-pan-graphic>
+      <coating-pan-graphic pan='[[_pan]]' view='side'></coating-pan-graphic>
+      <div class='schematic-label'>Top View</div>
+      <div class='schematic-label'>Side View</div>
+    </div>
+
+  </template>
+
+  <script>
+    class TabletDetailsSection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-details-section'; }
+      static get properties() {
+        return {
+          _pan: {
+            type: Object,
+            statePath: 'pan'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(TabletDetailsSection.is, TabletDetailsSection);
+  </script>
+</dom-module>

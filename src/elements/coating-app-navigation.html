@@ -21,49 +21,54 @@
         margin-right: auto;
         height: 64px;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
       }
-      #tab-selector .tab {
+      .tab {
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 48px;
-        padding: 8px 24px 8px 16px;
-        border-bottom: 2px solid var(--white-color);
+        padding: 8px 20px 8px 16px;
+        border-bottom: 3px solid var(--white-color);
         @apply --paper-font-body1;
       }
-      .tab iron-icon {
-        margin-right: 16px;
+      .tab:hover {
+        cursor: pointer;
       }
-      .tab.iron-selected {
-        color: var(--app-primary-color);
-        border-bottom: 2px solid var(--app-light-color);
+      .iron-selected {
+        border-color: var(--app-light-color);
+      }
+      .iron-selected ~ .tab {
+        color: var(--text-light-color);
+        /*border-color: var(--white-color);*/
+      }
+      iron-icon {
+        margin-right: 16px;
       }
     </style>
     
-    <iron-selector id='tab-selector' selected='{{selectedTab}}' attr-for-selected='name' >
+    <iron-selector id='tab-selector' selected='[[selectedTab]]' attr-for-selected='data-name' on-tap='_tabSelected'>
       
-      <div class='tab' name='tablet'>
+      <div class='tab' data-name='tablet'>
         <iron-icon icon='my-icons:info'></iron-icon>
         Substrate
       </div>
       
-      <div class='tab' name='equipment'>
+      <div class='tab' data-name='equipment'>
         <iron-icon icon='my-icons:info'></iron-icon>
         Equipment
       </div>
       
-      <div class='tab'>
+      <div class='tab' data-name='coating'>
         <iron-icon icon='my-icons:info'></iron-icon>
         Coating
       </div>
       
-      <div class='tab'>
+      <div class='tab' data-name='parameters'>
         <iron-icon icon='my-icons:info'></iron-icon>
         Parameters
       </div>
       
-      <div class='tab'>
+      <div class='tab' data-name='checks'>
         <iron-icon icon='my-icons:info'></iron-icon>
         Checks
       </div>
@@ -77,10 +82,12 @@
       static get properties() {
         return {
           selectedTab: {
-            type: String,
-            notify: true
+            type: String
           }
         };
+      }
+      _tabSelected(e) {
+        window.location = `#/${e.target.dataset.name}`;
       }
     }
 

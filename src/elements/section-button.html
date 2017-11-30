@@ -16,14 +16,17 @@
         padding: 12px 16px;
         border: 2px solid var(--text-light-color);
         background-color: var(--white-color);
-        border-radius: 12px;
+        border-radius: 24px;
         @apply --paper-font-button;
+        transition: background-color 0.2s;
       }
-      
+    
       #button:hover {
+        border-color: var(--app-primary-color);
+        background-color: var(--app-primary-color);
         color: var(--white-color);
-        border-color: var(--green-color);
-        background-color: var(--green-color);
+        cursor: pointer;
+        transition: background-color 0.2s;
       }
       
       :host([no-border]) #button {
