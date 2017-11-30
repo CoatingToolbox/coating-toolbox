@@ -10,8 +10,8 @@
         justify-content: center;
         --pan-size: calc(100% - 16px);
         --pan-color: #bdbdbd;
-        --pan-outline-color: var(--text-color);
-        --pan-fill-color: var(--red-color, #FF514B);
+        --pan-outline-color: var(--text-light-color);
+        --pan-fill-color: var(--app-highlight-color, #FF514B);
         
       }
       svg {
@@ -20,11 +20,8 @@
         fill: var(--pan-color);
         stroke: var(--pan-outline-color);
         fill-opacity: 0.8;
-        stroke-width: 0.25px;
+        stroke-width: 0.35px;
         stroke-linejoin: bevel;
-      /*  filter: */
-      /*    drop-shadow( 3px 3px 2px rgba(0,0,0,.7) );*/
-      /*}*/
       }
       .volume {
         fill: var(--pan-fill-color);
