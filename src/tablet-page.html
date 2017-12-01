@@ -1,15 +1,12 @@
 
-<link rel="import" href="../bower_components/polymer/polymer-element.html">">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="elements/section-toolbar.html">
 <link rel="import" href="elements/section-button.html">
 <link rel="import" href="elements/section-header-button.html">
 <link rel="import" href="sections/tablet/tablet-overview-section.html">
 <link rel="import" href="sections/tablet/tablet-details-section.html">
 <link rel="import" href="sections/tablet/batch-size-section.html">
-<link rel="import" href="sections/tablet/tablet-next-step-section.html">
 
 <dom-module id="tablet-page">
   
@@ -18,76 +15,71 @@
     <style>
       :host {
         display: block;
+        background: linear-gradient(to bottom, var(--app-primary-color) 360px, var(--background-color) 360px);
       }
-      
-      /* Styles for header section */
+      #content-layout {
+        background: var(--white-color);
+        max-width: 900px;
+        margin: 32px auto 64px;
+      }
       #header-layout {
+        display: flex;
+        align-items: center;
         color: white;
-        padding: 36px;
-        border-radius: 6px 6px 0px 0px;
-        background: linear-gradient(25deg, var(--app-primary-color), var(--app-light-color) 150%);
+        padding: 36px 0px;
+        max-width: 1280px;
+        margin: auto;
+        
+        /*background: linear-gradient(25deg, var(--app-primary-color), var(--app-light-color) 150%);*/
       }
       #title {
         @apply --paper-font-display2;
-        margin-bottom: 32px;
+        flex-grow: 1;
+        padding-left: 72px;
       }
-      #description {
-        @apply --paper-font-body1;
-        margin: 24px;
-        max-width: 600px;
-        text-align: justify;
-      }
-      #next-page-button-layout {
+      #button-layout {
         display: flex;
         align-items: center;
         justify-content: flex-end;
         padding: 24px;
       }
-      #header-button-layout {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+      /*Media Queries*/
+      @media(min-width: 964px) {
+          #content-layout {
+            border-radius: 6px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          }
       }
-      
     </style>
     
-    <div id='header-layout'>
-      <div id='title'>Coating Substrate</div>
-      <iron-selector id='header-button-layout' selected='{{page}}'>
-        <section-header-button label='Overview' icon='my-icons:info'></section-header-button>
-        <section-header-button label='Tablet Library' icon='my-icons:library'></section-header-button>
-        <section-header-button label='Tablet Designer' icon='my-icons:edit'></section-header-button>
-      </iron-selector>
-    </div>
-    
-    <iron-pages selected='[[page]]'>
-      <div>
-        <section-toolbar title='Substrate Overview'></section-toolbar>
+      <div id='header-layout'>
+        <div id='title'>Coating Substrate</div>
+      </div>
+      <div id='content-layout'>
+        <section-toolbar title='Substrate'>
+          <a href='#/tablet-library'>
+            <section-header-button label='Library' icon='my-icons:library'></section-header-button>
+          </a>
+        <section-header-button label='Designer' icon='my-icons:edit'></section-header-button></section-toolbar>
         <tablet-overview-section></tablet-overview-section>
         <tablet-details-section></tablet-details-section>
         <section-toolbar title='Batch Size'></section-toolbar>
         <batch-size-section></batch-size-section>
-        <section-toolbar title='Next Step'></section-toolbar>
-        <tablet-next-step-section></tablet-next-step-section>
-        <div id='next-page-button-layout'>
-          <section-button>
-            <div>Next</div>
-            <iron-icon icon='my-icons:arrow-right'></iron-icon>
-          </section-button>
-        </div>
+        <div id='button-layout'>
+            <section-button>
+              <div>Equipment</div>
+              <iron-icon icon='my-icons:arrow-right'></iron-icon>
+            </section-button>
+          </div>
       </div>
-    </iron-pages>
     
   </template>
 
   <script>
     class TabletPage extends Polymer.Element {
       static get is() { return 'tablet-page'; }
-      static get properties() {
-        return {
-          page: {type: Number, value: 0}
-        };
-      }
     }
 
     window.customElements.define(TabletPage.is, TabletPage);

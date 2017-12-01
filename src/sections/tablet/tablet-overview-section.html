@@ -10,14 +10,14 @@
       :host {
         padding: 64px 64px 24px;
         display: grid;
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto auto;
-        grid-gap: 4px 24px;
+        grid-template-columns: auto 1fr 1fr 1fr;
+        grid-template-rows: repeat(3, auto);
+        grid-gap: 8px 24px;
         align-items: center;
       }
       #icon {
         grid-column: 1 / 2;
-        grid-row: 1 / 3;
+        grid-row: 1 / 4;
         @apply --paper-font-display1;
         color: var(--text-color);
         display: flex;
@@ -33,40 +33,50 @@
         height: 175px;
       }
       #title {
-        grid-column: 2 / 3;
+        grid-column: 2 / 5;
         grid-row: 1 / 2;
         align-self: end;
         @apply --paper-font-display2;
         color: var(--app-primary-color);
       }
-      #detail-layout {
-        grid-column: 2 / 3;
-        grid-row: 2 / 3;
-        align-self: start;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        padding-left: 4px;
+      .detail {
         @apply --paper-font-subhead;
-        color: var(--text-light-color);
+        color: var(--text-color);
         text-transform: capitalize;
+        margin-left: 8px;
       }
-      .dot {
-        margin: 0px 16px;
+      .caption {
+        @apply --paper-font-caption;
+        color: var(--text-light-color);
       }
       
     </style>
     
       <div id='icon'></div>
       <div id='title'>[[productName]]</div>
-      <div id='detail-layout'>
-        <div>[[shape]] Tablet</div>
-        <div class='dot'>&middot</div>
-        <div>[[productType]]</div>
-        <div class='dot'>&middot</div>
+      <div class='detail'>
+        <div class='caption'>Company</div>
         <div>[[companyName]]</div>
-        <div class='dot'>&middot</div>
+      </div>
+      <div class='detail'>
+        <div class='caption'>Location</div>
+        <div>[[locationName]]</div>
+      </div>
+      <div class='detail'>
+        <div class='caption'>Contact</div>
         <div>[[contactName]]</div>
+      </div>
+      <div class='detail'>
+        <div class='caption'>Formulation</div>
+        <div>[[formulationName]]</div>
+      </div>
+      <div class='detail'>
+        <div class='caption'>Subrate</div>
+        <div>[[shape]] Tablet</div>
+      </div>
+      <div class='detail'>
+        <div class='caption'>Type</div>
+        <div>[[productType]]</div>
       </div>
       
   </template>
@@ -77,9 +87,11 @@
       static get properties() {
         return {
           shape: {type: String, statePath: 'tablet.shape'},
+          formulationName: {type: String, statePath: 'tablet.formulationName'},
           productName: {type: String, statePath: 'tablet.productName'},
           productType: {type: String, statePath: 'tablet.productType'},
           companyName: {type: String, statePath: 'tablet.companyName'},
+          locationName: {type: String, statePath: 'tablet.locationName'},
           contactName: {type: String, statePath: 'tablet.contactName'},
         };
       }

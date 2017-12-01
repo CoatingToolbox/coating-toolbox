@@ -22,10 +22,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="elements/coating-app-navigation.html">
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="tablet-page.html">
+<link rel="lazy-import" href="tablet-library-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -60,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     /*Main Layout Items*/
       iron-pages {
-        background-color: var(--white-color);
+        background-color: var(--background-color);
       }
      app-header {
         color: var(--white-color);
@@ -92,19 +92,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-right: 16px;
         padding: 8px 16px;
       }
-      
-      
-      /*Media Queries*/
-      @media(min-width: 964px) {
-          iron-pages {
-            max-width: 900px;
-            margin: 32px auto 64px;
-            border-radius: 6px;
-            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
-          }
-      }
     </style>
 
     <app-location
@@ -124,10 +111,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home" href="#/home">Overview</a>
-          <a name="tablet" href="#/tablet">Subtrate</a>
-          <a name="coating" href="#/coating">Coating Formulation</a>
-          <a name="pan" href="#/pan">Coating Pan</a>
-          <a name="parameters" href="#/parameters">Coating Parameter</a>
+          <a name="tablet" href="#/tablet">Tablet</a>
+          <a name="tablet-library" href="#/tablet-library">Tablet Library</a>
         </iron-selector>
       </app-drawer>
       
@@ -138,19 +123,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
             <div main-title>Coating Toolbox</div>
-            <!--<div>Substrate</div>-->
-            <!--<div>Coating</div>-->
-            <!--<div>Pan</div>-->
-            <!--<div>Parameters</div>-->
           </app-toolbar>
-          
-          <coating-app-navigation sticky selected-tab='[[page]]'></coating-app-navigation>
-        
         </app-header>
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
           <div name='home'>Welcome to the Coating Toolbox.</div>
           <tablet-page name='tablet'></tablet-page>
+          <tablet-library-page name='tablet-library'></tablet-library-page>
         </iron-pages>
         
       </app-header-layout>

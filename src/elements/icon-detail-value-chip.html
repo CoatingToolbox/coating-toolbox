@@ -25,8 +25,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
         align-self: center;
         border-radius: 50%;
         background-color: var(--gray-color);
@@ -35,22 +35,22 @@
       #value {
         grid-column: 2 / 3;
         grid-row: 2 / 3;
-        @apply --paper-font-subhead;
+        @apply --paper-font-title;
         color: var(--text-color);
       }
       #label {
         grid-column: 2 / 3;
         grid-row: 1 / 2;
         color: var(--text-light-color);
-        @apply --paper-font-caption;
+        @apply --paper-font-body1;
       }
     </style>
       
   <div id='icon'>
     <iron-icon icon='[[icon]]'></iron-icon>
   </div>
-  <div id='value'>[[value]]</div>
   <div id='label'>[[label]]</div>
+  <div id='value'>[[value]]</div>
     
   </template>
 

@@ -1,0 +1,53 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../elements/section-button.html">
+
+<dom-module id="tablet-library-section">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #button-layout {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 24px;
+      }
+      .title {
+        padding: 48px 64px 16px 64px;
+        @apply --paper-font-title;
+      }
+      #description {
+        @apply --paper-font-body1;
+        margin: 0px auto 48px;
+        max-width: 600px;
+        text-align: justify;
+      }
+    </style>
+    
+    <div class='title'>Equipment</div>
+    <div id='description'>
+      With the tablet and batch size determined let's choose the coating equipment. 
+    </div>
+    
+    <div id='button-layout'>
+      <section-button>
+        <div>Next</div>
+        <iron-icon icon='my-icons:arrow-right'></iron-icon>
+      </section-button>
+    </div>
+    
+    
+
+  </template>
+
+  <script>
+    class TabletLibrarySection extends Polymer.Element {
+      static get is() { return 'tablet-library-section'; }
+    }
+
+    window.customElements.define(TabletLibrarySection.is, TabletLibrarySection);
+  </script>
+</dom-module>

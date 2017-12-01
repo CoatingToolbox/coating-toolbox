@@ -9,15 +9,18 @@
         display: flex;
         justify-items: flex-start;
         align-items: center;
-        width: 100%;
-        padding-right: 16px;
+        margin-right: 16px;
+        height: 56px;
       }
       #flag {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(110deg, var(--app-highlight-color) 84%, var(--white-color) 84%);
+        padding: 0px 64px 0px 24px;
+        color: white;
         @apply --paper-font-subhead;
         font-weight: 500;
-        background: linear-gradient(110deg, var(--app-highlight-color) 84%, var(--white-color) 84%);
-        color: white;
-        padding: 12px 64px 12px 24px;
       }
       #spacer {
         flex-grow: 1;
