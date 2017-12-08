@@ -1,10 +1,10 @@
 
-<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../elements/list-unit-input.html">
-<link rel="import" href="../../redux/redux-mixin.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/list-unit-input.html">
+<link rel="import" href="../redux/redux-mixin.html">
 
-<dom-module id="batch-size-section">
+<dom-module id="batch-size">
   <template>
     <style>
       :host {
@@ -40,21 +40,11 @@
     
     <!--<div class='title'>Customize Batch Size</div>-->
     
-    <list-unit-input
-      icon='my-icons:volume'
-      title='Product Volume'
-      subtitle='The volume of material.'
-      decimals='1'
-      selected-units='l'
-      type='volume'
-      value='[[volume]]'
-      on-value-changed='_volumeChanged' >
-    </list-unit-input>
     
     <list-unit-input 
       icon='my-icons:weight'
       title='Product Weight'
-      subtitle='With a 0.76 g/ml bulk density.'
+      subtitle='Desired batch weight.'
       decimals='1'
       type='weight'
       selected-units='kg'
@@ -63,9 +53,20 @@
     </list-unit-input>
     
     <list-unit-input
+      icon='my-icons:volume'
+      title='Product Volume'
+      subtitle='[[_volumeSubtitle(tabletDensity)]]'
+      decimals='1'
+      selected-units='l'
+      type='volume'
+      value='[[volume]]'
+      on-value-changed='_volumeChanged' >
+    </list-unit-input>
+    
+    <list-unit-input
       icon='my-icons:count'
       title='Product Count'
-      subtitle='With a 400 mg product weight.'
+      subtitle='[[_countSubtitle(tabletWeight)]]'
       decimals='0'
       selected-units='tablets'
       type='count'
@@ -76,17 +77,25 @@
   </template>
 
   <script>
-    class BatchSizeSection extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'batch-size-section'; }
+    class BatchSize extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'batch-size'; }
       
       static get properties() {
         return {
           volume: {type: Number, statePath: "batch.volume"},
           weight: {type: Number, statePath: "batch.weight"},
           count: {type: Number, statePath: "batch.count"},
+          tabletWeight: {type: Number, statePath: "batch.tablet.weight"},
+          tabletDensity: {type: Number, statePath: "batch.tablet.bulkDensity"}
         };
       }
-      
+    _countSubtitle(weight) {
+      return `With a ${(weight * 1000).toFixed(1)} mg product weight.`;
+    } 
+    
+    _volumeSubtitle(density) {
+      return `With a ${ (density * 1e-6).toFixed(2) } g/ml bulk density.`;
+    } 
     _countChanged(e) {
       this.dispatch({
         type: "SET_BATCH_COUNT",
@@ -108,6 +117,6 @@
       
     }
 
-    window.customElements.define(BatchSizeSection.is, BatchSizeSection);
+    window.customElements.define(BatchSize.is, BatchSize);
   </script>
 </dom-module>

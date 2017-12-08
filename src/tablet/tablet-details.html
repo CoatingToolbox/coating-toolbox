@@ -1,0 +1,131 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/icon-detail-value-chip.html">
+<link rel="import" href="../elements/tablet-graphic.html">
+<link rel="import" href="../redux/redux-mixin.html">
+
+<dom-module id="tablet-details">
+  <template>
+    <style>
+      :host {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        grid-template-rows: repeat(4, auto);
+        padding: 72px 64px;
+        grid-gap: 24px 32px
+      }
+      .title {
+        grid-row: 1 / 2;
+        grid-column: 1 / 4;
+        @apply --paper-font-title;
+      }
+      icon-detail-value-chip {
+        padding-left: 16px;
+      }
+      
+      #schematic-layout {
+        grid-row: 4 / 5;
+        grid-column: 1 / 4;
+        align-self: center;
+        justify-self: center;
+        display: flex;
+        border-radius: 16px;
+        background-color: var(--gray-color);
+        border: 5px solid var(--border-color);
+        padding: 8px 16px 16px 16px;
+        margin: 24px auto;
+      }
+      .graphic-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      tablet-graphic {
+        width: 175px;
+        height: 175px;
+      }
+      .schematic-label {
+        @apply --paper-font-subhead;
+        text-align: center;
+      }
+      [hidden] {
+        display: none;
+      }
+    </style>
+    
+    <div class='title'>Tablet Properties</div>
+    <icon-detail-value-chip icon='my-icons:ruler' value='[[_getDimensionString(shape, length, width, thickness)]]' label='Dimensions (mm)'></icon-detail-value-chip>
+    <icon-detail-value-chip icon='my-icons:surface-area' value='[[_getSurfaceAreaString(surfaceArea)]]' label='Surface Area (cm2)'></icon-detail-value-chip>
+    <icon-detail-value-chip icon='my-icons:density' value='[[_getDensityString(compressedDensity)]]' label='Compressed Density (g/ml)'></icon-detail-value-chip>
+    <icon-detail-value-chip icon='my-icons:weight' value='[[_getWeightString(weight)]]' label='Tablet Weight (mg)'></icon-detail-value-chip>
+    <icon-detail-value-chip icon='my-icons:volume' value='[[_getVolumeString(volume)]]' label='Volume (ml)'></icon-detail-value-chip>
+    <icon-detail-value-chip icon='my-icons:density' value='[[_getDensityString(bulkDensity)]]' label='Bulk Density (g/ml)'></icon-detail-value-chip>
+    <div id='schematic-layout'>
+      <div class='graphic-layout'>
+        <tablet-graphic top-view shape='[[shape]]' length='[[length]]' width='[[width]]' band-thickness='[[bandThickness]]' cup-thickness='[[cupThickness]]'></tablet-graphic>
+        <div class='schematic-label'>Top View</div>
+      </div>
+      <div class='graphic-layout'>
+        <tablet-graphic length-view shape='[[shape]]' length='[[length]]' width='[[width]]' band-thickness='[[bandThickness]]' cup-thickness='[[cupThickness]]'></tablet-graphic>
+        <div class='schematic-label'>Length View</div>
+      </div>
+      <div class='graphic-layout' hidden$='[[isRound(shape)]]'>
+        <tablet-graphic width-view shape='[[shape]]' length='[[length]]' width='[[width]]' band-thickness='[[bandThickness]]' cup-thickness='[[cupThickness]]'></tablet-graphic>
+        <div class='schematic-label'>Width View</div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    class TabletDetails extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-details'; }
+      static get properties() {
+        return {
+          shape: {type: String, statePath: "tablet.shape"},
+          length: {type: Number, statePath: "tablet.length"},
+          width: {type: Number, statePath: "tablet.width"},
+          thickness: {type: Number, statePath: "tablet.totalThickness"},
+          bandThickness: {type: Number, statePath: "tablet.bandThickness"},
+          cupThickness: {type: Number, statePath: "tablet.cupThickness"},
+          weight: {type: Number, statePath: "tablet.weight"},
+          bulkDensity: {type: Number, statePath: "tablet.bulkDensity"},
+          compressedDensity: {type: Number, statePath: "tablet.compressedDensity"},
+          surfaceArea: {type: Number, statePath: "tablet.surfaceArea"},
+          volume: {type: Number, statePath: "tablet.volume"}
+        };
+      }
+      isRound(shape) {
+        return shape.toLowerCase() === 'round';
+      }
+      _getDimensionString(shape, length, width, thickness) {
+        // values in meters and need to convert to mm.
+        let conv = 1000;
+        if(shape === 'round') {
+          return `${(length * conv).toFixed(1)} x ${(thickness * conv).toFixed(1)}`;
+        } else {
+          return `${(length * conv).toFixed(1)} x ${(width * conv).toFixed(1)} x ${(thickness * conv).toFixed(1)}`;
+        }
+      }
+      
+      _getDensityString(density) {
+        return (density * 1e-6).toFixed(2);
+      }
+      
+      _getWeightString(weight) {
+        return (weight * 1000).toFixed(1);
+      }
+      
+      _getVolumeString(volume) {
+        return (volume * 1000000).toFixed(2);
+      }
+      
+      _getSurfaceAreaString(surfaceArea) {
+        return (surfaceArea * 10000).toFixed(2);
+      }
+    }
+
+    window.customElements.define(TabletDetails.is, TabletDetails);
+  </script>
+</dom-module>

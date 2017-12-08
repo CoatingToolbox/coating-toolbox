@@ -1,22 +1,26 @@
 <script>
    class Tablet {
     
-    constructor(shape = 'round', length=0.01, width=0.0075, totalThickness=0.00475, 
-        bandThickness=0.00275, weight=0.400, bulkDensity = 760000) {
+    constructor(parameters={}) {
            
-            this.shape = shape;
-            this.length = length;
-            this.width = width;
-            this.totalThickness = totalThickness;
-            this.bandThickness = bandThickness;
-            this.weight  = weight;
-            this.bulkDensity = bulkDensity;
+            this.shape = 'round';
+            this.length = 0.01;
+            this.width = 0.0075;
+            this.totalThickness = 0.00475;
+            this.bandThickness = 0.00275;
+            this.weight  = 0.4;
+            this.bulkDensity = 760000;
             this.productType = 'Pharmaceutical';
             this.productName = 'Colorcon Round Placebo';
             this.formulationName = 'Placebo WP2';
             this.companyName = 'Colorcon';
             this.locationName = 'Irvine, CA';
             this.contactName = 'Jason Hansell';
+            
+            Object.getOwnPropertyNames(this).map(name => {
+                if(!parameters[name]) { return }
+                this[name] = parameters[name];
+            });
     }
         
     get totalVolume() {
@@ -208,6 +212,29 @@
         let part2 = Math.pow(this.length / 2, 2);
         let part3 = 2 * this.cupThickness;
         return (part1 + part2) / part3;
+    }
+    
+    
+    toJSON() {
+        return {
+            shape: this.shape,
+            length: this.length,
+            width: this.width,
+            totalThickness: this.totalThickness,
+            bandThickness: this.bandThickness,
+            cupThickness: this.cupThickness,
+            weight: this.weight,
+            bulkDensity: this.bulkDensity,
+            productType: this.productType,
+            productName: this.productName,
+            formulationName: this.formulationName,
+            companyName: this.companyName,
+            locationName: this.locationName,
+            contactName: this.contactName,
+            surfaceArea: this.totalArea,
+            volume: this.totalVolume,
+            compressedDensity: this.compressedDensity
+        };
     }
     
   }

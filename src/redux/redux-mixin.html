@@ -11,7 +11,7 @@
     // create an initial state 
     const initialState = {
         pan: new CoatingPan(),      /*global Tablet*/
-        tablet: new Tablet(),       /*global Tablet*/
+        tablet: new Tablet().toJSON(),       /*global Tablet*/
         batch: new Batch()          /*global Batch*/
     };
     
@@ -27,6 +27,10 @@
                 break;
             case "SET_BATCH_WEIGHT":
                 newState.batch.weight = action.value;
+                break;
+            case "LOAD_TABLET":
+                newState.batch.tablet = action.tablet;
+                newState.tablet = action.tablet;
                 break;
         }
         return newState;

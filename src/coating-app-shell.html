@@ -24,8 +24,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="my-icons.html">
 
+<link rel="lazy-import" href="home-page.html">
 <link rel="lazy-import" href="tablet-page.html">
-<link rel="lazy-import" href="tablet-library-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -49,8 +49,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /*Additional Colors*/
         --white-color: #F4F4F8;
         --gray-color: #eeeef1;
-        --yellow-color: #E0E06B;
-        --green-color: #6CAE5C;
+        /*https://color.adobe.com/create/color-wheel/?copy=true&base=2&rule=Custom&selected=1&name=Copy%20of%20globalS&mode=rgb&rgbvalues=0.9294117647058824,0.36470588235294116,0.36470588235294116,0.03137254901960784,0.5568627450980392,0.38823529411764707,0.3058823529411765,0.4117647058823529,0.5882352941176471,0.39880359440579893,0.3546493563579278,0.73,0.94,0.7335686274510071,0.12164705882352939&swatchOrder=0,1,2,3,4*/
+        --yellow-color: #F0BB1F;
+        --green-color: #088E63;
+        --purple-color: #665ABA;
         --red-color: #FE5150;
 
         display: block;
@@ -102,7 +104,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-route
         route="{{route}}"
         pattern="[[rootPath]]:page"
-        data="{{routeData}}">
+        data="{{routeData}}"
+        tail='{{routeTail}}'>
     </app-route>
 
     <app-drawer-layout fullbleed force-narrow on-toggle-drawer='_toggleDrawer'>
@@ -110,15 +113,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home" href="#/home">Overview</a>
+          <a name="home" href="#/home">Home</a>
           <a name="tablet" href="#/tablet">Tablet</a>
-          <a name="tablet-library" href="#/tablet-library">Tablet Library</a>
         </iron-selector>
       </app-drawer>
       
       <app-header-layout>
         
-        <app-header slot='header' condenses fixed effects='waterfall'>
+        <app-header slot='header' reveals effects='waterfall'>
           
           <app-toolbar>
             <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
@@ -127,9 +129,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
-          <div name='home'>Welcome to the Coating Toolbox.</div>
-          <tablet-page name='tablet'></tablet-page>
-          <tablet-library-page name='tablet-library'></tablet-library-page>
+          <home-page name='home'></home-page>
+          <tablet-page route='[[routeTail]]' name='tablet'></tablet-page>
         </iron-pages>
         
       </app-header-layout>
@@ -159,7 +160,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
-        this.page = page || 'tablet';
+        this.page = page || 'home';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {

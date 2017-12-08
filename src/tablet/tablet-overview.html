@@ -1,0 +1,79 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../elements/section-toolbar.html">
+<link rel="import" href="../elements/section-button.html">
+<link rel="import" href="../elements/section-header-button.html">
+<link rel="import" href="../my-icons.html">
+<link rel="import" href="tablet-description.html">
+<link rel="import" href="tablet-details.html">
+<link rel="import" href="batch-size.html">
+
+<dom-module id="tablet-overview">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: block;
+        padding-bottom 64px;
+      }
+      #card {
+        background-color: var(--white-color);
+        max-width: 900px;
+        margin: auto;
+      }
+      #button-layout {
+        display: flex;
+        justify-content: flex-end;
+        padding: 16px 32px;
+      }
+      #page-title {
+        color: var(--white-color);
+        @apply --paper-font-display2;
+        padding: 64px 0px;
+        max-width: 900px;
+        margin: auto;
+      }
+      
+      /*Media Queries*/
+      @media(min-width: 964px) {
+          #card {
+            border-radius: 6px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          }
+      }
+    </style>
+    <div id='page-title'>Overview & Batch Size</div>
+    <div id='card'>
+      <section-toolbar title='Substrate'>
+        <a href='#/tablet/library'>
+          <section-header-button label='Load' icon='my-icons:library'></section-header-button>
+        </a>
+        <a href='#/tablet/design'>
+          <section-header-button label='Edit' icon='my-icons:edit'></section-header-button>
+        </a>
+      </section-toolbar>
+      <tablet-description></tablet-description>
+      <tablet-details></tablet-details>
+      <section-toolbar title='Batch Size'></section-toolbar>
+      <batch-size></batch-size>
+      <div id='button-layout'>
+          <section-button>
+            <div>Equipment</div>
+            <iron-icon icon='my-icons:arrow-right'></iron-icon>
+          </section-button>
+        </div>
+    </div>
+    
+  </template>
+
+  <script>
+    class TabletOverview extends Polymer.Element {
+      static get is() { return 'tablet-overview'; }
+    }
+
+    window.customElements.define(TabletOverview.is, TabletOverview);
+  </script>
+</dom-module>

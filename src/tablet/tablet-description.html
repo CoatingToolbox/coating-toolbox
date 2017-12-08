@@ -1,10 +1,10 @@
 
-<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../elements/icon-detail-value-chip.html">
-<link rel="import" href="../../redux/redux-mixin.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../elements/icon-detail-value-chip.html">
+<link rel="import" href="../redux/redux-mixin.html">
 
-<dom-module id="tablet-overview-section">
+<dom-module id="tablet-description">
   <template>
     <style>
       :host {
@@ -82,8 +82,8 @@
   </template>
 
   <script>
-    class TabletOverviewSection extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'tablet-overview-section'; }
+    class TabletDescription extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-description'; }
       static get properties() {
         return {
           shape: {type: String, statePath: 'tablet.shape'},
@@ -97,6 +97,6 @@
       }
     }
 
-    window.customElements.define(TabletOverviewSection.is, TabletOverviewSection);
+    window.customElements.define(TabletDescription.is, TabletDescription);
   </script>
 </dom-module>

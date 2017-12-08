@@ -1,7 +1,6 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
-<link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
@@ -61,9 +60,6 @@
       iron-pages {
         background: linear-gradient(to bottom, var(--app-primary-color) 360px, var(--background-color) 360px); 
       }
-      a {
-        color: inherit;
-      }
     </style>
 
     <app-route
@@ -77,9 +73,7 @@
         <app-header slot='header' reveals effects='waterfall'>
           
           <app-toolbar>
-            <a href='#/home'>
-              <paper-icon-button icon='my-icons:arrow-left'></paper-icon-button>
-            </a>
+            <paper-icon-button icon='my-icons:arrow-left'></paper-icon-button>
             <div main-title>Coating Substrate</div>
           <iron-selector selected='{{page}}' attr-for-selected='page'>
             <div class='tab' page='overview'>

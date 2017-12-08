@@ -5,6 +5,11 @@
 <iron-iconset-svg name="my-icons" size="24">
   <svg>
     <defs>
+      <g id='tooling' style='stroke-width: 0px'><path d="M12.04,2.5L9.53,5H14.53L12.04,2.5M4,7V20H20V7H4M12,0L17,5V5H20A2,2 0 0,1 22,7V20A2,2 0 0,1 20,22H4A2,2 0 0,1 2,20V7A2,2 0 0,1 4,5H7V5L12,0M7,18V14H12V18H7M14,17V10H18V17H14M6,12V9H11V12H6Z" /></g>
+      <g id='company'><path d="M18,15H16V17H18M18,11H16V13H18M20,19H12V17H14V15H12V13H14V11H12V9H20M10,7H8V5H10M10,11H8V9H10M10,15H8V13H10M10,19H8V17H10M6,7H4V5H6M6,11H4V9H6M6,15H4V13H6M6,19H4V17H6M12,7V3H2V21H22V7H12Z" /></g>
+      <g id='contact'><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></g>
+      <g id='product'><path d="M14,17H7V15H14M17,13H7V11H17M17,9H7V7H17M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z" /></g>
+      <g id='location'><path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" /></g>
       <g id='toolbox'><path d="M5,19A1,1 0 0,0 6,20H18A1,1 0 0,0 19,19C19,18.79 18.93,18.59 18.82,18.43L13,8.35V4H11V8.35L5.18,18.43C5.07,18.59 5,18.79 5,19M6,22A3,3 0 0,1 3,19C3,18.4 3.18,17.84 3.5,17.37L9,7.81V6A1,1 0 0,1 8,5V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V5A1,1 0 0,1 15,6V7.81L20.5,17.37C20.82,17.84 21,18.4 21,19A3,3 0 0,1 18,22H6M13,16L14.34,14.66L16.27,18H7.73L10.39,13.39L13,16M12.5,12A0.5,0.5 0 0,1 13,12.5A0.5,0.5 0 0,1 12.5,13A0.5,0.5 0 0,1 12,12.5A0.5,0.5 0 0,1 12.5,12Z" /></g>
       <g id='save'><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" /></g>
       <g id='load'><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></g>
@@ -27,7 +32,7 @@
       <!--<g id="ruler-1"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H3V8h2v4h2V8h2v4h2V8h2v4h2V8h2v4h2V8h2v8z"></path></g>-->
       <g id="volume"><path d="M3,3H21V5A2,2 0 0,0 19,7V19A2,2 0 0,1 17,21H7A2,2 0 0,1 5,19V7A2,2 0 0,0 3,5V3M7,5V7H12V8H7V9H10V10H7V11H10V12H7V13H12V14H7V15H10V16H7V19H17V5H7Z" /></path></g>
       <g id='surface-area'> <path d="M3,3H18V18H3V3M19,19H21V21H19V19M19,16H21V18H19V16M19,13H21V15H19V13M19,10H21V12H19V10M19,7H21V9H19V7M16,19H18V21H16V19M13,19H15V21H13V19M10,19H12V21H10V19M7,19H9V21H7V19Z" /></g>
-      <g id='count'><path d="M3,5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5M7,18H9L9.35,16H13.35L13,18H15L15.35,16H17.35L17.71,14H15.71L16.41,10H18.41L18.76,8H16.76L17.12,6H15.12L14.76,8H10.76L11.12,6H9.12L8.76,8H6.76L6.41,10H8.41L7.71,14H5.71L5.35,16H7.35L7,18M10.41,10H14.41L13.71,14H9.71L10.41,10Z" /></g>
+      <g id='count'><path d="M5.41,21L6.12,17H2.12L2.47,15H6.47L7.53,9H3.53L3.88,7H7.88L8.59,3H10.59L9.88,7H15.88L16.59,3H18.59L17.88,7H21.88L21.53,9H17.53L16.47,15H20.47L20.12,17H16.12L15.41,21H13.41L14.12,17H8.12L7.41,21H5.41M9.53,9L8.47,15H14.47L15.53,9H9.53Z" /></g>
       <!--<g id="build"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g>-->
       <!--<g id="report"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"></path></g>-->
       <!--<g id="filter-list"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></g>-->
@@ -57,30 +62,30 @@
         <path d="M11,9H13V11H11V9M9,11H11V13H9V11M13,11H15V13H13V11M15,9H17V11H15V9M7,9H9V11H7V9M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M9,18H7V16H9V18M13,18H11V16H13V18M17,18H15V16H17V18M19,11H17V13H19V15H17V13H15V15H13V13H11V15H9V13H7V15H5V13H7V11H5V5H19V11Z" />
       </g>
      
-      <g id='round-tablet' style='fill-opacity: 0.4; stroke-width: 4px;'>
+      <g id='round-tablet' style='fill-opacity: 0.4; stroke-width: 1.5px;'>
           <circle cx='12' cy='12' r='8'></circle>
       </g>
     
-      <g id='oval-tablet' style='fill-opacity: 0.4; stroke-width: 0.5px;'>
+      <g id='oval-tablet' style='fill-opacity: 0.4; stroke-width: 1.5px;'>
           <path d="m 2 12 a 10 7 0 0 0 20 0 a 10 7 0 0 0 -20 0 z"></path>
       </g>
     
-      <g id='caplet-tablet' style='fill-opacity: 0.4; stroke-width: 0.5px;'>
+      <g id='caplet-tablet' style='fill-opacity: 0.4; stroke-width: 1.5px;'>
           <path d="m 12 12 m 5.999999999999999 5.4 l -11.999999999999998 0 a 5.4 5.4 0 0 1 0 -10.8 l 11.999999999999998 0 a 5.4 5.4 0 0 1 0 10.8 z"></path>
       </g>
     
-      <g id='shallow-concavity' style='fill-opacity: 0.4; stroke-width: 0.5px;'>
+      <g id='shallow-concavity' style='fill-opacity: 0.4; stroke-width: 2.5px;'>
           <path d="m 2 9 l 20 0 l 0 6 l -20 0 l 0 -6"></path>
           <path d="m 2 9 a 61.0163 61.0163 0 0 1 20 0"></path>
           <path d="m 2 15 a 61.0163 61.0163 0 0 0 20 0"></path>
       </g>
-      <g id='standard-concavity' style='fill-opacity: 0.4; stroke-width: 0.5px;'>
+      <g id='standard-concavity' style='fill-opacity: 0.4; stroke-width: 2.5px;'>
           <path d="m 2 9 l 20 0 l 0 6 l -20 0 l 0 -6"></path>
           <path d="m 2 9 a 33.524 33.524 0 0 1 20 0"></path>
           <path d="m 2 15 a 33.524 33.524 0 0 0 20 0"></path>
       </g>
     
-      <g id='deep-concavity' style='fill-opacity: 0.4; stroke-width: 0.5px;'>
+      <g id='deep-concavity' style='fill-opacity: 0.4; stroke-width: 0.75px;'>
           <path d="m 2 9 l 20 0 l 0 6 l -20 0 l 0 -6"></path>
           <path d="m 2 9 a 25.15 25.15 0 0 1 20 0"></path>
           <path d="m 2 15 a 25.15 25.15 0 0 0 20 0"></path>

@@ -1,0 +1,245 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../elements/section-toolbar.html">
+<link rel="import" href="../elements/section-button.html">
+<link rel="import" href="../elements/list-unit-input.html">
+<link rel="import" href="../elements/list-text-input.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../models/tablet-class.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="tablet-design">
+  
+   <template>
+    
+    <style>
+    :host {
+        display: block;
+        padding-bottom: 64px;
+      }
+      #card {
+        background-color: var(--white-color);
+        max-width: 900px;
+        margin: auto;
+      }
+      #button-layout {
+        display: flex;
+        justify-content: flex-end;
+        padding: 32px;
+      }
+      #page-title {
+        color: var(--white-color);
+        @apply --paper-font-display2;
+        padding: 64px 0px;
+        max-width: 900px;
+        margin: auto;
+      }
+      section-toolbar {
+        margin-bottom: 48px;
+      }
+      list-text-input + section-toolbar,
+      .icon-selector + section-toolbar {
+        margin-top: 64px;
+      }
+      list-text-input + list-text-input,
+      list-unit-input + list-unit-input {
+        border-top: 2px solid var(--border-color);
+      }
+      
+      /*Shape Elements*/
+      .icon-selector {
+        display: flex;
+        justify-content: space-between;
+        margin: 32px auto;
+        max-width: 600px;
+      }
+      .icon-layout {
+        min-width: 124px;
+        padding: 16px;
+        margin: 0px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: var(--text-light-color);
+        --iron-icon-stroke-color: var(--text-light-color);
+        background-color: var(--gray-color);
+        border: 4px solid var(--gray-color);
+        border-radius: 12px;
+        transition: all 0.2s;
+      }
+      .icon-layout:hover {
+        cursor: pointer;
+        color: var(--text-dark-color);
+        border-color: var(--text-dark-color);
+        --iron-icon-stroke-color: var(--text-light-color);
+        transition: all 0.2s;
+      }
+      .icon-layout.iron-selected,
+      .icon-layout:hover.iron-selected {
+        border-color: var(--app-light-color);
+        color: var(--app-light-color);
+        transition: all 0.2s;
+        --iron-icon-stroke-color: var(--app-light-color);
+      }
+      .icon-layout iron-icon {
+        width: 56px;
+        height: 56px;
+        margin: 16px;
+        
+      }
+      [hidden] {
+        display: none;
+      }
+      
+      /*Media Queries*/
+      @media(min-width: 964px) {
+          #card {
+            border-radius: 6px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          }
+      }
+
+    </style>
+    
+    <div id='page-title'>Tablet Design</div>
+    <div id='card'>
+      <section-toolbar title='Product Description'></section-toolbar>
+      <list-text-input 
+        icon='my-icons:product' 
+        value='{{tablet.productName}}' 
+        title='Product Name' 
+        subtitle='Provide the product name or description'></list-text-input>
+      <list-text-input 
+        icon='my-icons:product' 
+        value='{{tablet.formulationName}}' 
+        title='Formulation Reference' 
+        subtitle='Optional - Formula name or number'></list-text-input>
+      <list-text-input 
+        icon='my-icons:company' 
+        value='{{tablet.companyName}}' 
+        title='Company' 
+        subtitle='Provide a company or brand name'></list-text-input>
+      <list-text-input 
+        icon='my-icons:contact' 
+        value='{{tablet.contactName}}' 
+        title='Contact' 
+        subtitle='Contact providing info'></list-text-input>
+      <list-text-input 
+        icon='my-icons:location' 
+        value='{{tablet.locationName}}' 
+        title='Location' 
+        subtitle='Company or Contact location'></list-text-input>
+      
+      <!--<section-toolbar title='Calculation Model'></section-toolbar>-->
+      <!--<iron-selector class='icon-selector' selected='0'>-->
+      <!--  <div class='icon-layout'>-->
+      <!--    <iron-icon icon='my-icons:deep-concavity'></iron-icon>-->
+      <!--    <div>Compressed Tablet</div>-->
+      <!--  </div>-->
+      <!--  <div class='icon-layout'>-->
+      <!--    <iron-icon icon='my-icons:tooling'></iron-icon>-->
+      <!--    <div>Tooling Specs</div>-->
+      <!--  </div>-->
+      <!--</iron-selector>-->
+      
+      <section-toolbar title='Tablet Shape'></section-toolbar>
+      <iron-selector class='icon-selector' attr-for-selected='shape' selected='{{tablet.shape}}'>
+        <div class='icon-layout' shape='round'>
+          <iron-icon icon='my-icons:round-tablet'></iron-icon>
+          <div>Round</div>
+        </div>
+        <div class='icon-layout' shape='oval'>
+          <iron-icon icon='my-icons:oval-tablet'></iron-icon>
+          <div>Oval</div>
+        </div>
+        <div class='icon-layout' shape='caplet'>
+          <iron-icon icon='my-icons:caplet-tablet'></iron-icon>
+          <div>caplet</div>
+        </div>
+      </iron-selector>
+      
+      <section-toolbar title='Tablet Inputs'></section-toolbar>
+      <list-unit-input 
+        icon='my-icons:ruler' 
+        type='length'
+        value='{{tablet.length}}' 
+        title='Length' 
+        subtitle='The diameter or longest length'
+        selected-units='mm'></list-unit-input>
+      <list-unit-input 
+        icon='my-icons:ruler' 
+        type='length'
+        value='{{tablet.width}}' 
+        title='Width' 
+        subtitle='The shortest length'
+        selected-units='mm'
+        hidden$='[[_isRound(tablet.shape)]]'></list-unit-input>
+      <list-unit-input 
+        icon='my-icons:ruler' 
+        type='length'
+        value='{{tablet.totalThickness}}' 
+        title='Total Thickness' 
+        subtitle='The total height of tablet'
+        selected-units='mm'></list-unit-input>
+      <list-unit-input 
+        icon='my-icons:ruler' 
+        type='length'
+        value='{{tablet.bandThickness}}' 
+        title='Band Thickness' 
+        subtitle='The thickness along the tablet band'
+        selected-units='mm'></list-unit-input>
+      <list-unit-input 
+        icon='my-icons:weight' 
+        type='weight'
+        value='{{tablet.weight}}' 
+        title='Weight' 
+        subtitle='The average tablet weight'
+        selected-units='mg'></list-unit-input>
+      <list-unit-input 
+        icon='my-icons:density' 
+        type='density'
+        value='{{tablet.bulkDensity}}' 
+        title='Bulk Density' 
+        subtitle='The bulk density of tablets'
+        selected-units='g/ml'></list-unit-input>
+        <div id='button-layout'>
+          <section-button on-click='_calculateTablet'>
+            <iron-icon icon='my-icons:calculator'></iron-icon>
+            <div>Calculate Tablet</div>
+          </section-button>
+        </div>
+    </div>
+    
+    
+  </template>
+
+  <script>
+    class TabletDesign extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-design'; }
+      static get properties() {
+        return {
+          tablet: { type: Object, statePath: "tablet" }
+        };
+      }
+      
+      _isRound(shape) {
+        return (shape === 'round');
+      }
+      
+      _calculateTablet(){
+        let tablet = new Tablet(this.tablet);
+        this.dispatch({
+          type: "LOAD_TABLET",
+          tablet: tablet.toJSON()
+        });
+        window.location = '#/tablet/overview';
+        window.scrollTo(0, 0);
+      }
+      
+    }
+
+    window.customElements.define(TabletDesign.is, TabletDesign);
+  </script>
+</dom-module>
