@@ -29,6 +29,7 @@
       .section-title {
           grid-column: 1 / 13;
           margin-top: 56px;
+          color: var(--text-light-color);
           @apply --paper-font-display1;
       }
       home-page-card[title="Tablet"] {
@@ -84,80 +85,72 @@
     <page-header title='Coating Process Overview' icon='my-icons:toolbox'></page-header>
     
     <div id='content-layout'>
-      
       <div class='section-title'>Materials & Equipment</div>
-          
       <home-page-card title='Tablet'>
         <p class='text'>
           The tablet shape, size and formulation effect the coating process
           in many ways. Including the film thickness, coating uniformity and optimal batch size.
         </p>
-        <icon-item icon='my-icons:standard-concavity' label='Colorcon Round Placebo'></icon-item>
+        <icon-item icon='my-icons:standard-concavity' label='Colorcon Round Placebo' detail='200mg &middot 11mm x 5.6mm'></icon-item>
         <paper-icon-button slot='toolbar' icon='my-icons:info'></paper-icon-button>
         <paper-icon-button slot='toolbar' icon='my-icons:library'></paper-icon-button>
         <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-      </home-page-card>    
-      
+      </home-page-card>  
       <home-page-card title='Coating Pan'>
         <p class='text'>
           The coating pan setup, baffles and spray guns are responsible for mixing the tablets,
           disbursing the coating liquid. And these conditions can change with different pan sizes.
         </p>
-        <icon-item icon='my-icons:fill' label="O'Hara Labcoat II - 24 Pan"></icon-item>
+        <icon-item icon='my-icons:fill' label="O'Hara Labcoat II" detail='48 inches &middot 145 liters'></icon-item>
         <paper-icon-button slot='toolbar' icon='my-icons:info'></paper-icon-button>
         <paper-icon-button slot='toolbar' icon='my-icons:library'></paper-icon-button>
         <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
       </home-page-card>
-      
       <home-page-card title='Coating Formulation'>
-        <p class='text'>
-          The coating  is choosen for it's functionality (ie aesethics, modified release, 
-          opacity, adhesion, etc). The amount of coating, the dispersion solids, gloss and more are 
-          effected by the formulation you choosen.
-        </p>
-        <icon-item icon='my-icons:fill' label="Opadry II 85F Series"></icon-item>
-        <paper-icon-button slot='toolbar' icon='my-icons:info'></paper-icon-button>
-        <paper-icon-button slot='toolbar' icon='my-icons:library'></paper-icon-button>
-        <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-      </home-page-card>
+          <p class='text'>
+            The coating  is choosen for it's functionality (ie aesethics, modified release, 
+            opacity, adhesion, etc). The amount of coating, the dispersion solids, gloss and more are 
+            effected by the formulation you choosen.
+          </p>
+          <icon-item icon='my-icons:fill' label="Opadry II 85F Series" detail='10% solids &middot 156cps'></icon-item>
+          <paper-icon-button slot='toolbar' icon='my-icons:info'></paper-icon-button>
+          <paper-icon-button slot='toolbar' icon='my-icons:library'></paper-icon-button>
+          <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
+        </home-page-card>
       
-      <div class='section-title'>Process Setup</div>
-          
+      <div class='section-title'>Trial Setup</div>
       <home-page-card title='Batch Size'>
         <p class='text'>
-          The tablet shape, size and formulation effect the coating process
-          in many ways. Including the film thickness, coating uniformity and optimal batch size.
+          The batch size effects the coating time, pan movement and more. 
+          Set your desired batch size by weight, count or volume. 
         </p>
-        <icon-item icon='my-icons:fill' label='154.3 kilograms'></icon-item>
+        <icon-item icon='my-icons:fill' label='154.3 kilograms' detail='146 liters &middot 330,321 tabs'></icon-item>
         <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
       </home-page-card>    
-      
       <home-page-card title='Coating Amount'>
-        <p class='text'>
-          The coating pan setup, baffles and spray guns are responsible for mixing the tablets,
-          disbursing the coating liquid. And these conditions can change with different pan sizes.
-        </p>
-        <icon-item icon='my-icons:fill' label="3% weight gain"></icon-item>
-        <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-      </home-page-card>
+          <p class='text'>
+            Depending on your application the amount of coating may vary. Choose the amount of coating to 
+            apply based on weight gain, film thickness or coating coverage.
+          </p>
+          <icon-item icon='my-icons:fill' label="3% weight gain" detail='34.5 mircons &middot 0.23mm2'></icon-item>
+          <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
+        </home-page-card>
       
-      <div class='section-title'>Process Parameters</div>
-          
+      <div class='section-title'>Parameters</div>
       <home-page-card title='Thermodynamics'>
         <p class='text'>
-          The tablet shape, size and formulation effect the coating process
-          in many ways. Including the film thickness, coating uniformity and optimal batch size.
+          Update the set of coating parameters that effect the evaporation of water. These
+          include spray rate, airflow and temperatures.
         </p>
         <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
       </home-page-card>    
-      
       <home-page-card title='Distribution'>
-        <p class='text'>
-          The coating pan setup, baffles and spray guns are responsible for mixing the tablets,
-          disbursing the coating liquid. And these conditions can change with different pan sizes.
-        </p>
-        <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-      </home-page-card>
+          <p class='text'>
+            Update the set of parameters that influence the distribution of coating including
+            pan speed, spray parameters and more.
+          </p>
+          <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
+        </home-page-card>
       
     </div>
     
