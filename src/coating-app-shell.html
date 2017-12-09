@@ -24,8 +24,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="my-icons.html">
 
-<link rel="lazy-import" href="home-page.html">
-<link rel="lazy-import" href="tablet-page.html">
+<link rel="lazy-import" href="pages/home-page.html">
+<link rel="lazy-import" href="pages/tablet-overview-page.html">
+<link rel="lazy-import" href="pages/tablet-library-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -104,8 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-route
         route="{{route}}"
         pattern="[[rootPath]]:page"
-        data="{{routeData}}"
-        tail='{{routeTail}}'>
+        data="{{routeData}}">
     </app-route>
 
     <app-drawer-layout fullbleed force-narrow on-toggle-drawer='_toggleDrawer'>
@@ -114,7 +114,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home" href="#/home">Home</a>
-          <a name="tablet" href="#/tablet">Tablet</a>
+          <a name="tablet-overview" href="#/tablet-overview">Tablet</a>
+          <a name="tablet-library" href="#/tablet-library">Tablet Library</a>
         </iron-selector>
       </app-drawer>
       
@@ -130,7 +131,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
           <home-page name='home'></home-page>
-          <tablet-page route='[[routeTail]]' name='tablet'></tablet-page>
+          <tablet-overview-page name='tablet-overview'></tablet-overview-page>
+          <tablet-library-page name='tablet-library'></tablet-library-page>
         </iron-pages>
         
       </app-header-layout>
@@ -170,7 +172,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl(`${page}-page.html`);
+        var resolvedPageUrl = this.resolveUrl(`pages/${page}-page.html`);
         Polymer.importHref(
             resolvedPageUrl,
             null,

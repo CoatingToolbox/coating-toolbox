@@ -1,11 +1,11 @@
 
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/paper-styles/typography.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="elements/page-header.html">
-<link rel="import" href="elements/home-page-card.html">
-<link rel="import" href="elements/icon-item.html">
-<link rel="import" href="my-icons.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../elements/page-header.html">
+<link rel="import" href="../elements/home-page-card.html">
+<link rel="import" href="../elements/icon-item.html">
+<link rel="import" href="../my-icons.html">
 
 <dom-module id="home-page">
   
@@ -28,7 +28,7 @@
       }
       .section-title {
           grid-column: 1 / 13;
-          margin-top: 56px;
+          margin-top: 48px;
           color: var(--text-light-color);
           @apply --paper-font-display1;
       }
@@ -79,6 +79,12 @@
         border: 2px solid var(--app-light-color);
         color: var(--app-light-color);
         transition: color 0.2s;
+      }
+      p.text {
+        padding: 0px;
+      }
+      icon-item {
+        margin: auto;
       }
     </style>
         
