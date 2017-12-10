@@ -26,6 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="lazy-import" href="pages/home-page.html">
 <link rel="lazy-import" href="pages/tablet-page.html">
+<link rel="lazy-import" href="pages/materials-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -94,6 +95,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-right: 16px;
         padding: 8px 16px;
       }
+      [hidden] {
+        display: none;
+      }
     </style>
 
     <app-location
@@ -114,15 +118,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home" href="#/home">Home</a>
           <a name="tablet" href="#/tablet/overview">Tablet</a>
+          <a name="tablet" href="#/materials/tablet-overview">Tablet</a>
         </iron-selector>
       </app-drawer>
       
       <app-header-layout>
         
-        <app-header slot='header' reveals effects='waterfall'>
+        <app-header slot='header' fixed effects='waterfall'>
           
           <app-toolbar>
-            <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
+            <paper-icon-button hidden$='[[_isHome(routeData.page)]]' icon='my-icons:arrow-left' on-click='_goHome'></paper-icon-button>
+            <paper-icon-button hidden$='[[!_isHome(routeData.page)]]' icon='my-icons:menu' drawer-toggle></paper-icon-button>
             <div main-title>Coating Toolbox</div>
           </app-toolbar>
         </app-header>
@@ -130,6 +136,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
           <home-page name='home'></home-page>
           <tablet-page name='tablet'></tablet-page>
+          <materials-page name='materials'></materials-page>
         </iron-pages>
         
       </app-header-layout>
@@ -147,15 +154,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             observer: '_pageChanged',
           },
           routeData: Object,
+          isHome: Boolean
         };
       }
 
       static get observers() {
         return [
-          '_routePageChanged(routeData.page)',
+          '_routePageChanged(routeData.page)'
         ];
       }
 
+      _isHome(page) {
+        return (page === 'home');
+      }
+      _goHome() {
+        window.location = '#/home';
+      }
+      
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.

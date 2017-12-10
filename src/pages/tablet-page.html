@@ -43,7 +43,6 @@
         pattern="[[rootPath]]tablet/:page"
         data="{{routeData}}">
     </app-route>
-    
     <page-header title='Tablet' icon='my-icons:tablet'>
       <div class='text'>
         The tablet shape, size and formulation effect the coating process
@@ -65,7 +64,7 @@
       </iron-selctor>
       
     </div>
-    
+  
     <iron-pages selected='[[routeData.page]]' attr-for-selected='section' fallback-selection='overview'>
       <tablet-overview-section section='overview'></tablet-overview-section>
       <tablet-library-section section='library'></tablet-library-section>
