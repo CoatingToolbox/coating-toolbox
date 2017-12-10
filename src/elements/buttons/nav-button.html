@@ -1,0 +1,51 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="nav-button">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 20px 8px 16px;
+        border-bottom: 3px solid var(--white-color);
+        color: var(--text-light-color);
+        @apply --paper-font-subhead;
+      }
+      :host(:hover) {
+        cursor: pointer;
+      }
+      :host(.iron-selected) {
+        /*color: var(--text-color);*/
+        border-color: var(--app-light-color);
+      }
+      iron-icon {
+        margin-right: 16px;
+      }
+    </style>
+    
+    <iron-icon icon='[[icon]]'></iron-icon>
+    <div>[[label]]</div>
+      
+    
+  </template>
+  <script>
+    class NavButton extends Polymer.Element {
+      static get is() { return 'nav-button'; }
+      static get properties() {
+          return {
+              label: String,
+              icon: String
+          };
+      }
+    }
+
+    window.customElements.define(NavButton.is, NavButton);
+  </script>
+</dom-module>

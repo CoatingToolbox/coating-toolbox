@@ -1,0 +1,50 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../elements/pages/page-header.html">
+<link rel="import" href="../../elements/cards/tagged-card.html">
+<link rel="import" href="../../elements/list-items/icon-label-item.html">
+<link rel="import" href="../../elements/graphics/tablet-graphic.html">
+<link rel="import" href="../../redux/redux-mixin.html">
+
+<dom-module id="tablet-designer-section">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: auto;
+        grid-gap: 32px 48px;
+        max-width: 932px;
+        margin: auto;
+        padding: 48px 16px;
+      }
+      
+      #page-title {
+        grid-column: 1 / 4;
+        grid-row: 1 / 2; 
+        color: var(--text-light-color);
+        @apply --paper-font-display1;
+      }
+    </style>
+    
+    <div id='page-title'>Tablet Designer</div>
+    
+      
+  </template>
+
+  <script>
+    class TabletDesignerSection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-designer-section'; }
+      static get properties() {
+        return { 
+          tablet: { type: Object, statePath: 'tablet' }
+        };
+      }
+    }
+
+    window.customElements.define(TabletDesignerSection.is, TabletDesignerSection);
+  </script>
+</dom-module>

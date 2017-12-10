@@ -1,8 +1,8 @@
 
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
 
-<dom-module id="home-page-card">
+<dom-module id="tagged-toolbar-card">
   <template>
     <style>
       :host {
@@ -65,8 +65,8 @@
   </template>
 
   <script>
-    class HomePageCard extends Polymer.Element {
-      static get is() { return 'home-page-card'; }
+    class TaggedToolbarCard extends Polymer.Element {
+      static get is() { return 'tagged-toolbar-card'; }
       static get properties() {
           return {
               title: String
@@ -74,6 +74,6 @@
       }
     }
 
-    window.customElements.define(HomePageCard.is, HomePageCard);
+    window.customElements.define(TaggedToolbarCard.is, TaggedToolbarCard);
   </script>
 </dom-module>

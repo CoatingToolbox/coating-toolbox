@@ -1,0 +1,97 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../my-icons.html">
+<link rel="import" href="page-header.html">
+
+<dom-module id="materials-navigation-header">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: flex;
+        background-color: var(--white-color);
+        color: var(--text-color);
+      }
+      #tab-selector {
+        flex-grow: 1;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 64px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 20px 8px 16px;
+        border-bottom: 3px solid var(--white-color);
+        @apply --paper-font-body1;
+      }
+      .tab:hover {
+        cursor: pointer;
+      }
+      .iron-selected {
+        border-color: var(--app-light-color);
+      }
+      .iron-selected ~ .tab {
+        color: var(--text-light-color);
+        /*border-color: var(--white-color);*/
+      }
+      iron-icon {
+        margin-right: 16px;
+      }
+    </style>
+    
+    <iron-selector id='tab-selector' selected='[[selectedTab]]' attr-for-selected='data-name' on-tap='_tabSelected'>
+      
+      <div class='tab' data-name='tablet'>
+        <iron-icon icon='my-icons:info'></iron-icon>
+        Substrate
+      </div>
+      
+      <div class='tab' data-name='equipment'>
+        <iron-icon icon='my-icons:info'></iron-icon>
+        Equipment
+      </div>
+      
+      <div class='tab' data-name='coating'>
+        <iron-icon icon='my-icons:info'></iron-icon>
+        Coating
+      </div>
+      
+      <div class='tab' data-name='parameters'>
+        <iron-icon icon='my-icons:info'></iron-icon>
+        Parameters
+      </div>
+      
+      <div class='tab' data-name='checks'>
+        <iron-icon icon='my-icons:info'></iron-icon>
+        Checks
+      </div>
+      
+    </iron-selector>
+    
+  </template>
+  <script>
+    class CoatingAppNavigation extends Polymer.Element {
+      static get is() { return 'coating-app-navigation'; }
+      static get properties() {
+        return {
+          selectedTab: {
+            type: String
+          }
+        };
+      }
+      _tabSelected(e) {
+        window.location = `#/${e.target.dataset.name}`;
+      }
+    }
+
+    window.customElements.define(CoatingAppNavigation.is, CoatingAppNavigation);
+  </script>
+</dom-module>

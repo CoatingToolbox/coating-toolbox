@@ -1,28 +1,25 @@
 
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../elements/page-header.html">
-<link rel="import" href="../models/tablet-class.html">
-<link rel="import" href="../redux/redux-mixin.html">
-<link rel="import" href="../my-icons.html">
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../elements/pages/page-header.html">
+<link rel="import" href="../../data/tablet-class.html">
+<link rel="import" href="../../redux/redux-mixin.html">
+<link rel="import" href="../../elements/my-icons.html">
 
-<dom-module id="tablet-library-page">
+<dom-module id="tablet-library-section">
   
    <template>
     
     <style>
       :host {
         display: block;
-        flex-direction: column;
-      }
-      #content-layout {
         width: 100%;
         max-width: 932px;
         margin: auto;
-        padding: 48px 16px;
+        padding: 72px 16px;
       }
       #search-layout {
         display: flex;
@@ -33,7 +30,7 @@
       }
       #table-layout {
         display: grid;
-        grid-template-columns: auto 1fr auto auto auto auto;
+        grid-template-columns: 1fr auto auto auto auto auto;
         grid-template-rows: 48px;
         grid-auto-rows: auto;
         margin-bottom: 48px;
@@ -57,15 +54,17 @@
       }
       
       #page-title {
-        color: var(--text-light-color);
-        @apply --paper-font-display1;
+        grid-column: 1 / 4;
+        grid-row: 1 / 2;
+        color: var(--text-color);
+        @apply --paper-font-display2;
       }
       /*Styles for Cells in Table*/
       .cell {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 20px 16px;
+        padding: 16px;
         border-bottom: 2px solid var(--border-color);
         @apply --paper-font-subhead;
       }
@@ -166,7 +165,7 @@
         @apply --paper-font-subhead;
       }
       .item-title {
-        @apply --paper-font-title;
+        /*@apply --paper-font-s;*/
       }
       .subtext {
         color: var(--text-light-color);
@@ -179,9 +178,6 @@
       }
     </style>
       
-    <page-header title='Materials & Equipment' icon='my-icons:mix'></page-header>
-   
-    <div id='content-layout'>
       <div id='page-title'>Tablet Library</div>
     
       <div id='search-layout'>
@@ -190,18 +186,14 @@
       </div>
       
       <div id='table-layout'>
-        <div class='header cell'>Shape</div>
         <div class='header cell'>Product</div>
         <div class='header cell'>Formulation</div>
+        <div class='header cell'>Shape</div>
         <div class='header cell'>Dimensions (mm)</div>
         <div class='header cell'>Weight (mg)</div>
         <div class='header cell'></div>
       
       <template is='dom-repeat' items='[[_filterLibrary(library, filterTerm)]]'>
-        <div class='cell shape-icon'>
-          <iron-icon icon='[[_getIcon(item.shape)]]'></iron-icon>
-          <div class='subtext'>[[item.shape]]</div>
-        </div>
         <div class='cell'>
           <div class='item-title'>[[item.productName]]</div>
           <div class='subtext'>[[item.companyName]] [[item.locationName]]</div>
@@ -209,6 +201,10 @@
         <div class='cell'>
           <div>[[item.productType]]</div>
           <div class='subtext'>[[item.formulationName]]</div>
+        </div>
+        <div class='cell shape-icon'>
+          <iron-icon icon='[[_getIcon(item.shape)]]'></iron-icon>
+          <div class='subtext'>[[item.shape]]</div>
         </div>
         <div class='cell number'>[[_convertDimensions(item.shape, item.length, item.width, item.totalThickness)]]</div>
         <div class='cell number'>[[_convertWeight(item.weight)]]</div>
@@ -233,13 +229,12 @@
         <div id='new-tablet-button' on-click=_gotoDesign>New Tablet</div>
       </div>
       
-    </div>
     
   </template>
 
   <script>
-    class TabletLibraryPage extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'tablet-library-page'; }
+    class TabletLibrarySection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-library-section'; }
       
       static get properties() {
         return {
@@ -273,7 +268,7 @@
           type: "LOAD_TABLET",
           tablet: e.model.item
         });
-        window.location = '#/tablet-overview';
+        window.location = '#/tablet/overview';
         window.scrollTo(0, 0);
       }
       _editTablet(e) {
@@ -296,7 +291,7 @@
         // values in meters and need to convert to mm.
         let conv = 1000;
         if(shape === 'round') {
-          return `${(length * conv).toFixed(1)} x ${(length * conv).toFixed(1)} x ${(thickness * conv).toFixed(1)}`;
+          return `${(length * conv).toFixed(1)} x ${(thickness * conv).toFixed(1)}`;
         } else {
           return `${(length * conv).toFixed(1)} x ${(width * conv).toFixed(1)} x ${(thickness * conv).toFixed(1)}`;
         }
@@ -310,6 +305,6 @@
       }
     }
 
-    window.customElements.define(TabletLibraryPage.is, TabletLibraryPage);
+    window.customElements.define(TabletLibrarySection.is, TabletLibrarySection);
   </script>
 </dom-module>

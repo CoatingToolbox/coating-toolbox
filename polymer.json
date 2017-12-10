@@ -2,8 +2,9 @@
   "entrypoint": "index.html",
   "shell": "src/coating-app-shell.html",
   "fragments": [
-    "src/home-page.html",
-    "src/tablet-page.html"
+    "src/pages/home-page.html",
+    "src/pages/tablet-page.html",
+    "src/pages/tablet/tablet-library-section.html"
   ],
   "sources": [
     "src/**/*",
@@ -20,7 +21,6 @@
   },
   "builds": [
     { "preset": "es6-unbundled" },
-    { "preset": "es6-bundled" },
-    { "preset": "es5-bundled" }
+    { "preset": "es6-bundled" }
   ]
 }

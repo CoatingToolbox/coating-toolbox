@@ -22,11 +22,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="my-icons.html">
+<link rel="import" href="elements/my-icons.html">
 
 <link rel="lazy-import" href="pages/home-page.html">
-<link rel="lazy-import" href="pages/tablet-overview-page.html">
-<link rel="lazy-import" href="pages/tablet-library-page.html">
+<link rel="lazy-import" href="pages/tablet-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -114,8 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home" href="#/home">Home</a>
-          <a name="tablet-overview" href="#/tablet-overview">Tablet</a>
-          <a name="tablet-library" href="#/tablet-library">Tablet Library</a>
+          <a name="tablet" href="#/tablet/overview">Tablet</a>
         </iron-selector>
       </app-drawer>
       
@@ -131,8 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
           <home-page name='home'></home-page>
-          <tablet-overview-page name='tablet-overview'></tablet-overview-page>
-          <tablet-library-page name='tablet-library'></tablet-library-page>
+          <tablet-page name='tablet'></tablet-page>
         </iron-pages>
         
       </app-header-layout>

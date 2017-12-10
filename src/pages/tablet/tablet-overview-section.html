@@ -1,38 +1,39 @@
 
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../elements/page-header.html">
-<link rel="import" href="../elements/home-page-card.html">
-<link rel="import" href="../elements/icon-label-item.html">
-<link rel="import" href="../elements/tablet-graphic.html">
-<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../elements/pages/page-header.html">
+<link rel="import" href="../../elements/cards/tagged-card.html">
+<link rel="import" href="../../elements/list-items/icon-label-item.html">
+<link rel="import" href="../../elements/graphics/tablet-graphic.html">
+<link rel="import" href="../../elements/buttons/icon-label-button.html">
+<link rel="import" href="../../redux/redux-mixin.html">
 
-<dom-module id="tablet-overview-page">
+<dom-module id="tablet-overview-section">
   
    <template>
     
     <style>
       :host {
-        display: block;
-      }
-      #content-layout {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-auto-rows: auto;
         grid-gap: 32px 48px;
         max-width: 932px;
         margin: auto;
-        padding: 48px 16px;
+        padding: 72px 16px;
       }
       
       #page-title {
         grid-column: 1 / 4;
         grid-row: 1 / 2; 
-        color: var(--text-light-color);
-        @apply --paper-font-display1;
+        color: var(--text-color);
+        @apply --paper-font-display2;
+      }
+      #page-title > div {
+        flex-grow: 1;
       }
       /*Description Card styles*/
-      home-page-card[title="Description"] {
+      tagged-card[title="Description"] {
         grid-column: 1 / 4;
         grid-row: 2 / 3;
       }
@@ -70,19 +71,19 @@
       }
       
       /*Dimension Layouts*/
-      home-page-card[title="Dimensions"] {
+      tagged-card[title="Dimensions"] {
         grid-column: 1 / 2;
         grid-row: 3 / 4;
       }
-      home-page-card[title="Formulation"] {
+      tagged-card[title="Formulation"] {
         grid-column: 2 / 3;
         grid-row: 3 / 4;
       }
-      home-page-card[title="Calcualtions"] {
+      tagged-card[title="Calcualtions"] {
         grid-column: 3 / 4;
         grid-row: 3 / 4;
       }
-      home-page-card[title="Tablet Schematic"] {
+      tagged-card[title="Tablet Schematic"] {
         grid-column: 1 / 3;
         grid-row: 4 / 5;
       }
@@ -117,56 +118,55 @@
         display: none;
       }
     </style>
-    <page-header title='Materials & Equipment' icon='my-icons:mix'></page-header>
-    <div id='content-layout'>
-      <div id='page-title'>Tablet Overview</div>
-      <home-page-card title='Description'>
-        <div id='description-layout'>
-          <div id='description-icon'></div>
-          <div id='description-title'>[[tablet.productName]]</div>
-          <icon-label-item 
-            label='Company' 
-            value='[[tablet.companyName]]' 
-            icon='my-icons:company'></icon-label-item>
-          <icon-label-item 
-            label='Formulation' 
-            value='[[tablet.formulationName]]' 
-            icon='my-icons:product'></icon-label-item>
-          <icon-label-item 
-            label='Contact' 
-            value='[[tablet.contactName]]' 
-            icon='my-icons:contact'></icon-label-item>
-          <icon-label-item 
-            label='Location' 
-            value='[[tablet.locationName]]' 
-            icon='my-icons:location'></icon-label-item>
-        </div>
-      </home-page-card>
-      <home-page-card title='Dimensions'>
+    
+    <div id='page-title'>Tablet Overview</div>
+    <tagged-card title='Description'>
+      <div id='description-layout'>
+        <div id='description-icon'></div>
+        <div id='description-title'>[[tablet.productName]]</div>
         <icon-label-item 
-            label='Shape' 
-            value='[[_getShapeString(tablet.shape)]]' 
-            icon='[[_getShapeIcon(tablet.shape)]]'></icon-label-item>
-          <icon-label-item 
-            label='Dimensions' 
-            value='[[_getDimensionString(tablet.shape, tablet.length, tablet.width)]]' 
-            icon='my-icons:ruler'></icon-label-item>
-          <icon-label-item 
-            label='Thickness' 
-            value='[[_getThicknessString(tablet.totalThickness)]]' 
-            icon='my-icons:ruler'></icon-label-item>
-      </home-page-card>
-      <home-page-card title='Formulations'>
+          label='Company' 
+          value='[[tablet.companyName]]' 
+          icon='my-icons:company'></icon-label-item>
         <icon-label-item 
-            label='Weight' 
-            value='[[_getWeightString(tablet.weight)]]' 
-            icon='my-icons:weight'></icon-label-item>
-          <icon-label-item 
-            label='Bulk Density' 
-            value='[[_getDensityString(tablet.bulkDensity)]]' 
-            icon='my-icons:density'></icon-label-item>
-      </home-page-card>
-      <home-page-card title='Calcualtions'>
+          label='Formulation' 
+          value='[[tablet.formulationName]]' 
+          icon='my-icons:product'></icon-label-item>
+        <icon-label-item 
+          label='Contact' 
+          value='[[tablet.contactName]]' 
+          icon='my-icons:contact'></icon-label-item>
+        <icon-label-item 
+          label='Location' 
+          value='[[tablet.locationName]]' 
+          icon='my-icons:location'></icon-label-item>
+      </div>
+    </tagged-card>
+    <tagged-card title='Dimensions'>
+      <icon-label-item 
+          label='Shape' 
+          value='[[_getShapeString(tablet.shape)]]' 
+          icon='[[_getShapeIcon(tablet.shape)]]'></icon-label-item>
+        <icon-label-item 
+          label='Dimensions' 
+          value='[[_getDimensionString(tablet.shape, tablet.length, tablet.width)]]' 
+          icon='my-icons:ruler'></icon-label-item>
+        <icon-label-item 
+          label='Thickness' 
+          value='[[_getThicknessString(tablet.totalThickness)]]' 
+          icon='my-icons:ruler'></icon-label-item>
+    </tagged-card>
+    <tagged-card title='Formulations'>
+      <icon-label-item 
+          label='Weight' 
+          value='[[_getWeightString(tablet.weight)]]' 
+          icon='my-icons:weight'></icon-label-item>
+        <icon-label-item 
+          label='Bulk Density' 
+          value='[[_getDensityString(tablet.bulkDensity)]]' 
+          icon='my-icons:density'></icon-label-item>
+    </tagged-card>
+    <tagged-card title='Calculations'>
         <icon-label-item 
             label='Surface Area' 
             value='[[_getSurfaceAreaString(tablet.surfaceArea)]]' 
@@ -179,8 +179,8 @@
             label='Compressed Density' 
             value='[[_getDensityString(tablet.compressedDensity)]]' 
             icon='my-icons:density'></icon-label-item>
-      </home-page-card>
-      <home-page-card title='Tablet Schematic'>
+      </tagged-card>
+    <tagged-card title='Tablet Schematic'>
         <div id='schematic-layout'>
           <div class='graphic-layout'>
             <tablet-graphic top-view shape='[[tablet.shape]]' length='[[tablet.length]]' width='[[tablet.width]]' band-thickness='[[tablet.bandThickness]]' cup-thickness='[[tablet.cupThickness]]'></tablet-graphic>
@@ -195,13 +195,13 @@
             <div class='schematic-label'>Width View</div>
           </div>
         </div>
-      </home-page-card>
-    </div>
+      </tagged-card>
+      
   </template>
 
   <script>
-    class TabletOverviewPage extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'tablet-overview-page'; }
+    class TabletOverviewSection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-overview-section'; }
       static get properties() {
         return { 
           tablet: { type: Object, statePath: 'tablet' }
@@ -255,6 +255,6 @@
       
     }
 
-    window.customElements.define(TabletOverviewPage.is, TabletOverviewPage);
+    window.customElements.define(TabletOverviewSection.is, TabletOverviewSection);
   </script>
 </dom-module>
