@@ -204,7 +204,7 @@
         return vol;
     }
     
-    get cupRadius() {
+    get lengthCupRadius() {
             
         // see the link for more details on calculations
         // http://liutaiomottola.com/formulae/sag.htm
@@ -214,10 +214,25 @@
         return (part1 + part2) / part3;
     }
     
+    get widthCupRadius() {
+            
+        // see the link for more details on calculations
+        // http://liutaiomottola.com/formulae/sag.htm
+        let part1 = Math.pow(this.cupThickness, 2);
+        let part2 = Math.pow(this.width / 2, 2);
+        let part3 = 2 * this.cupThickness;
+        return (part1 + part2) / part3;
+    }
+    
+    get isRound() {
+        return (this.shape === 'round');
+    }
+    
     
     toJSON() {
         return {
             shape: this.shape,
+            isRound: this.isRound,
             length: this.length,
             width: this.width,
             totalThickness: this.totalThickness,

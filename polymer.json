@@ -4,7 +4,9 @@
   "fragments": [
     "src/pages/home-page.html",
     "src/pages/tablet-page.html",
-    "src/pages/tablet/tablet-library-section.html"
+    "src/pages/tablet/tablet-overview-section.html",
+    "src/pages/tablet/tablet-library-section.html",
+    "src/pages/tablet/tablet-designer-section.html"
   ],
   "sources": [
     "src/**/*",

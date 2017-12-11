@@ -49,40 +49,10 @@
        static get properties() {
         
         return {
-          topView: {
-            type: Boolean,
-          },
-          lengthView: {
-            type: Boolean
-          },
-          widthView: {
-            type: Boolean
-          },
-          
-          shape: {
-            type: String
-          }, 
-          length: {
-            type: Number
-          }, 
-          width: {
-            type: Number
-          }, 
-          bandThickness: {
-            type: Number
-          }, 
-          cupThickness: {
-            type: Number
-          },
-          
-          lengthCupRadius: {
-            type: Number,
-            computed: 'computeCupRadius(length, cupThickness)'
-          },
-          widthCupRadius: {
-            type: Number,
-            computed: 'computeCupRadius(width, cupThickness)'
-          },
+          topView:Boolean,
+          lengthView: Boolean,
+          widthView: Boolean,
+          tablet: Object,
           tabletSVG: {
             type: Object,
             notify: true,
@@ -117,39 +87,39 @@
           pathLengthSideTablet: {
             type: String,
             notify: true,
-            computed: "computePathSideTablet(shape, length, lengthCupRadius, bandThickness)"
+            computed: "computePathSideTablet(tablet.shape, tablet.length, tablet.lengthCupRadius, tablet.bandThickness)"
           },
           pathLengthTopCup: {
             type: String,
-            computed: 'computePathTopCup(shape, length, lengthCupRadius, bandThickness)'
+            computed: 'computePathTopCup(tablet.shape, tablet.length, tablet.lengthCupRadius, tablet.bandThickness)'
           },
           pathLengthBottomCup: {
             type: String,
-            computed: 'computePathBottomCup(shape, length, lengthCupRadius, bandThickness)'
+            computed: 'computePathBottomCup(tablet.shape, tablet.length, tablet.lengthCupRadius, tablet.bandThickness)'
           },
           pathLengthBand: {
             type: String,
-            computed: 'computePathBand(shape, length, bandThickness)'
+            computed: 'computePathBand(tablet.shape, tablet.length, tablet.bandThickness)'
           },
           pathWidthSideTablet: {
             type: String,
-            computed: "computePathSideTablet(shape, width, widthCupRadius, bandThickness)"
+            computed: "computePathSideTablet(tablet.shape, tablet.width, tablet.widthCupRadius, tablet.bandThickness)"
           },
           pathWidthTopCup: {
             type: String,
-            computed: 'computePathTopCup(shape, width, widthCupRadius, bandThickness)'
+            computed: 'computePathTopCup(tablet.shape, tablet.width, tablet.widthCupRadius, tablet.bandThickness)'
           },
           pathWidthBottomCup: {
             type: String,
-            computed: 'computePathBottomCup(shape, width, widthCupRadius, bandThickness)'
+            computed: 'computePathBottomCup(tablet.shape, tablet.width, tablet.widthCupRadius, tablet.bandThickness)'
           },
           pathWidthBand: {
             type: String,
-            computed: 'computePathBand(shape, width, bandThickness)'
+            computed: 'computePathBand(tablet.shape, tablet.width, tablet.bandThickness)'
           },
           pathTopTablet: {
             type: String,
-            computed: 'computePathTopTablet(shape, width, length)'
+            computed: 'computePathTopTablet(tablet.shape, tablet.width, tablet.length)'
           }
         };
           
@@ -328,17 +298,6 @@
                 " m " + (svg.cap / 2) + " 0" +
                 " l " + -svg.cap + " 0";
       }
-    
-      // computed properties functions
-      computeCupRadius(length, cupThickness) {
-        // see the link for more details on calculations
-        // http://liutaiomottola.com/formulae/sag.htm
-        let part1 = Math.pow(cupThickness, 2);
-        let part2 = Math.pow(length / 2, 2);
-        let part3 = 2 * cupThickness;
-        return (part1 + part2) / part3;
-      }
-          
 
     }
     

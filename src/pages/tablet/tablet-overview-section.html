@@ -4,7 +4,7 @@
 <link rel="import" href="../../elements/pages/page-header.html">
 <link rel="import" href="../../elements/cards/tagged-card.html">
 <link rel="import" href="../../elements/list-items/icon-label-item.html">
-<link rel="import" href="../../elements/graphics/tablet-graphic.html">
+<link rel="import" href="../../elements/graphics/tablet-schematic-layout.html">
 <link rel="import" href="../../elements/buttons/icon-label-button.html">
 <link rel="import" href="../../redux/redux-mixin.html">
 
@@ -26,8 +26,8 @@
       #page-title {
         grid-column: 1 / 4;
         grid-row: 1 / 2; 
-        color: var(--text-color);
-        @apply --paper-font-display2;
+        color: var(--text-light-color);
+        @apply --paper-font-display1;
       }
       #page-title > div {
         flex-grow: 1;
@@ -43,7 +43,7 @@
         grid-template-rows: repeat(3, auto);
         grid-gap: 8px 24px;
         align-items: center;
-        padding: 64px 64px;
+        padding: 36px 64px;
       }
       #description-icon {
         grid-column: 1 / 2;
@@ -88,34 +88,10 @@
         grid-row: 4 / 5;
       }
       /*Schematic Styles*/
-      #schematic-layout {
+      tablet-schematic-layout {
         grid-row: 4 / 5;
         grid-column: 1 / 4;
-        align-self: center;
-        justify-self: center;
-        display: flex;
-        border-radius: 16px;
-        background-color: var(--gray-color);
-        border: 5px solid var(--border-color);
-        padding: 8px 16px 16px 16px;
         margin: 24px auto;
-      }
-      .graphic-layout {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      tablet-graphic {
-        width: 175px;
-        height: 175px;
-      }
-      .schematic-label {
-        @apply --paper-font-subhead;
-        text-align: center;
-      }
-      
-      [hidden] {
-        display: none;
       }
     </style>
     
@@ -181,20 +157,7 @@
             icon='my-icons:density'></icon-label-item>
       </tagged-card>
     <tagged-card title='Tablet Schematic'>
-        <div id='schematic-layout'>
-          <div class='graphic-layout'>
-            <tablet-graphic top-view shape='[[tablet.shape]]' length='[[tablet.length]]' width='[[tablet.width]]' band-thickness='[[tablet.bandThickness]]' cup-thickness='[[tablet.cupThickness]]'></tablet-graphic>
-            <div class='schematic-label'>Top View</div>
-          </div>
-          <div class='graphic-layout'>
-            <tablet-graphic length-view shape='[[tablet.shape]]' length='[[tablet.length]]' width='[[tablet.width]]' band-thickness='[[tablet.bandThickness]]' cup-thickness='[[tablet.cupThickness]]'></tablet-graphic>
-            <div class='schematic-label'>Length View</div>
-          </div>
-          <div class='graphic-layout' hidden$='[[_isRound(tablet.shape)]]'>
-            <tablet-graphic width-view shape='[[tablet.shape]]' length='[[tablet.length]]' width='[[tablet.width]]' band-thickness='[[tablet.bandThickness]]' cup-thickness='[[tablet.cupThickness]]'></tablet-graphic>
-            <div class='schematic-label'>Width View</div>
-          </div>
-        </div>
+        <tablet-schematic-layout tablet='[[tablet]]'></tablet-schematic-layout>
       </tagged-card>
       
   </template>

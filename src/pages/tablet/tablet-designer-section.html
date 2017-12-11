@@ -1,10 +1,16 @@
 
 <link rel="import" href="../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../elements/pages/page-header.html">
+<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../elements/buttons/designer-back-button.html">
+<link rel="import" href="../../elements/buttons/designer-next-button.html">
+<link rel="import" href="../../elements/inputs/text-input.html">
+<link rel="import" href="../../elements/inputs/unit-input.html">
+<link rel="import" href="../../elements/cards/tagged-toolbar-card.html">
 <link rel="import" href="../../elements/cards/tagged-card.html">
-<link rel="import" href="../../elements/list-items/icon-label-item.html">
-<link rel="import" href="../../elements/graphics/tablet-graphic.html">
+<link rel="import" href="../../elements/graphics/tablet-schematic-layout.html">
+<link rel="import" href="../../elements/my-icons.html">
 <link rel="import" href="../../redux/redux-mixin.html">
 
 <dom-module id="tablet-designer-section">
@@ -13,25 +19,173 @@
     
     <style>
       :host {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-auto-rows: auto;
-        grid-gap: 32px 48px;
+        display: block;
         max-width: 932px;
         margin: auto;
         padding: 48px 16px;
       }
-      
       #page-title {
         grid-column: 1 / 4;
         grid-row: 1 / 2; 
+        padding-bottom: 32px;
         color: var(--text-light-color);
         @apply --paper-font-display1;
       }
+      
+      /*Styles for intor card*/
+      #intro-layout {
+        display: grid;
+        grid-template-columns: 124px auto;
+        grid-template-rows: auto auto auto;
+        grid-gap: 16px 48px;
+        padding: 64px 64px 32px;
+      }
+      #intro-icon-layout {
+        grid-row: 1 / 3;
+        grid-column: 1 / 2;
+        align-self: center;
+        justify-self: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        border-radius: 50%;
+        background-color: var(--gray-color);
+        border: 4px solid var(--app-light-color);
+      }
+      #intro-icon {
+        height: 100%;
+        width: 100%;
+        color: var(--app-light-color);
+      }
+      #intro-title {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        color: var(--app-primary-color);
+        @apply --paper-font-headline;
+      }
+      #intro-description {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+        @apply --paper-font-body2;
+      }
+      #intro-layout designer-next-button {
+        grid-row: 3 / 4;
+        grid-column: 2 / 3;
+        justify-self: end;
+      }
+      
+      /*Styles for the description page*/
+      #description-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: auto;
+        grid-gap: 32px 32px;
+        padding: 64px 64px 24px;
+      }
+      #description-layout text-input[label="Product"] {
+        grid-column: 1 / 3;
+      }
+      #description-layout designer-next-button {
+        grid-column: 2 / 3;
+        justify-self: end;
+      }
+      
+      /*Dimensions card styles*/ 
+      #dimensions-layout {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(4, auto);
+        grid-gap: 24px 48px;
+        padding: 32px 48px 16px;
+      }
+      #dimensions-layout tablet-schematic-layout {
+        grid-row: 3 / 4;
+        grid-column: 1 / 3;
+      }
+      #dimensions-layout unit-input[label="Length"] {
+        grid-row: 1 / 2;
+        grid-column: 1 / 2;
+        justify-self: end;
+      }
+      #dimensions-layout unit-input[label="Width"] {
+        grid-row: 1 / 2;
+        grid-column: 2 / 3;
+        justify-self: start;
+      }
+      #dimensions-layout unit-input[label="Total Thickness"] {
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+        justify-self: end;
+      }
+      #dimensions-layout unit-input[label="Band Thickness"] {
+        grid-row: 2 / 3;
+        grid-column: 2 / 3;
+        justify-self: start;
+      }
+      #dimensions-layout designer-back-button {
+        grid-row: 4 / 5;
+        grid-column: 1 / 2;
+        justify-self: start;
+      }
+      #dimensions-layout designer-next-button {
+        grid-row: 4 / 5;
+        grid-column: 2 / 3;
+        justify-self: end;
+      }
+      
+      [hidden] {
+        display: none;
+      }  
     </style>
     
     <div id='page-title'>Tablet Designer</div>
     
+    <iron-pages id='pages' selected='{{selectedPage}}'>
+      <tagged-card title='Introduction'>
+          <div id='intro-layout'>
+            <div id='intro-icon-layout'>
+              <iron-icon id='intro-icon' icon='my-icons:tablet'></iron-icon>
+            </div>
+            <div id='intro-title'>Tablet Designer</div>
+            <div id='intro-description'>The Tablet Designer allows estimates important properties of a tablet. Starting with a compressed tablet input a few easy measurements like length, thickness, and weight to caluclate the tablets surface area, volume and more.</div>
+            <designer-next-button label='Get Started' on-click='_nextPage'></designer-next-button>
+          </div>
+      </tagged-card>
+      
+      <tagged-card title='Product Description'>
+          <div id='description-layout'>
+            <text-input value='{{tablet.productName}}' icon='my-icons:product' label='Product'></text-input>
+            <text-input value='{{tablet.formulationName}}' icon='my-icons:product' label='Formulation'></text-input>
+            <text-input value='{{tablet.companyName}}' icon='my-icons:company' label='Brand / Company'></text-input>
+            <text-input value='{{tablet.productType}}' icon='my-icons:product' label='Industry' options='["Pharmaceutical", "Dietary Supplment", "OTC"]'></text-input>
+            <text-input value='{{tablet.contactName}}' icon='my-icons:contact' label='Contact'></text-input>
+            <designer-next-button label='Shape' on-click='_nextPage'></designer-next-button>
+          </div>
+      </tagged-card>
+      
+      <tagged-card title='Tablet Shape'>
+          <div id='dimensions-layout'>
+            <designer-back-button label='Description' on-click='_previousPage'></designer-back-button>
+            <designer-next-button label='Dimensions' on-click='_nextPage'></designer-next-button>
+          </div>
+      </tagged-card>
+      
+      <tagged-card title='Tablet Dimensions'>
+          <div id='dimensions-layout'>
+            <unit-input value='{{tablet.length}}' icon='my-icons:ruler' label='Length' type='length' selected-units='{{lengthUnits}}'></unit-input>
+            <unit-input hidden$='[[tablet.isRound]]' value='{{tablet.width}}' icon='my-icons:ruler' label='Width' type='length' selected-units='{{lengthUnits}}'></unit-input>
+            <unit-input value='{{tablet.totalThickness}}' icon='my-icons:ruler' label='Total Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>
+            <unit-input value='{{tablet.bandThickness}}' icon='my-icons:ruler' label='Band Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>
+            <tablet-schematic-layout tablet='[[tablet]]'></tablet-schematic-layout>
+            
+            <designer-back-button label='Shape' on-click='_previousPage'></designer-back-button>
+            <designer-next-button label='Weight & Density' on-click='_nextPage'></designer-next-button>
+          </div>
+      </tagged-card>
+      
+    </iron-pages>
       
   </template>
 
@@ -40,8 +194,17 @@
       static get is() { return 'tablet-designer-section'; }
       static get properties() {
         return { 
-          tablet: { type: Object, statePath: 'tablet' }
+          tablet: { type: Object, statePath: 'tablet' },
+          selectedPage: { type: Number, value: 3},
+          lengthUnits: { type: String, value: 'mm' }
         };
+      }
+      // Event Functions
+      _nextPage() {
+        this.$.pages.selectNext();
+      }
+      _previousPage() {
+        this.$.pages.selectPrevious();
       }
     }
 

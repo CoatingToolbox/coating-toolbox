@@ -153,8 +153,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: String,
             observer: '_pageChanged',
           },
-          routeData: Object,
-          isHome: Boolean
+          routeData: Object
         };
       }
 
@@ -165,7 +164,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _isHome(page) {
-        return (page === 'home');
+        return (page === 'home' || !page);
       }
       _goHome() {
         window.location = '#/home';

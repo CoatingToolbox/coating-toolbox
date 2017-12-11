@@ -56,8 +56,8 @@
       #page-title {
         grid-column: 1 / 4;
         grid-row: 1 / 2;
-        color: var(--text-color);
-        @apply --paper-font-display2;
+        color: var(--text-light-color);
+        @apply --paper-font-display1;
       }
       /*Styles for Cells in Table*/
       .cell {
@@ -276,7 +276,7 @@
           type: "LOAD_TABLET",
           tablet: e.model.item
         });
-        window.location = '#/tablet/design';
+        window.location = '#/tablet/designer';
         window.scrollTo(0, 0);
       }
       _filterLibrary(library, searchTerm) {
