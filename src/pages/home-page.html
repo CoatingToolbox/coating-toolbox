@@ -4,8 +4,17 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../elements/pages/page-header.html">
 <link rel="import" href="../elements/cards/tagged-toolbar-card.html">
+<link rel="import" href="../elements/graphics/tablet-graphic.html">
 <link rel="import" href="../elements/list-items/icon-item.html">
+<link rel="import" href="../elements/list-items/small-icon-item.html">
 <link rel="import" href="../elements/my-icons.html">
+<link rel="import" href="../redux/redux-mixin.html">
+
+<link rel="import" href="tablet-card/tablet-card.html">
+<link rel="import" href="coating-card/coating-card.html">
+<link rel="import" href="equipment-card/equipment-card.html">
+<link rel="import" href="batch-card/batch-card.html">
+<link rel="import" href="coating-amount-card/coating-amount-card.html">
 
 <dom-module id="home-page">
   
@@ -13,169 +22,122 @@
     
     <style>
       :host {
-        display: block;
-        background-color: var(--background-color);
-      }
-      /*Main Layout Items*/
-      #content-layout {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
-        grid-auto-rows: auto;
-        grid-gap: 32px 48px;
+        grid-auto-row: auto;
+        grid-gap: 16px 32px;
         max-width: 932px;
+        padding: 48px 16px;
         margin: auto;
-        padding: 0px 16px 48px;
+      }
+      
+      /*Main Element Styles*/
+      #page-title {
+        grid-row: 1 / 2;
+        grid-column: 1 / 13;
+        @apply --paper-font-display2;
+        font-weight: bold;
       }
       .section-title {
-          grid-column: 1 / 13;
-          margin-top: 48px;
-          color: var(--text-color);
-          @apply --paper-font-display1;
+        grid-column: 1 / 13;
+        @apply --paper-font-headline;
+        font-weight: bold;
+        padding-top: 48px;
+        border-top: 3px solid var(--border-color);
       }
-      tagged-toolbar-card[title="Tablet"] {
+      .section-description {
+        grid-column: 1 / 13;
+        @apply --paper-font-body1;
+        text-align: justify;
+        margin-bottom: 12px;
+      }
+      tablet-card {
         grid-column: 1 / 7;
-        grid-row: 2 / 3;
       }
-      tagged-toolbar-card[title='Coating Pan'] {
+      equipment-card {
         grid-column: 7 / 13;
-        grid-row: 2 / 3;
       }
-      tagged-toolbar-card[title='Coating Formulation'] {
+      coating-card {
         grid-column: 4 / 10;
-        grid-row: 3 / 4;
       }
-      tagged-toolbar-card[title='Batch Size'] {
+      batch-card {
         grid-column: 1 / 7;
-        grid-row: 5 / 6;
-        --app-highlight-color: var(--purple-color);
       }
-      tagged-toolbar-card[title='Coating Amount'] {
+      coating-amount-card {
         grid-column: 7 / 13;
-        grid-row: 5 / 6;
-        --app-highlight-color: var(--purple-color);
-      }
-      tagged-toolbar-card[title='Thermodynamics'] {
-        grid-column: 1 / 7;
-        grid-row: 7 / 8;
-        --app-highlight-color: var(--yellow-color);
-      }
-      tagged-toolbar-card[title='Distribution'] {
-        grid-column: 7 / 13;
-        grid-row: 7 / 8;
-        --app-highlight-color: var(--yellow-color);
-      }
-      .card-button-layout {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-      }
-      paper-icon-button {
-        color: var(--text-light-color);
-        transition: color 0.2s;
-      }
-      paper-icon-button:hover {
-        border-radius: 50%;
-        background-color: var(--gray-color);
-        border: 2px solid var(--app-light-color);
-        color: var(--app-light-color);
-        transition: color 0.2s;
-      }
-      p.text {
-        padding: 0px;
-      }
-      icon-item {
-        margin: auto;
+      };
+      #trial-title,
+      #parameters-title {
+        margin-top: 48px;
       }
     </style>
         
-        
-    <page-header title='Coating Process Overview' icon='my-icons:home'></page-header>
-    
-    <div id='content-layout'>
-      <div class='section-title'>Materials & Equipment</div>
-      <tagged-toolbar-card title='Tablet'>
-        <p class='text'>
-          The tablet shape, size and formulation effect the coating process
-          in many ways. Including the film thickness, coating uniformity and optimal batch size.
-        </p>
-        <icon-item icon='my-icons:oval-tablet' label='Colorcon Round Placebo' detail='200mg &middot 11mm x 5.6mm'></icon-item>
-        <a href='#/tablet/overview' slot='toolbar'>
-          <paper-icon-button icon='my-icons:info'></paper-icon-button>
-        </a>
-        <a href='#/tablet/library' slot='toolbar'>
-          <paper-icon-button icon='my-icons:library'></paper-icon-button>
-        </a>
-        <a href='#/tablet/designer' slot='toolbar'>
-          <paper-icon-button icon='my-icons:edit'></paper-icon-button>
-        </a>
-      </tagged-toolbar-card>  
-      <tagged-toolbar-card title='Coating Pan'>
-        <p class='text'>
-          The coating pan setup, baffles and spray guns are responsible for mixing the tablets,
-          disbursing the coating liquid. And these conditions can change with different pan sizes.
-        </p>
-        <icon-item icon='my-icons:pan' label="O'Hara Labcoat II" detail='48 inches &middot 145 liters'></icon-item>
-        <paper-icon-button slot='toolbar' icon='my-icons:info'></paper-icon-button>
-        <paper-icon-button slot='toolbar' icon='my-icons:library'></paper-icon-button>
-        <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-      </tagged-toolbar-card>
-      <tagged-toolbar-card title='Coating Formulation'>
-          <p class='text'>
-            The coating  is choosen for it's functionality (ie aesethics, modified release, 
-            opacity, adhesion, etc). The amount of coating, the dispersion solids, gloss and more are 
-            effected by the formulation you choosen.
-          </p>
-          <icon-item icon='my-icons:coating' label="Opadry II 85F Series" detail='10% solids &middot 156cps'></icon-item>
-          <paper-icon-button slot='toolbar' icon='my-icons:info'></paper-icon-button>
-          <paper-icon-button slot='toolbar' icon='my-icons:library'></paper-icon-button>
-          <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-        </tagged-toolbar-card>
-      
-      <div class='section-title'>Trial Setup</div>
-      <tagged-toolbar-card title='Batch Size'>
-        <p class='text'>
-          The batch size effects the coating time, pan movement and more. 
-          Set your desired batch size by weight, count or volume. 
-        </p>
-        <icon-item icon='my-icons:batch-size' label='154.3 kilograms' detail='146 liters &middot 330,321 tabs'></icon-item>
-        <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-      </tagged-toolbar-card>    
-      <tagged-toolbar-card title='Coating Amount'>
-          <p class='text'>
-            Depending on your application the amount of coating may vary. Choose the amount of coating to 
-            apply based on weight gain, film thickness or coating coverage.
-          </p>
-          <icon-item icon='my-icons:coating-amount' label="3% weight gain" detail='34.5 mircons &middot 0.23mm2'></icon-item>
-          <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-        </tagged-toolbar-card>
-      
-      <div class='section-title'>Process Parameters</div>
-      <tagged-toolbar-card title='Thermodynamics'>
-        <p class='text'>
-          Update the set of coating parameters that effect the evaporation of water. These
-          include spray rate, airflow and temperatures.
-        </p>
-        <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-      </tagged-toolbar-card>    
-      <tagged-toolbar-card title='Distribution'>
-          <p class='text'>
-            Update the set of parameters that influence the distribution of coating including
-            pan speed, spray parameters and more.
-          </p>
-          <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
-        </tagged-toolbar-card>
-      
+    <div id='page-title'>Coating Process</div>
+    <div id='material-title' class='section-title'>Materials & Equipment</div>
+    <div id='material-description' class='section-description'>
+      The material and equipment used for the coating process determine the the 
+      coating process parameters, the batch size and target coating weight gain. 
+      Below load the materials and equipment from the library or quickly design your own.
     </div>
+    
+    <tablet-card></tablet-card>
+    <equipment-card></equipment-card>
+    <coating-card></coating-card>
+      
+    <div id='trial-title' class='section-title'>Trial Setup</div>
+    <div id='trial-description' class='section-description'></div>
+    
+    <batch-card></batch-card>
+    <coating-amount-card></coating-amount-card>
+      
+      <!--<div id='parameters-title' class='section-title'>Process Parameters</div>-->
+      <!--<div id='parameters-description' class='section-description'>-->
+      <!--  Process parameters balance the evaporation of water and the distribution-->
+      <!--  of the coating. Set your process parameters or calculate a recommended-->
+      <!--  starting point.-->
+      <!--</div>-->
+      <!--<tagged-toolbar-card title='Thermodynamics'>-->
+      <!--  <p slot='description'>-->
+      <!--    Update the set of coating parameters that effect the evaporation of water. These-->
+      <!--    include spray rate, airflow and temperatures.-->
+      <!--  </p>-->
+      <!--  <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>-->
+      <!--</tagged-toolbar-card>    -->
+      <!--<tagged-toolbar-card title='Distribution'>-->
+      <!--    <p slot='description'>-->
+      <!--      Update the set of parameters that influence the distribution of coating including-->
+      <!--      pan speed, spray parameters and more.-->
+      <!--    </p>-->
+      <!--    <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>-->
+      <!--  </tagged-toolbar-card>-->
     
   </template>
 
   <script>
-    class HomePage extends Polymer.Element {
+    class HomePage extends ReduxMixin(Polymer.Element) {
       static get is() { return 'home-page'; }
       static get properties() {
         return {
-          routeData: Object
+          tablet: { type: Object, statePath: 'tablet' }
         };
+      }
+      
+       _getTabletDimensionString(shape, length, width) {
+        // values in meters and need to convert to mm.
+        let conv = 1000;
+        if(shape === 'round') {
+          return `${(length * conv).toFixed(1)} mm`;
+        } else {
+          return `${(length * conv).toFixed(1)} x ${(width * conv).toFixed(1)} mm`;
+        }
+      }
+      
+      _getDensityString(density) {
+        return `${(density * 1e-6).toFixed(2)} g/ml`;
+      }
+      
+      _getTabletWeightString(weight) {
+        return `${(weight * 1000).toFixed(1)} mg`;
       }
       
     }

@@ -1,0 +1,49 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../elements/cards/tagged-toolbar-card.html">
+<link rel="import" href="../../elements/list-items/small-icon-item.html">
+<link rel="import" href="../../elements/my-icons.html">
+<link rel="import" href="../../redux/redux-mixin.html">
+
+<dom-module id="coating-amount-card">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: block;
+        --app-highlight-color: var(--purple-color);
+      }
+    </style>
+        
+    <tagged-toolbar-card title='Coating Amount'>
+      
+      <p slot='description'>
+        Depending on your application the amount of coating may vary. Choose the amount of coating to 
+        apply based on weight gain, film thickness or coating coverage.
+      </p>
+      
+      <icon-item slot='item' icon='my-icons:coating-amount' label="3% weight gain" detail='34.5 mircons &middot 0.23mm2'></icon-item>
+     
+      <paper-icon-button slot='toolbar' icon='my-icons:edit'></paper-icon-button>
+    
+    </tagged-toolbar-card> 
+    
+  </template>
+
+  <script>
+    class CoatingAmountCard extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'coating-amount-card'; }
+      static get properties() {
+        return {
+          amount: Object
+        };
+      }
+      
+    }
+
+    window.customElements.define(CoatingAmountCard.is, CoatingAmountCard);
+  </script>
+</dom-module>

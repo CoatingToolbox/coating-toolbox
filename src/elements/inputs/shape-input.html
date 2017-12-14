@@ -1,0 +1,82 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id='shape-input'>
+    <template>
+        <style>
+        :host {
+            display: flex;
+            flex-direction: column;
+        }
+        #label-layout {
+            display: flex;
+            align-items: center;
+            padding-bottom: 8px;
+        }
+        iron-selector {
+            display: flex;
+            align-items: center;
+            justify-items: flex-start;
+        }
+        .shape-layout {
+            padding: 8px 24px;
+            margin: 4px  32px 0px 0px;
+            color: var(--text-color);
+            @apply --paper-font-title;
+        }
+        .shape-layout:hover {
+            cursor: pointer;
+        }
+        .shape-layout.iron-selected {
+            background-color: var(--gray-color);
+            border-radius: 24px;
+        }
+        #label {
+            @apply --paper-font-subhead;
+            var(--text-light-color);
+        }
+        
+        iron-icon {
+            margin-right: 8px;
+            color: var(--app-light-color);
+            --iron-icon-stroke-color: var(--app-light-color);
+        }
+    </style>
+    
+        
+        <div id='label-layout'>
+            <iron-icon icon='my-icons:shape'></iron-icon>
+            <div id='label'>Tablet Shape</div>
+        </div>
+        
+        <iron-selector selected='{{shape}}' attr-for-selected='shape'>
+            <div class='shape-layout' shape='round'>
+                Round
+            </div>
+            <div class='shape-layout' shape='oval'>
+                Oval
+            </div>
+            <div class='shape-layout' shape='caplet'>
+                Caplet
+            </div>
+        </iron-selector>
+        
+    </template>
+    <script>
+        class ShapeInput extends Polymer.Element {
+            static get is() { return 'shape-input';}
+            
+            static get properties() {
+                return {
+                    shape: { type: String, notify: true },
+                };
+            }
+        }
+        
+        window.customElements.define(ShapeInput.is, ShapeInput);
+    </script>
+</dom-module>

@@ -1,0 +1,64 @@
+
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../elements/cards/tagged-toolbar-card.html">
+<link rel="import" href="../../elements/list-items/small-icon-item.html">
+<link rel="import" href="../../elements/my-icons.html">
+<link rel="import" href="../../redux/redux-mixin.html">
+
+<dom-module id="coating-card">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: flex;
+      }
+    </style>
+        
+      
+    <tagged-toolbar-card title='Coating'>
+      <p class='text' slot='description'>
+        With the equipment and materials selected you can now start to plan the 
+        coating trial. Key decisions include the batch size to be coated and the 
+        amount of coating to apply. Below choose your targets or calculate the recommend values.
+      </p>
+      <div class='title' slot='item-title'>Opadry II 85F</div>
+      <small-icon-item slot='item' label='10% solids' icon='my-icons:volume'></small-icon-item>
+      <small-icon-item slot='item' label='140 cps' icon='my-icons:viscosity'></small-icon-item>
+      <paper-icon-button icon='my-icons:library' slot='toolbar'></paper-icon-button>
+      <paper-icon-button icon='my-icons:edit' slot='toolbar'></paper-icon-button>
+    </tagged-toolbar-card>
+      
+      
+  </template>
+
+  <script>
+    class CoatingCard extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'coating-card'; }
+      static get properties() {
+        return {
+          tablet: { type: Object, statePath: 'coating' }
+        };
+      }
+      
+       _getTabletDimensionString(shape, length, width) {
+        // values in meters and need to convert to mm.
+        let conv = 1000;
+        if(shape === 'round') {
+          return `${(length * conv).toFixed(1)} mm`;
+        } else {
+          return `${(length * conv).toFixed(1)} x ${(width * conv).toFixed(1)} mm`;
+        }
+      }
+      
+      _getTabletWeightString(weight) {
+        return `${(weight * 1000).toFixed(1)} mg`;
+      }
+      
+    }
+
+    window.customElements.define(CoatingCard.is, CoatingCard);
+  </script>
+</dom-module>
