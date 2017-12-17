@@ -4,12 +4,10 @@
 <link rel="import" href="../../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../data/tablet-class.html">
+<link rel="import" href="../../data/coating-pan-class.html">
 <link rel="import" href="../../redux/redux-mixin.html">
-<link rel="import" href="../../elements/my-icons.html">
 
-<dom-module id="tablet-library">
+<dom-module id="pan-library">
   
    <template>
     
@@ -55,7 +53,7 @@
       
       #table-layout {
         display: grid;
-        grid-template-columns: 1fr auto auto auto auto auto;
+        grid-template-columns: auto auto auto auto auto auto;
         grid-template-rows: 48px;
         grid-auto-rows: auto;
         margin-bottom: 8px;
@@ -197,43 +195,39 @@
       
       <div id='header'>
         <paper-icon-button icon='my-icons:close' on-click='toggle'></paper-icon-button>
-        <div id='page-title'>Tablet Library</div>
+        <div id='page-title'>Coating Pan Library</div>
         <div id='search-layout'>
           <iron-icon id='search-icon' icon='my-icons:search'></iron-icon>
-          <paper-input value='{{filterTerm}}' placeholder='Search Product Name...' no-label-float></paper-input>
+          <paper-input value='{{filterTerm}}' placeholder='Search Equipment Name...' no-label-float></paper-input>
         </div>
       </div>
       
       <div id='table-layout'>
-        <div class='header cell'>Product</div>
-        <div class='header cell'>Formulation</div>
-        <div class='header cell'>Shape</div>
-        <div class='header cell'>Dimensions (mm)</div>
-        <div class='header cell'>Weight (mg)</div>
+        <div class='header cell'>Equipment</div>
+        <div class='header cell'>Nickname</div>
+        <div class='header cell'>Location</div>
+        <div class='header cell'>Diameter (in)</div>
+        <div class='header cell'>Brim Volume (l)</div>
         <div class='header cell'></div>
         
         <template is='dom-repeat' items='[[_filterLibrary(library, filterTerm)]]'>
           <div class='cell'>
-            <div class='item-title'>[[item.productName]]</div>
-            <div class='subtext'>[[item.companyName]] [[item.locationName]]</div>
+            <div class='subtext'>[[item.vendorName]]</div>
+            <div class='item-title'>[[item.equipmentName]]</div>
           </div>
           <div class='cell'>
-            <div>[[item.productType]]</div>
-            <div class='subtext'>[[item.formulationName]]</div>
+            <div>[[item.nickname]]</div>
           </div>
-          <div class='cell shape-icon'>
-            <iron-icon icon='[[_getIcon(item.shape)]]'></iron-icon>
-            <div class='subtext'>[[item.shape]]</div>
+          <div class='cell'>
+            <div>[[item.companyName]]</div>
+            <div class='subtext'>[[item.locationName]]</div>
           </div>
-          <div class='cell number'>[[_convertDimensions(item.shape, item.length, item.width, item.totalThickness)]]</div>
-          <div class='cell number'>[[_convertWeight(item.weight)]]</div>
+          <div class='cell number'>[[_convertDiameter(item.panDiameter)]]</div>
+          <div class='cell number'>[[_convertVolume(item.brimVolume)]]</div>
           
           <div class='cell icon-layout'>
-            <div class='icon-button' on-click='_loadTablet'>
+            <div class='icon-button' on-click='_load'>
               <iron-icon icon='my-icons:load'></iron-icon>
-            </div>
-            <div class='icon-button' on-click='_editTablet'>
-              <iron-icon icon='my-icons:edit'></iron-icon>
             </div>
            
           </div> 
@@ -248,39 +242,61 @@
   </template>
 
   <script>
-    class TabletLibrary extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'tablet-library'; }
+    class PanLibrary extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'pan-library'; }
       
       static get properties() {
         return {
           filterTerm: String,
           opened: { type: Boolean, reflectToAttribute: true, value: false },
-          tabletParameters: {
+          panParameters: {
             type: Array,
             value: function() {
               return [
-                {},
-                {productName: "Jason's Tablet", shape: "oval", weight: 0.6, bulkDensity: 720000},
-                {productName: "Mike's Caplet", shape: "caplet", weight: 0.72, width: 0.008, length: 0.011, bulkDensity: 841000},
-                {},
-                {},
-                {productName: "Jason's Tablet", shape: "oval", weight: 0.6, bulkDensity: 720000},
-                {productName: "Mike's Caplet", shape: "caplet", weight: 0.72, width: 0.008, length: 0.011, bulkDensity: 841000},
-                {},
-                {productName: "Jason's Tablet", shape: "oval", weight: 0.6, bulkDensity: 720000},
-                {productName: "Mike's Caplet", shape: "caplet", weight: 0.72, length: 0.014, width: 0.008, width: 0.011, weight: 0.945, bulkDensity: 841000},
+                {nickname: '9" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                equipmentName: 'M Coater', panDiameter: 0.2286, openingDiameter: 0.127, brimWidth: 0.1651, wallWidth: 0.1143}, 
+                
+                {nickname: '12" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                equipmentName: 'Labcoat IIX', panDiameter: 0.3048, openingDiameter: 0.1524, brimWidth: 0.2032, wallWidth: 0.1143},
+                
+                {nickname: '15" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                equipmentName: 'Labcoat IIX', panDiameter: 0.381, openingDiameter: 0.2032, brimWidth: 0.31115, wallWidth: 0.2032},
+                
+                {nickname: '19" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                equipmentName: 'Labcoat IIX', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794},
+                
+                {nickname: '24" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                equipmentName: 'Labcoat IIX', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.508, wallWidth: 0.3302},
+                
+                {nickname: '30" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                equipmentName: 'Labcoat IIX', panDiameter: 0.762, openingDiameter: 0.254, brimWidth: 0.6477, wallWidth: 0.381},
+                
+                {nickname: '48" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
+                equipmentName: 'Fastcoat', panDiameter: 1.2192, openingDiameter: 0.4826, brimWidth: 0.93345, wallWidth: 0.508},
+                
+                {nickname: '15" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+                equipmentName: 'Compu-Lab', panDiameter: 0.381, openingDiameter: 0.254, brimWidth: 0.2159, wallWidth: 0.1524}, 
+                
+                {nickname: '19" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+                equipmentName: 'Compu-Lab', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794}, 
+                
+                {nickname: '24" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
+                equipmentName: 'Compu-Lab', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.53975, wallWidth: 0.3302},
+                
+                {nickname: '60" Pan', locationName: 'Irvine, CA', companyName: 'Par', vendorName: "Thomas Engineering", 
+                equipmentName: 'Accela-Cota', panDiameter: 1.524, openingDiameter: 0.4826, brimWidth: 1.2192, wallWidth: 0.635}
               ];
             }
           },
           library: {
             type: Array,
-            computed: '_computeLibrary(tabletParameters)'
+            computed: '_computeLibrary(panParameters)'
           }
         };
       }
       _computeLibrary(parameters) {
         return parameters.map( params => {
-          return new Tablet(params).toJSON();
+          return new CoatingPan(params).toJSON();
         });
       }
       _lockScroll(e) {
@@ -308,41 +324,26 @@
         }
         document.querySelector('body').style.overflow = overflow;
       }
-      _loadTablet(e) {
+      _load(e) {
         this.dispatch({
-          type: "LOAD_TABLET",
-          tablet: e.model.item
-        });
-        this.toggle();
-      }
-      _editTablet(e) {
-        this.dispatch({
-          type: "LOAD_TABLET",
-          tablet: e.model.item
+          type: "LOAD_PAN",
+          value: e.model.item
         });
         this.toggle();
       }
       _filterLibrary(library, searchTerm) {
         if(!searchTerm) { return library; }
-        return library.filter( tablet => { return tablet.productName.toLowerCase().includes(searchTerm.toLowerCase()); });
+        return library.filter( pan => { return pan.productName.toLowerCase().includes(searchTerm.toLowerCase()); });
       }
-      _getIcon(shape) {
-        return `my-icons:${shape}-tablet`;
+      
+      _convertDiameter(diameter) {
+        return `${(diameter * 39.3701).toFixed(0)}`;
       }
-      _convertDimensions(shape, length, width, thickness) {
-        // values in meters and need to convert to mm.
-        let conv = 1000;
-        if(shape === 'round') {
-          return `${(length * conv).toFixed(1)} x ${(thickness * conv).toFixed(1)}`;
-        } else {
-          return `${(length * conv).toFixed(1)} x ${(width * conv).toFixed(1)} x ${(thickness * conv).toFixed(1)}`;
-        }
-      } 
-      _convertWeight(weight) {
-        return (weight * 1000).toFixed(1);
+      _convertVolume(volume) {
+        return `${(volume * 1000).toFixed(0)}`;
       }
     }
 
-    window.customElements.define(TabletLibrary.is, TabletLibrary);
+    window.customElements.define(PanLibrary.is, PanLibrary);
   </script>
 </dom-module>

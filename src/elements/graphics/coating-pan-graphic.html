@@ -1,4 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../data/coating-pan-class.html">
 
 <dom-module id="coating-pan-graphic">
   <template>
@@ -29,12 +31,21 @@
       }
     </style>
     
-    <svg viewbox='0 0 24 24'>
-      <path class='outline' d$='[[_getOutline(pan.*, view)]]'></path>
-      <path class='volume' d$='[[_getVolume(pan.*, view, volumeType)]]'></path>
-      <path class='opening' d$='[[_getOpening(pan.*, view)]]'></path>
-      <path class='dimension' d$='[[_getDimension(pan.*, view, lineType)]]'></path>
-    </svg>
+    
+    <template is='dom-if' if='[[frontView]]'>
+      <svg viewbox='0 0 24 24'>
+      <path class='outline' d$='[[_getFrontPan(pan.panDiameter)]]'></path>
+      <path class='outline' d$='[[_getFrontPan(pan.openingDiameter)]]'></path>
+      <path class='volume' d$='[[_getFrontFill(pan.panDiameter, pan.brimHeight)]]'></path>
+      </svg>
+    </template>
+    
+    <template is='dom-if' if='[[sideView]]'>
+      <svg viewbox='0 0 24 24'>
+        <path class='outline' d$='[[_getSidePan(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth)]]'></path>
+        <path class='volume' d$='[[_getSideFill(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth, pan.brimHeight)]]'></path>
+      </svg>
+    </template>
             
   </template>
 
@@ -46,21 +57,9 @@
       
       static get properties() {
         return {
-          pan: {
-            type: Object,
-          },
-          view: {
-            type: String,
-            value: 'front'
-          },
-          lineType: {
-            type: String,
-            value: ''
-          },
-          volumeType: {
-            type: String, 
-            value: 'fill'
-          }, 
+          frontView: Boolean,
+          sideView: Boolean,
+          pan: Object,
           svg: {
             type: Object,
             value: function() {
@@ -92,102 +91,9 @@
           },
         };
       }
-      
-      _getOutline(pan, view) {
-        pan = pan.base;
-        if(!pan) { return;}
-        if(view === 'side') {
-          return this.getSidePan(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth);
-        } else {
-          return this.getFrontPan(pan.panDiameter);
-        }
-      }
-      _getVolume(pan, view, volumeType){
-        pan = pan.base;
-        if(!pan) { return; }
-        
-        if(view === 'side') {
-          switch(volumeType) {
-            case 'fill':
-              return this.getSideFill(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth, pan.fillHeight);
-            case 'brim':
-              return this.getSideFill(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth, pan.brimHeight);
-            case 'max':
-              return this.getSideFill(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth, pan.maxFillHeight);
-            case 'min':
-              return this.getSideFill(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth, pan.minFillHeight);
-          }
-        } else {
-          switch(volumeType) {
-            case 'fill':
-              return this.getFrontFill(pan.panDiameter, pan.fillHeight);
-            case 'brim':
-              return this.getFrontFill(pan.panDiameter, pan.brimHeight);
-            case 'max':
-              return this.getFrontFill(pan.panDiameter, pan.maxFillHeight);
-            case 'min':
-              return this.getFrontFill(pan.panDiameter, pan.minFillHeight);
-          }
-        }
-        
-      }
-      _getOpening(pan, view) {
-        pan = pan.base;
-        if(!pan){ return; }
-        
-        if(view !== 'front') {
-          return '';
-        } else {
-          return this.getFrontPan(pan.openingDiameter);
-        }
-      }
-      _getDimension(pan, view, lineType) {
-        pan = pan.base;
-        if(!pan){ return; }
-        
-        if(view === 'side') {
-          switch(lineType) {
-            case 'brim-width':
-              return this.getSideWidthLine(pan.panDiameter, pan.brimWidth);
-            case 'fill-width':
-              return this.getSideWidthLine(pan.panDiameter, pan.fillWidth);
-            case 'min-width':
-              return this.getSideWidthLine(pan.panDiameter, pan.minFillWidth);
-            case 'max-width':
-              return this.getSideWidthLine(pan.panDiameter, pan.maxFillWidth);
-            case 'wall-width':
-              return this.getSideWidthLine(pan.panDiameter, pan.wallWidth);
-            case 'fill-height':
-              return this.getSideFillHeightLine(pan.panDiameter, pan.fillHeight, pan.brimWidth);
-            case 'brim-height':
-              return this.getSideFillHeightLine(pan.panDiameter, pan.brimHeight, pan.brimWidth);
-            case 'max-height':
-              return this.getSideFillHeightLine(pan.panDiameter, pan.maxFillHeight, pan.brimWidth);
-            case 'min-height':
-              return this.getSideFillHeightLine(pan.panDiameter, pan.minFillHeight, pan.brimWidth);
-            case 'side-wall':
-              return this.getSideWallLine(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth);
-          }
-        } else {
-          switch(lineType) {
-            case 'pan-diameter':
-              return this.getFrontPanDiameterLine(pan.panDiameter);
-            case 'opening-diameter':
-              return this.getFrontOpeningDiameterLine(pan.openingDiameter, pan.panDiameter);
-            case 'brim-height':
-              return this.getFrontBrimHeightLine(pan.openingDiameter, pan.panDiameter);
-            case 'fill-height':
-              return this.getFrontFillHeightLine(pan.panDiameter, pan.fillHeight);
-            case 'fill-length':
-              return this.getFrontFillLengthLine(pan.panDiameter, pan.fillLength);
-            default:
-              return '';
-          }
-        }
-      }
 
       // Path for SVG Graphics
-      getSidePan(diameter, open, wall, brim) {
+      _getSidePan(diameter, open, wall, brim) {
         let svg = this.svg;
         //helper values
         let scaledDiameter = diameter * svg.scale;
@@ -211,7 +117,7 @@
                 " l " + wallX + " " + wallY +
                 " l 0 " + scaledOpen + " z";
       }
-      getFrontPan(diameter) {
+      _getFrontPan(diameter) {
           let svg = this.svg;
           //helper values
           let scaledDiameter = diameter * svg.scale;
@@ -222,7 +128,7 @@
                   " a " + rad + " " + rad + " 0 0 0 " + scaledDiameter + " 0" +
                   " a " + rad + " " + rad + " 0 0 0 " + -scaledDiameter + " 0 z";
       } 
-      getFrontFill(diameter, fill){
+      _getFrontFill(diameter, fill){
         let svg = this.svg;
         //helper values
         let scaledDiameter = diameter * svg.scale;
@@ -242,7 +148,7 @@
         return  "M " + (svg.center - fillHalfChord) + " " + (svg.center + gapHeight) +
                       " a " + scaledRadius + " " + scaledRadius + " 0 0 0 " + (2 * fillHalfChord) + " 0 z";
       }
-      getSideFill(diameter, open, wall, brim, fill) {
+      _getSideFill(diameter, open, wall, brim, fill) {
         let svg = this.svg;
         //helper values
         let scaledDiameter = diameter * svg.scale;
@@ -268,247 +174,6 @@
                 " l " + -scaledWall + " 0" +
                 " l " + (-wallX + fillX) + " " + (-wallY + brimToFill) + " z";
       }
-      getSideFillHeightLine(diameter, fill, depth){
-        let svg = this.svg;
-         //helper values
-         let scaledDiameter = diameter * svg.scale;
-         let scaledDepth = depth * svg.scale;
-         let scaledFill = fill * svg.scale;
-        
-         //we stopp the graphic if fill height is bigger than pan radius
-         if(scaledFill > scaledDiameter / 2){
-           scaledFill = scaledDiameter / 2;
-         }
-         
-         return "M " + (svg.center + scaledDepth / 2 + svg.padding) + ' ' + (svg.center + scaledDiameter / 2 - scaledFill) +
-                    " l " + svg.cap + " 0" +
-                    " m " + (-svg.cap / 2) + " 0" +
-                    " l 0 " + scaledFill +
-                    " m " + (svg.cap / 2) + " 0" +
-                    " l " + -svg.cap + " 0";
-        }
-      
-      // the dimension lines
-      getFrontPanDiameterLine(diameter) {
-          let svg = this.svg;
-        let scaledDiameter = diameter * svg.scale;
-    
-        return "M " + (svg.center + scaledDiameter / 2 + svg.padding) + ' ' + (svg.center - scaledDiameter / 2) +
-                    " l " + svg.cap + " 0" +
-                    " m " + (-svg.cap / 2) + " 0" +
-                    " l 0 " + scaledDiameter +
-                    " m " + (svg.cap / 2) + " 0" +
-                    " l " + -svg.cap + " 0";
-        }
-      getFrontOpeningDiameterLine(open, diameter) {
-          let svg = this.svg;
-        let scaledOpen = open * svg.scale;
-        let scaledDiameter = diameter * svg.scale;
-    
-        return  "M " + (svg.center + scaledDiameter / 2 + svg.padding) + ' ' + (svg.center - scaledOpen / 2) +
-                    " l " + svg.cap + " 0" +
-                    " m " + (-svg.cap / 2) + " 0" +
-                    " l 0 " + scaledOpen +
-                    " m " + (svg.cap / 2) + " 0" +
-                    " l " + -svg.cap + " 0";
-      }
-      getFrontBrimHeightLine(open, diameter) {
-          let svg = this.svg;
-          let scaledOpen = open * svg.scale;
-          let scaledDiameter = diameter * svg.scale;
-          let scaledBrim = (scaledDiameter - scaledOpen) / 2;
-      
-          return  "M " + (svg.center + scaledDiameter / 2 + svg.padding) + ' ' + (svg.center + scaledOpen / 2) +
-                      " l " + svg.cap + " 0" +
-                      " m " + (-svg.cap / 2) + " 0" +
-                      " l 0 " + scaledBrim +
-                      " m " + (svg.cap / 2) + " 0" +
-                      " l " + -svg.cap + " 0";
-                       
-        }  
-      getFrontFillHeightLine(diameter, fill){
-        let svg = this.svg;
-        //helper values
-          let scaledDiameter = diameter * svg.scale;
-          let scaledRadius = scaledDiameter / 2;
-          let scaledFill = fill * svg.scale;
-          
-          //we stopp the graphic if fill height is bigger than pan radius
-          if(scaledFill > scaledRadius){
-            scaledFill = scaledRadius;
-          }
-           
-          return "M " + (svg.center + scaledRadius + svg.padding) + ' ' + (svg.center + scaledRadius - scaledFill) +
-                      " l " + svg.cap + " 0" +
-                      " m " + (-svg.cap / 2) + " 0" +
-                      " l 0 " + scaledFill +
-                      " m " + (svg.cap / 2) + " 0" +
-                      " l " + -svg.cap + " 0";
-        }
-      getSideWidthLine(diameter, depth) {
-        let svg = this.svg;
-        let scaledDiameter = diameter * svg.scale;
-        let scaledDepth = depth * svg.scale;
-  
-        return  "M " + (svg.center + scaledDepth / 2) + ' ' + (svg.center + scaledDiameter / 2 + svg.padding) +
-                    " l 0 " + svg.cap +
-                    " m 0 " + (-svg.cap / 2) + 
-                    " l " + -scaledDepth + " 0 " +
-                    " m 0 " + (svg.cap / 2) + 
-                    " l 0 " + -svg.cap ;    
-      }
-      getSideWallLine(diameter, open, wall, brim) {
-        let svg = this.svg;
-        //helper values
-        let scaledDiameter = diameter * svg.scale;
-        let scaledOpen = open * svg.scale;
-        let scaledWall = wall * svg.scale;
-        let scaledDepth = brim * svg.scale;
-      
-        //distance from brim to starting wall. Only one side This gives us the slope of the pan walls
-        let wallX = (scaledDepth - scaledWall) / 2;
-        //the difference in height from the brim to diameter only on one side
-        let wallY = (scaledDiameter - scaledOpen) / 2;
-        
-        // the x and y coordinate to move the end cap along
-        // the inverse and negative slop of the wall line
-        let capSlope = -wallX / wallY;
-        let capX = Math.sqrt(Math.pow(svg.cap, 2) / (1 + Math.pow(capSlope, 2)));
-        let capY = capX * capSlope;
-        
-        return  "M " + svg.center + " " + svg.center + 
-                    " m " + (scaledDepth / 2 + svg.padding ) + " " + (scaledOpen / 2 + -capY) +
-                    " l " + capX + " " + -capY +
-                    " m " + (-capX / 2) + " " + (capY / 2) +
-                    " l " + -wallX + " " + wallY + 
-                    " m " + (-capX / 2) + " " + (capY / 2) +
-                    " l " + capX + " " + -capY;
-      }
-      getFrontFillLengthLine(diameter, width){
-        let svg = this.svg;
-        //helper values
-          diameter = diameter * svg.scale;
-          width = width * svg.scale;
-         
-          return "M " + (svg.center + width / 2) + ' ' + (svg.center + diameter / 2) +
-                      " l 0 " + svg.cap +
-                      " m 0 " + (-svg.cap / 2) +
-                      " l " + -width + " 0" +
-                      " m 0 " + (svg.cap / 2) +
-                      " l 0 " + -svg.cap;
-      }
-      
-    //   getSideVolume(diameter, open, wall, brim) {
-    //     let svg = this.svg;
-    //     //helper values
-    //     let scaledDiameter = diameter * svg.scale;
-    //     let scaledOpen = open * svg.scale;
-    //     let scaledWall = wall * svg.scale;
-    //     let scaledDepth = brim * svg.scale;
-        
-    //     //distance from brim to starting wall. Only one side This gives us the slope of the pan walls
-    //     let wallX = (scaledDepth - scaledWall) / 2;
-    //     //the difference in height from the brim to diameter only on one side
-    //     let wallY = (scaledDiameter - scaledOpen) / 2;
-        
-    //     return "M " + svg.center + " " + svg.center + 
-    //             " m " + (scaledDepth / 2) + " " + (scaledOpen / 2) +
-    //             " l " + -wallX + " " + wallY + 
-    //             " l " + -scaledWall + " 0" +
-    //             " l " + -wallX + " " + -wallY + " z";
-    //   }
-    //   getSideWallLine(diameter, open, wall, brim) {
-    //       let svg = this.svg;
-    //       //helper values
-    //       let scaledDiameter = diameter * svg.scale;
-    //       let scaledOpen = open * svg.scale;
-    //       let scaledWall = wall * svg.scale;
-    //       let scaledDepth = brim * svg.scale;
-        
-    //       //distance from brim to starting wall. Only one side This gives us the slope of the pan walls
-    //       let wallX = (scaledDepth - scaledWall) / 2;
-    //       //the difference in height from the brim to diameter only on one side
-    //       let wallY = (scaledDiameter - scaledOpen) / 2;
-          
-    //       // the x and y coordinate to move the end cap along
-    //       // the inverse and negative slop of the wall line
-    //       let capSlope = -wallX / wallY;
-    //       let capX = Math.sqrt(Math.pow(svg.cap, 2) / (1 + Math.pow(capSlope, 2)));
-    //       let capY = capX * capSlope;
-          
-    //       return  "M " + svg.center + " " + svg.center + 
-    //                   " m " + (scaledDepth / 2 + svg.padding ) + " " + (scaledOpen / 2 + -capY) +
-    //                   " l " + capX + " " + -capY +
-    //                   " m " + (-capX / 2) + " " + (capY / 2) +
-    //                   " l " + -wallX + " " + wallY + 
-    //                   " m " + (-capX / 2) + " " + (capY / 2) +
-    //                   " l " + capX + " " + -capY;
-    //     }
-    //   getFrontFillBrimLine(diameter, open, brim){
-    //     let svg = this.svg;
-    //     //helper values
-    //       let scaledDiameter = diameter * svg.scale;
-    //       let scaledRadius = scaledDiameter / 2;
-    //       let scaledOpen = open * svg.scale;
-    //       let scaledBrim = brim * svg.scale;
-        
-    //       //we stopp the graphic if fill height is bigger than pan radius
-    //       if(scaledBrim < 0){
-    //         scaledBrim = 0;
-    //       }
-         
-    //       return "M " + (svg.center + scaledRadius + svg.padding) + ' ' + (svg.center + scaledOpen / 2) +
-    //                   " l " + svg.cap + " 0" +
-    //                   " m " + (-svg.cap / 2) + " 0" +
-    //                   " l 0 " + scaledBrim +
-    //                   " m " + (svg.cap / 2) + " 0" +
-    //                   " l " + -svg.cap + " 0";
-    //     }
-    //   getFrontFillLengthLine(diameter, width){
-    //     let svg = this.svg;
-    //     //helper values
-    //       diameter = diameter * svg.scale;
-    //       width = width * svg.scale;
-         
-    //       return "M " + (svg.center + width / 2) + ' ' + (svg.center + diameter / 2) +
-    //                   " l 0 " + svg.cap +
-    //                   " m 0 " + (-svg.cap / 2) +
-    //                   " l " + -width + " 0" +
-    //                   " m 0 " + (svg.cap / 2) +
-    //                   " l 0 " + -svg.cap;
-    //   }
-    //   getSideFillWidthLine(diameter, depth){
-    //     let svg = this.svg;
-    //     //helper values
-    //     diameter = diameter * svg.scale;
-    //     depth = depth * svg.scale;
-       
-    //     return "M " + (svg.center + depth / 2) + ' ' + (svg.center + diameter / 2) +
-    //               " l 0 " + svg.cap +
-    //               " m 0 " + (-svg.cap / 2) +
-    //               " l " + -depth + " 0" +
-    //               " m 0 " + (svg.cap / 2) +
-    //               " l 0 " + -svg.cap;
-    //   }
-    //   getSideFillBrimLine(depth, open, brim){
-    //     let svg = this.svg;
-    //     //helper values
-    //     let scaledDepth = depth * svg.scale;
-    //     let scaledOpen = open * svg.scale;
-    //     let scaledBrim = brim * svg.scale;
-      
-    //     //we stopp the graphic if fill height is bigger than pan radius
-    //     if(scaledBrim < 0){
-    //       scaledBrim = 0;
-    //     }
-       
-    //     return "M " + (svg.center + scaledDepth / 2 + svg.padding) + ' ' + (svg.center + scaledOpen / 2) +
-    //                 " l " + svg.cap + " 0" +
-    //                 " m " + (-svg.cap / 2) + " 0" +
-    //                 " l 0 " + scaledBrim +
-    //                 " m " + (svg.cap / 2) + " 0" +
-    //                 " l " + -svg.cap + " 0";
-    // }
     }
     
     window.customElements.define(CoatingPanGraphic.is, CoatingPanGraphic);

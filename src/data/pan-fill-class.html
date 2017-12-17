@@ -1,17 +1,28 @@
 <script>
 
-class CoatingPan { 
+class PanFill { 
   
   constructor(parameters = {}) {
     this.panDiameter = 1.2192;
     this.openingDiameter = 0.4826;
     this.wallWidth = 0.508;
     this.brimWidth = 0.93345;
+    this.fillVolume = 0;
+    this.fillDensity = 760000;
+    this.tabletWeight = 0.4;
+    this.baffleHeight = 0;
+    this.sprayLength = 0.1524;
+    this.gun2gun = 0;
+    this.gunCount = 1;
+    this.baffleType= '';
+    this.gunType = '';
+    this.gunModel = '';
     this.equipmentName = "O'Hara Fastcoat";
     this.vendorName = '';
     this.nickname = '';
     this.companyName = '';
     this.locationName = '';
+    this.contactName = '';
     
     
     Object.getOwnPropertyNames(this).map(name => {
@@ -24,15 +35,6 @@ class CoatingPan {
   toJSON() {
     return {
       panDiameter: this.panDiameter,
-      openingDiameter: this.openingDiameter,
-      brimVolume: this.brimVolume,
-      wallWidth: this.wallWidth,
-      brimWidth: this.brimWidth,
-      brimHeight: this.brimHeight,
-      brimLength: this.brimLength,
-      radius: this.radius,
-      sideWallSlope: this.sideWallSlope,
-      sideWallLength: this.sideWallLength,
       equipmentName: this.equipmentName,
       locationName: this.locationName,
       companyName: this.companyName,
@@ -41,8 +43,58 @@ class CoatingPan {
       gunType: this.gunType,
       gunCount: this.gunCount,
       gunMode: this.gunModel,
+      brimVolume: this.brimVolume
     };
   }
+  get fillHeight(){ 
+    //we estimate the heigh that will match our fill volume
+    let saggita = 0;
+    let step = this.brimHeight / 500;
+    for(let i=0; i<this.brimHeight; i = i + step){
+      saggita = this.brimHeight - i;
+      let volume = this.calcVolume(saggita, this.wallWidth, this.panDiameter, this.sideWallSlope);
+      if(volume <= this.fillVolume){
+        break;
+      }
+    }
+    return saggita;
+  }
+  
+  get fillWeight() {
+    return this.fillVolume * this.fillDensity;
+  }
+  set fillWeight(val) {
+    this.fillVolume = val / this.fillDensity;
+  }
+  
+  get fillCount() {
+    return Math.ceil(this.fillWeight / this.tabletWeight);
+  }
+  set fillCount(val) {
+    this.fillWeight = val * this.tabletWeight;
+  }
+  
+  get fillWidth() {
+    //the "run" or Width that we moved on one side of the pan side wall
+    let dist = this.fillHeight / this.sideWallSlope;
+    return this.wallWidth + dist + dist;
+  }
+  
+  get minFillWidth() {
+    //the "run" or Width that we moved on one side of the pan side wall
+    let dist = this.minFillHeight / this.sideWallSlope;
+    return this.wallWidth + dist + dist;
+  }
+  
+  get maxFillWidth() {
+    //the "run" or Width that we moved on one side of the pan side wall
+    let dist = this.maxFillHeight / this.sideWallSlope;
+    return this.wallWidth + dist + dist;
+  }
+  
+  get fillToBrim() {
+    return (this.fillHeight < this.brimHeight) ? this.brimHeight - this.fillHeight : 0;
+  } 
   
   get brimHeight() {
     return (this.panDiameter - this.openingDiameter) / 2;
@@ -52,6 +104,10 @@ class CoatingPan {
     return this.calcChordLength(this.radius, this.brimHeight);
   }
   
+  get fillLength() {
+    return this.calcChordLength(this.radius, this.fillHeight);
+  }
+  
   get brimVolume() {
     let volume =  this.calcVolume(this.brimHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
     // console.assert((volume > 0.17 * 0.9 && volume < 0.17 * 1.1), `The total volume is outside the O'Hara 48" pan target of 170L. The calculated volume is ${volume} m3`);
@@ -59,29 +115,60 @@ class CoatingPan {
     return volume;
   }
   
-  // get maxFillHeight() {
-  //   let limit = 0.0254;
-  //   if(this.brimHeight < 0.0254 * 4) {
-  //     limit = 0.0254 / 2;
-  //   }
-  //   return this.brimHeight - limit;
-  // }
+  get brimWeight() {
+    return this.brimVolume * this.fillDensity;
+  }
   
-  // get minFillHeight() {
-  //   if(this.baffleHeight > 0) {
-  //     return this.baffleHeight;
-  //   } else {
-  //     return this.brimHeight * 0.6;
-  //   }
-  // }
+  get maxFillHeight() {
+    let limit = 0.0254;
+    if(this.brimHeight < 0.0254 * 4) {
+      limit = 0.0254 / 2;
+    }
+    return this.brimHeight - limit;
+  }
   
-  // get maxFillVolume() {
-  //   return this.calcVolume(this.maxFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
-  // }
+  get minFillHeight() {
+    if(this.baffleHeight > 0) {
+      return this.baffleHeight;
+    } else {
+      return this.brimHeight * 0.6;
+    }
+  }
   
-  // get minFillVolume() {
-  //   return this.calcVolume(this.minFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
-  // }
+  get maxFillVolume() {
+    
+    return this.calcVolume(this.maxFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
+    
+  }
+  
+  get maxFillWeight() {
+    return this.maxFillVolume * this.fillDensity;
+  }
+  
+  get maxFillCount() {
+    return Math.ceil(this.maxFillWeight / this.tabletWeight);
+  }
+  
+  get minFillVolume() {
+    
+    return this.calcVolume(this.minFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
+    
+  }
+  
+  get minFillWeight() {
+    return this.minFillVolume * this.fillDensity;
+  }
+  
+  get minFillCount() {
+    return Math.ceil(this.minFillWeight / this.tabletWeight);
+  }
+  
+  get fillPercent() {
+    return this.fillVolume / this.brimVolume;
+  }
+  set fillPercent(val) {
+    this.fillVolume = val * this.brimVolume;
+  }
   
   get radius() {
     return this.panDiameter / 2;
@@ -102,6 +189,22 @@ class CoatingPan {
     return Math.sqrt(a2 + b2);
   }
   
+  get isUnderFilled() {
+    return (this.minFillVolume > this.fillVolume);
+  }
+  
+  get isOverFilled() {
+    return (this.maxFillVolume < this.fillVolume);
+  }
+  
+  get totalSprayLength() {
+    //the length of the gun manifold
+    let gunLength = (this.gunCount - 1) * this.gun2gun;
+    // the last gun on each end adds length by 1/2 spray length
+    let spray = gunLength + this.sprayLength;
+    return spray;
+    
+  }
   calcChordLength(radius, saggita) {
     //brim width... the chord length at the brim height
     //typically close to the full diameter as the brim height is near the center

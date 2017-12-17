@@ -10,7 +10,7 @@
   
     // create an initial state 
     const initialState = {
-        pan: new CoatingPan(),      /*global Tablet*/
+        pan: new CoatingPan().toJSON(),      /*global CoatingPan*/
         tablet: new Tablet().toJSON(),       /*global Tablet*/
         batch: new Batch()          /*global Batch*/
     };
@@ -19,18 +19,11 @@
     const reducer = (state = initialState, action) => {
         let newState = Object.assign({}, state);
         switch(action.type) {
-            case "SET_BATCH_COUNT":
-                newState.batch.count = action.value;
-                break;
-            case "SET_BATCH_VOLUME":
-                newState.batch.volume = action.value;
-                break;
-            case "SET_BATCH_WEIGHT":
-                newState.batch.weight = action.value;
-                break;
             case "LOAD_TABLET":
-                newState.batch.tablet = action.tablet;
                 newState.tablet = action.tablet;
+                break;
+            case "LOAD_PAN":
+                newState.pan = action.value;
                 break;
         }
         return newState;

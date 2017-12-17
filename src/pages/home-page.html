@@ -12,7 +12,7 @@
 
 <link rel="import" href="tablet-card/tablet-card.html">
 <link rel="import" href="coating-card/coating-card.html">
-<link rel="import" href="equipment-card/equipment-card.html">
+<link rel="import" href="pan-card/pan-card.html">
 <link rel="import" href="batch-card/batch-card.html">
 <link rel="import" href="coating-amount-card/coating-amount-card.html">
 
@@ -54,7 +54,7 @@
       tablet-card {
         grid-column: 1 / 7;
       }
-      equipment-card {
+      pan-card {
         grid-column: 7 / 13;
       }
       coating-card {
@@ -81,7 +81,7 @@
     </div>
     
     <tablet-card></tablet-card>
-    <equipment-card></equipment-card>
+    <pan-card></pan-card>
     <coating-card></coating-card>
       
     <div id='trial-title' class='section-title'>Trial Setup</div>
@@ -120,24 +120,6 @@
         return {
           tablet: { type: Object, statePath: 'tablet' }
         };
-      }
-      
-       _getTabletDimensionString(shape, length, width) {
-        // values in meters and need to convert to mm.
-        let conv = 1000;
-        if(shape === 'round') {
-          return `${(length * conv).toFixed(1)} mm`;
-        } else {
-          return `${(length * conv).toFixed(1)} x ${(width * conv).toFixed(1)} mm`;
-        }
-      }
-      
-      _getDensityString(density) {
-        return `${(density * 1e-6).toFixed(2)} g/ml`;
-      }
-      
-      _getTabletWeightString(weight) {
-        return `${(weight * 1000).toFixed(1)} mg`;
       }
       
     }

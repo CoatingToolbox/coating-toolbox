@@ -1,0 +1,80 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="coating-pan-graphic.html">
+
+<dom-module id="tablet-schematic-layout">
+  <template>
+    <style>
+    /*Schematic Styles*/
+      :host {
+        display: flex;
+        width: calc(100% - 32px - 10px);
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 16px;
+        background-color: var(--gray-color);
+        border: 5px solid var(--border-color);
+        padding: 8px 16px 16px 16px;
+      }
+      .graphic-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      coating-pan-graphic {
+        width: 175px;
+        height: 175px;
+      }
+      .schematic-label {
+        @apply --paper-font-subhead;
+        text-align: center;
+      }
+      
+      [hidden] {
+        display: none;
+      }  
+    </style>
+    
+    <div class='graphic-layout'>
+      <coating-pan-graphic front-view pan='[[pan]]'></coating-pan-graphic>
+      <div class='schematic-label'>Front View</div>
+    </div>
+    
+    <div class='graphic-layout'>
+      <coating-pan-graphic side-view pan='[[pan]]'></coating-pan-graphic>
+      <div class='schematic-label'>Side View</div>
+    </div>  
+    
+  </template>
+
+  <script>
+  
+    class PanSchematicLayout extends Polymer.Element {
+      
+      static get is() { return 'pan-schematic-layout';}
+      
+      static get properties() {
+        return {
+          tablet: Object,
+          _tablet: Object
+        };
+      }
+      
+      static get observers() {
+        return [
+          '_calcTabletDimensions(tablet.*)'
+        ];
+      }
+      
+      // take the redux tablet properties and pass to a tablet class
+      // to calculate all the values required to map the tablet
+      _calcTabletDimensions() {
+        this._tablet = new Tablet(this.tablet);
+      }
+
+    }
+    
+    window.customElements.define(PanSchematicLayout.is,PanSchematicLayout);
+    
+  </script>
+
+</dom-module>
