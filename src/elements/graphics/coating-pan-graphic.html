@@ -34,16 +34,16 @@
     
     <template is='dom-if' if='[[frontView]]'>
       <svg viewbox='0 0 24 24'>
-      <path class='outline' d$='[[_getFrontPan(pan.panDiameter)]]'></path>
-      <path class='outline' d$='[[_getFrontPan(pan.openingDiameter)]]'></path>
-      <path class='volume' d$='[[_getFrontFill(pan.panDiameter, pan.brimHeight)]]'></path>
+      <path class='outline' d$='[[_getFrontPan(_pan.panDiameter)]]'></path>
+      <path class='outline' d$='[[_getFrontPan(_pan.openingDiameter)]]'></path>
+      <path class='volume' d$='[[_getFrontFill(_pan.panDiameter, _pan.brimHeight)]]'></path>
       </svg>
     </template>
     
     <template is='dom-if' if='[[sideView]]'>
       <svg viewbox='0 0 24 24'>
-        <path class='outline' d$='[[_getSidePan(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth)]]'></path>
-        <path class='volume' d$='[[_getSideFill(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth, pan.brimHeight)]]'></path>
+        <path class='outline' d$='[[_getSidePan(_pan.panDiameter, _pan.openingDiameter, _pan.wallWidth, _pan.brimWidth)]]'></path>
+        <path class='volume' d$='[[_getSideFill(_pan.panDiameter, _pan.openingDiameter, _pan.wallWidth, _pan.brimWidth, _pan.brimHeight)]]'></path>
       </svg>
     </template>
             
@@ -60,6 +60,7 @@
           frontView: Boolean,
           sideView: Boolean,
           pan: Object,
+          _pan: Object,
           svg: {
             type: Object,
             value: function() {
@@ -90,6 +91,18 @@
             }
           },
         };
+      }
+      
+      static get observers() {
+        return [
+          '_calcPanDimensions(pan.*)'
+        ];
+      }
+      
+      // take the redux tablet properties and pass to a tablet class
+      // to calculate all the values required to map the tablet
+      _calcPanDimensions() {
+        this._pan = new CoatingPan(this.pan);
       }
 
       // Path for SVG Graphics

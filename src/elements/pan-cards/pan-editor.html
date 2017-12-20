@@ -5,11 +5,11 @@
 <link rel="import" href="../../elements/inputs/unit-input.html">
 <link rel="import" href="../../elements/inputs/shape-input.html">
 <link rel="import" href="../../elements/buttons/icon-label-button.html">
-<link rel="import" href="../../elements/graphics/tablet-schematic-layout.html">
+<link rel="import" href="../../elements/graphics/pan-schematic-layout.html">
 <link rel="import" href="../../redux/redux-mixin.html">
-<link rel="import" href="../../data/tablet-class.html">
+<link rel="import" href="../../data/coating-pan-class.html">
 
-<dom-module id="tablet-editor">
+<dom-module id="pan-editor">
   
    <template>
     
@@ -56,11 +56,12 @@
         grid-column: 1 / 3; 
         display: flex;
         flex-direction: column;
-        padding: 16px 56px;
+        padding: 16px;
         background-color: var(--app-primary-color);
         color: var(--white-color);
       }
       #header #page-title {
+        padding: 0px 56px;
         @apply --paper-font-display1;
       }
       #header paper-icon-button {
@@ -69,13 +70,13 @@
       }
       #header #page-description {
         max-width: 600px;
-        padding: 16px 0px;
+        padding: 16px 56px;
         @apply --paper-font-body2;
       }
       
-      text-input[label="Product Name"],
+      text-input[label="Equipment Name"],
       shape-input,
-      tablet-schematic-layout {
+      pan-schematic-layout {
         grid-column: 1 / 3;
       }
       icon-label-button {
@@ -93,27 +94,28 @@
         
         <div id='header'>
           <paper-icon-button icon='my-icons:close' on-click='toggle'></paper-icon-button>
-          <div id='page-title'>Tablet Designer</div>
-          <div id='page-description'>The Tablet Designer allows estimates important properties of a tablet. Starting with a compressed tablet input a few easy measurements like length, 
+          <div id='page-title'>Coating Pan Designer</div>
+          <div id='page-description'>
+            The Tablet Designer allows estimates important properties of a tablet. Starting with a compressed tablet input a few easy measurements like length, 
             thickness, and weight to caluclate the tablets surface area, volume and more.
           </div>
         </div>
         <div id='input-layout'>
           
-          <text-input value='{{tablet.productName}}' icon='my-icons:product' label='Product Name'></text-input>
+          <text-input value='{{pan.equipmentName}}' icon='my-icons:product' label='Equipment Name'></text-input>
+          <text-input value='{{pan.vendorName}}' icon='my-icons:product' label='Vendor'></text-input>
+          <text-input value='{{pan.nickname}}' icon='my-icons:product' label='Nickname'></text-input>
+          <text-input value='{{pan.companyName}}' icon='my-icons:product' label='Company'></text-input>
+          <text-input value='{{pan.locationName}}' icon='my-icons:product' label='Location'></text-input>
           
-          <shape-input shape='{{tablet.shape}}'></shape-input>
-          
-          <unit-input value='{{tablet.length}}' icon='my-icons:ruler' label='Length' type='length' selected-units='{{lengthUnits}}'></unit-input>
-          <unit-input hidden$='{{_isRound(tablet.shape)}}' value='{{tablet.width}}' icon='my-icons:ruler' label='Width' type='length' selected-units='{{lengthUnits}}'></unit-input>
-          <unit-input value='{{tablet.totalThickness}}' icon='my-icons:ruler' label='Total Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>
-          <unit-input value='{{tablet.bandThickness}}' icon='my-icons:ruler' label='Band Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>          
-          <unit-input value='{{tablet.weight}}' icon='my-icons:weight' label='Weight' type='weight' selected-units='mg'></unit-input>
-          <unit-input value='{{tablet.bulkDensity}}' icon='my-icons:density' label='Bulk Density' type='density' selected-units='g/ml'></unit-input>
+          <unit-input value='{{pan.panDiameter}}' icon='my-icons:ruler' label='Main Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
+          <unit-input value='{{pan.openingDiameter}}' icon='my-icons:ruler' label='Opening Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
+          <unit-input value='{{pan.brimWidth}}' icon='my-icons:ruler' label='Depth at Brim' type='length' selected-units='{{lengthUnits}}'></unit-input>
+          <unit-input value='{{pan.wallWidth}}' icon='my-icons:ruler' label='Depth at Perforated Wall' type='length' selected-units='{{lengthUnits}}'></unit-input>
         
-          <tablet-schematic-layout tablet='[[tablet]]'></tablet-schematic-layout>
+          <pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>
           
-          <icon-label-button on-click='_save' highlight label='Calculate Tablet' icon='my-icons:calculator'></icon-label-button>
+          <icon-label-button on-click='_save' highlight label='Calculate Coating Pan' icon='my-icons:calculator'></icon-label-button>
        
         </div>
         
@@ -124,12 +126,12 @@
   </template>
 
   <script>
-    class TabletEditor extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'tablet-editor'; }
+    class PanSchematic extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'pan-editor'; }
       static get properties() {
         return { 
-          tablet: { type: Object, statePath: 'tablet'},
-          lengthUnits: { type: String, value: 'mm' },
+          pan: { type: Object, statePath: 'pan'},
+          lengthUnits: { type: String, value: 'in' },
           opened: { type: Boolean, reflectToAttribute: true, value: false },
         };
       }
@@ -160,20 +162,14 @@
       }
       
       _save() {
-        let tablet = new Tablet(this.tablet).toJSON();
         this.dispatch({ 
-          type: "LOAD_TABLET",
-          tablet: tablet
+          type: "LOAD_PAN",
+          value: new CoatingPan(this.pan).toJSON()            /*global CoatingPan */
         });
         this.toggle();
       }
-      
-      // Supported functions 
-      _isRound(shape) {
-        return (shape === 'round');
-      }
     }
 
-    window.customElements.define(TabletEditor.is, TabletEditor);
+    window.customElements.define(PanSchematic.is, PanSchematic);
   </script>
 </dom-module>

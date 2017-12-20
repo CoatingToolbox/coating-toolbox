@@ -3,8 +3,15 @@
   "shell": "src/coating-app-shell.html",
   "fragments": [
     "src/pages/home-page.html",
-    "src/pages/tablet-card/tablet-card.html",
-    "src/pages/tablet-card/tablet-library.html"
+    "src/elements/tablet-cards/tablet-card.html",
+    "src/elements/tablet-cards/tablet-library.html",
+    "src/elements/tablet-cards/tablet-editor.html",
+    "src/elements/pan-cards/pan-card.html",
+    "src/elements/pan-cards/pan-library.html",
+    "src/elements/pan-cards/pan-editor.html",
+    "src/elements/coating-cards/coating-card.html",
+    "src/elements/batch-cards/batch-card.html",
+    "src/elements/coating-amount-cards/coating-amount-card.html"
   ],
   "sources": [
     "src/**/*",

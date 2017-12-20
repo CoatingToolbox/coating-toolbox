@@ -10,11 +10,11 @@
 <link rel="import" href="../elements/my-icons.html">
 <link rel="import" href="../redux/redux-mixin.html">
 
-<link rel="import" href="tablet-card/tablet-card.html">
-<link rel="import" href="coating-card/coating-card.html">
-<link rel="import" href="pan-card/pan-card.html">
-<link rel="import" href="batch-card/batch-card.html">
-<link rel="import" href="coating-amount-card/coating-amount-card.html">
+<link rel="import" href="../elements/tablet-cards/tablet-card.html">
+<link rel="import" href="../elements/coating-cards/coating-card.html">
+<link rel="import" href="../elements/pan-cards/pan-card.html">
+<link rel="import" href="../elements/batch-cards/batch-card.html">
+<link rel="import" href="../elements/coating-amount-cards/coating-amount-card.html">
 
 <dom-module id="home-page">
   
@@ -85,7 +85,11 @@
     <coating-card></coating-card>
       
     <div id='trial-title' class='section-title'>Trial Setup</div>
-    <div id='trial-description' class='section-description'></div>
+    <div id='trial-description' class='section-description'>
+        With the equipment and materials selected you can now start to plan the 
+        coating trial. Key decisions include the batch size to be coated and the 
+        amount of coating to apply. Below choose your targets or calculate the recommend values.
+    </div>
     
     <batch-card></batch-card>
     <coating-amount-card></coating-amount-card>

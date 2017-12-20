@@ -1,7 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="coating-pan-graphic.html">
 
-<dom-module id="tablet-schematic-layout">
+<dom-module id="pan-schematic-layout">
   <template>
     <style>
     /*Schematic Styles*/
@@ -54,21 +54,8 @@
       
       static get properties() {
         return {
-          tablet: Object,
-          _tablet: Object
+          pan: Object,
         };
-      }
-      
-      static get observers() {
-        return [
-          '_calcTabletDimensions(tablet.*)'
-        ];
-      }
-      
-      // take the redux tablet properties and pass to a tablet class
-      // to calculate all the values required to map the tablet
-      _calcTabletDimensions() {
-        this._tablet = new Tablet(this.tablet);
       }
 
     }
