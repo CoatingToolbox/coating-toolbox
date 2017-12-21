@@ -11,6 +11,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth-script.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-database-script.html">
+
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
@@ -18,11 +26,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/app-route/app-location.html">
-<link rel="import" href="../bower_components/app-route/app-route.html">
+
+
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="elements/my-icons.html">
+<link rel="import" href="redux/redux-mixin.html">
 
 <link rel="lazy-import" href="pages/home-page.html">
 <link rel="lazy-import" href="pages/tablet-library-page.html">
@@ -104,6 +113,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+
+    <firebase-app
+      api-key="AIzaSyCdXXcFKqjckrxemo9zFEKu6E8jR5x4p0M"
+      auth-domain="coating-toolbox.firebaseapp.com"
+      database-url="https://coating-toolbox.firebaseio.com"
+      storage-bucket="coating-toolbox.appspot.com"
+      messaging-sender-id="66587926300">
+    </firebase-app>
+    
+    <firebase-auth id="auth" user="{{user}}"></firebase-auth>
+    
     <app-location
         route="{{route}}"
         use-hash-as-path>
@@ -154,13 +174,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    class CoatingAppShell extends Polymer.Element {
+    class CoatingAppShell extends ReduxMixin(Polymer.Element) {
       static get is() { return 'coating-app-shell'; }
       
+      attached() {
+        this.$.auth.signInWithEmailAndPassword('jhansell@colorcon.com', 'opadry');
+      }
       
       static get properties() {
         return {
-          user: Object,
+          user: {type: Object, observer: '_userChanged'},
           page: {
             type: String,
             observer: '_pageChanged',
@@ -168,7 +191,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           routeData: Object
         };
       }
-
+      _userChanged(user) {
+        if(!user) { return; }
+        let isAdmin = (user.email === 'jhansell@colorcon.com');
+        this.dispatch({
+          type: "SET_ADMIN",
+          value: isAdmin
+        });
+      }
       static get observers() {
         return [
           '_routePageChanged(routeData.page)'

@@ -21,6 +21,7 @@ class CoatingPan {
     this.gunToGunDistance = '';
     this.maxAirflow = '';
     this.perforations = '';
+    this.firebaseKey = '';
     
     
     Object.getOwnPropertyNames(this).map(name => {
@@ -42,7 +43,6 @@ class CoatingPan {
       radius: this.radius,
       sideWallSlope: this.sideWallSlope,
       sideWallLength: this.sideWallLength,
-      equipment: this.equipmentName,
       locationName: this.locationName,
       company: this.company,
       nickname: this.nickname,
@@ -55,7 +55,8 @@ class CoatingPan {
       gunManfucaturer: this.gunManfucaturer,
       gunCount: this.gunCount,
       gunModel: this.gunModel,
-      gunToGunDistance: this.gunToGunDistance
+      gunToGunDistance: this.gunToGunDistance,
+      firebaseKey: this.firebaseKey
     };
   }
   

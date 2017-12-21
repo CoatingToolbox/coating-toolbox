@@ -209,6 +209,11 @@
       
     </div>
     
+    <div hidden='[[!isAdmin]]'>
+      <icon-label-button icon='my-icons:save' label='Save to Firebase' on-click='_saveToFirebase'></icon-label-button>
+      <icon-label-button icon='my-icons:save' label='Update on Firebase' on-click='_replaceOnFirebase'></icon-label-button>
+    </div>
+    
   </template>
 
   <script>
@@ -216,6 +221,7 @@
       static get is() { return 'tablet-editor-page'; }
       static get properties() {
         return { 
+          isAdmin: {type: Boolean, statePath: 'isAdmin'},
           selectedSection: { type: Number, value: 0, observer: "_selectedSectionChanged"},
           tablet: { type: Object, statePath: 'tablet'},
           lengthUnits: { type: String, value: 'mm' },
@@ -245,6 +251,26 @@
       // Supported functions 
       _isRound(shape) {
         return (shape === 'round');
+      }
+      _saveToFirebase() {
+        if(!this.isAdmin) { return; }
+        
+        /*global firebase */
+        this.tablet.firebaseKey = firebase.database().ref('tablets/').push().key;
+        let tablet = new Tablet(this.tablet).toJSON();
+        firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
+      }
+      _replaceOnFirebase() {
+        if(!this.isAdmin) { return; }
+        
+        let tablet = new Tablet(this.tablet).toJSON();
+        if(tablet.firebaseKey) {
+          /*global firebase */
+          firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
+        } else {
+          console.log('could not replace firebase so loaded as new');
+          this._saveToFirebase();
+        }
       }
     }
 

@@ -6,7 +6,6 @@
 <link rel="import" href="../elements/inputs/unit-input.html">
 <link rel="import" href="../elements/inputs/item-select-input.html">
 <link rel="import" href="../elements/buttons/icon-label-button.html">
-<!--<link rel="import" href="../elements/graphics/pan-schematic-layout.html">-->
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/coating-pan-class.html">
 
@@ -268,6 +267,11 @@
       
     </div>
     
+    <div hidden='[[!isAdmin]]'>
+      <icon-label-button icon='my-icons:save' label='Save to Firebase' on-click='_saveToFirebase'></icon-label-button>
+      <icon-label-button icon='my-icons:save' label='Update on Firebase' on-click='_replaceOnFirebase'></icon-label-button>
+    </div>
+    
   </template>
 
   <script>
@@ -275,6 +279,7 @@
       static get is() { return 'pan-editor-page'; }
       static get properties() {
         return { 
+          isAdmin: {type: Boolean, statePath: 'isAdmin'},
           selectedSection: { type: Number, value: 1},
           pan: { type: Object, statePath: 'pan'},
           lengthUnits: { type: String, value: 'in' },
@@ -303,6 +308,26 @@
         window.history.back();
       }
       
+      _saveToFirebase() {
+        if(!this.isAdmin) { return; }
+        
+        /*global firebase */
+        this.pan.firebaseKey = firebase.database().ref('pans/').push().key;
+        let pan = new CoatingPan(this.pan).toJSON();
+        firebase.database().ref(`pans/${pan.firebaseKey}`).set(pan);
+      }
+      _replaceOnFirebase() {
+        if(!this.isAdmin) { return; }
+        
+        let pan = new CoatingPan(this.pan).toJSON();
+        if(pan.firebaseKey) {
+          /*global firebase */
+          firebase.database().ref(`pans/${pan.firebaseKey}`).set(pan);
+        } else {
+          console.log('could not replace firebase so loaded as new');
+          this._saveToFirebase();
+        }
+      }
     }
 
     window.customElements.define(PanEditorPage.is, PanEditorPage);

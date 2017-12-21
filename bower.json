@@ -22,7 +22,8 @@
     "iron-dropdown": "PolymerElements/iron-dropdown#^2.0.0",
     "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
     "paper-input": "PolymerElements/paper-input#^2.0.4",
-    "paper-dialog-scrollable": "PolymerElements/paper-dialog-scrollable#^2.1.0"
+    "paper-dialog-scrollable": "PolymerElements/paper-dialog-scrollable#^2.1.0",
+    "polymerfire": "firebase/polymerfire#^2.2.1"
   },
   "resolutions": {
     "polymer": "^2.0.0"

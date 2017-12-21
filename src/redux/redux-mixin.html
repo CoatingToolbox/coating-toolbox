@@ -10,6 +10,7 @@
   
     // create an initial state 
     const initialState = {
+        isAdmin: false,
         pan: new CoatingPan().toJSON(),      /*global CoatingPan*/
         tablet: new Tablet().toJSON(),       /*global Tablet*/
         batch: new Batch()          /*global Batch*/
@@ -19,6 +20,10 @@
     const reducer = (state = initialState, action) => {
         let newState = Object.assign({}, state);
         switch(action.type) {
+            case "SET_ADMIN":
+                newState.isAdmin = action.value;
+                console.log(action.value);
+                break;
             case "LOAD_TABLET":
                 newState.tablet = action.value;
                 break;
