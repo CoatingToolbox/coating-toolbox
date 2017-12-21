@@ -20,7 +20,7 @@
         let newState = Object.assign({}, state);
         switch(action.type) {
             case "LOAD_TABLET":
-                newState.tablet = action.tablet;
+                newState.tablet = action.value;
                 break;
             case "LOAD_PAN":
                 newState.pan = action.value;

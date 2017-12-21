@@ -27,6 +27,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="pages/home-page.html">
 <link rel="lazy-import" href="pages/tablet-library-page.html">
 <link rel="lazy-import" href="pages/tablet-editor-page.html">
+<link rel="lazy-import" href="pages/pan-library-page.html">
+<link rel="lazy-import" href="pages/pan-editor-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -35,17 +37,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         /*main color scheme*/
         /*https://color.adobe.com/create/color-wheel/?copy=true&base=2&rule=Custom&selected=2&name=Copy%20of%20globalS&mode=rgb&rgbvalues=0.18823529411764706,0.2549019607843137,0.36470588235294116,0.30451612903225805,0.4123655913979028,0.59,0.5340848463974999,0.6346336128326514,0.8,0.8784313725490196,0.8784313725490196,0.8784313725490196,0.9294117647058824,0.36470588235294116,0.36470588235294116&swatchOrder=0,1,2,3,4*/
-        --app-primary-color: #4E6996;
+        --app-primary-color: #4c81b7;
         --app-dark-color: #30415D;
         --app-light-color: #88A2CC;
         --app-highlight-color: #ED5D5D;
-        --background-color: #eff1f2;
+        --background-color: #e6e6e8;
         --border-color: #e3e7ea;
         
         /*Text colors*/
         --text-color: #758794;
         --text-light-color: #acb7bf;
-        --text-disabled-color: #BDBDBD;
+        --text-disabled-color: #edeef2;
         
         /*Additional Colors*/
         --white-color: #FBFCFC;
@@ -55,6 +57,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --green-color: #088E63;
         --purple-color: #665ABA;
         --red-color: #FE5150;
+        --black-color: #525e66;
 
         display: block;
         color: var(--text-color);
@@ -68,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
      app-header {
         color: var(--white-color);
-        background-color: var(--app-dark-color);
+        background-color: var(--black-color);
       }
       
     /*Drawer navigation styles*/
@@ -120,6 +123,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a name="home" href="#/home">Home</a>
           <a name="tablet-library" href="#/tablet-library">Tablet Library</a>
           <a name="tablet-editor" href="#/tablet-editor">Tablet Editor</a>
+          <a name="pan-library" href="#/pan-library">Coating Pan Library</a>
+          <a name="pan-editor" href="#/pan-editor">Coating Pan Editor</a>
         </iron-selector>
       </app-drawer>
       
@@ -131,6 +136,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-icon-button hidden$='[[_isHome(routeData.page)]]' icon='my-icons:arrow-left' on-click='_goHome'></paper-icon-button>
             <paper-icon-button hidden$='[[!_isHome(routeData.page)]]' icon='my-icons:menu' drawer-toggle></paper-icon-button>
             <div main-title>Coating Toolbox</div>
+            <div id='login-button'>[[user.email]]</div>
           </app-toolbar>
           
         </app-header>
@@ -139,6 +145,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <home-page name='home'></home-page>
           <tablet-library-page name='tablet-library'></tablet-library-page>
           <tablet-editor-page name='tablet-editor'></tablet-editor-page>
+          <pan-library-page name='pan-library'></pan-library-page>
+          <pan-editor-page name='pan-editor'></pan-editor-page>
         </iron-pages>
         
       </app-header-layout>
@@ -149,8 +157,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class CoatingAppShell extends Polymer.Element {
       static get is() { return 'coating-app-shell'; }
       
+      
       static get properties() {
         return {
+          user: Object,
           page: {
             type: String,
             observer: '_pageChanged',

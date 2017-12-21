@@ -7,11 +7,20 @@ class CoatingPan {
     this.openingDiameter = 0.4826;
     this.wallWidth = 0.508;
     this.brimWidth = 0.93345;
-    this.equipmentName = "O'Hara Fastcoat";
-    this.vendorName = '';
-    this.nickname = '';
-    this.companyName = '';
-    this.locationName = '';
+    this.model = "Fastcoat";
+    this.manufacturer = "O'Hara"
+    this.nickname = "O'Hara Fastcoat 48\" Room";
+    this.company = 'Colorcon';
+    this.locationName = 'Harlyesville, PA';
+    this.baffleType = '';
+    this.baffleCount = '0';
+    this.baffleHeight = '0';
+    this.gunManfucaturer = '';
+    this.gunModel = '';
+    this.gunCount = '';
+    this.gunToGunDistance = '';
+    this.maxAirflow = '';
+    this.perforations = '';
     
     
     Object.getOwnPropertyNames(this).map(name => {
@@ -33,14 +42,20 @@ class CoatingPan {
       radius: this.radius,
       sideWallSlope: this.sideWallSlope,
       sideWallLength: this.sideWallLength,
-      equipmentName: this.equipmentName,
+      equipment: this.equipmentName,
       locationName: this.locationName,
-      companyName: this.companyName,
+      company: this.company,
       nickname: this.nickname,
-      vendorName: this.vendorName,
-      gunType: this.gunType,
+      manufacturer: this.manufacturer,
+      model: this.model,
+      baffleType: this.baffleType,
+      baffleCount: this.baffleCount,
+      maxAirflow: this.maxAirflow,
+      perforations: this.perforations,
+      gunManfucaturer: this.gunManfucaturer,
       gunCount: this.gunCount,
-      gunMode: this.gunModel,
+      gunModel: this.gunModel,
+      gunToGunDistance: this.gunToGunDistance
     };
   }
   

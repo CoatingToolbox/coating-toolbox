@@ -16,26 +16,19 @@
     
     <style>
       :host {
-        display: block; 
-        background: linear-gradient(to bottom, var(--app-dark-color) 45%, var(--background-color) 45%);
+        display: flex;
+        flex-direction: column;
         padding: 64px 16px;
-      }
-      #main-layout {max-width: 1024px;
+        max-width: 1024px;
         margin: auto;
       }
       
-      /*Header Styles*/
-      #header {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 16px;
-      }
-      #header #page-title {
-        @apply --paper-font-display2;
-        font-weight: bold;
-      }
-      #header icon-label-button {
+      icon-label-button {
         align-self: flex-end;
+        margin-bottom: 16px;
+        background-color: var(--app-highlight-color);
+        border-color: var(--app-highlight-color);
+        color: var(--white-color);
         --app-primary-color: var(--app-highlight-color);
       }
       
@@ -140,8 +133,8 @@
       }
     </style>
     
-    <div id='main-layout'>
-      <div id='card'>
+    <icon-label-button icon='my-icons:calculator' label='Calculate Tablet' on-click='_save'></icon-label-button>
+    <div id='card'>
       
       <div id='title-section'>
         <div class='title'>Tablet Designer</div>
@@ -155,10 +148,10 @@
         <div class='page' id='details-page'>
           <div class='inputs-layout double-column'>
             <div class='card-title'>Description</div>
-            <text-input value='{{tablet.productName}}' icon='my-icons:product' label='Product Name'></text-input>
+            <text-input value='{{tablet.productName}}' icon='my-icons:product' label='Product'></text-input>
             <text-input value='{{tablet.formulationName}}' icon='my-icons:product' label='Formulation'></text-input>
-            <text-input value='{{tablet.companyName}}' icon='my-icons:product' label='Company Name'></text-input>
-            <text-input value='{{tablet.contactName}}' icon='my-icons:product' label='Contact Name'></text-input>
+            <text-input value='{{tablet.companyName}}' icon='my-icons:company' label='Company'></text-input>
+            <text-input value='{{tablet.contactName}}' icon='my-icons:contact' label='Contact'></text-input>
           </div>
           <div class='spacer'></div>
           <div class='nav-toolbar'>
@@ -205,16 +198,15 @@
             <div class='icon-background' on-click='_previous'>
               <iron-icon icon='my-icons:arrow-left'></iron-icon>
             </div>
-            <div class='icon-background highlight' on-click='_save'>
-              <iron-icon icon='my-icons:save'></iron-icon>
-            </div>
+            <!--<div class='icon-background highlight' on-click='_save'>-->
+            <!--  <iron-icon icon='my-icons:save'></iron-icon>-->
+            <!--</div>-->
           </div>
           
         </div>
           
       </iron-pages>
       
-    </div>
     </div>
     
   </template>
@@ -244,7 +236,7 @@
         let tablet = new Tablet(this.tablet).toJSON();
         this.dispatch({ 
           type: "LOAD_TABLET",
-          tablet: tablet
+          value: tablet
         });
         this.selectedSection = 0;
         window.history.back();

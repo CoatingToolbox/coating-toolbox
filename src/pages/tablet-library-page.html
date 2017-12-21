@@ -17,15 +17,9 @@
       :host {
         display: block;
         background-color: var(--background-color);
-        margin-bottom: 64px;
-      }
-      
-      #header-background {
-        background-color: var(--app-dark-color);
-        padding: 64px 16px 0px;
-      }
-      #table-background {
-        background: linear-gradient(to bottom, var(--app-dark-color) 48px, var(--background-color) 48px);
+        padding: 64px 16px;
+        max-width: 1024px;
+        margin: auto;
       }
       /*Header Styles*/
       #header {
@@ -33,7 +27,7 @@
         flex-direction: column;
         max-width: 1024px;
         margin: auto;
-        color: var(--white-color);
+        /*color: var(--white-color);*/
       }
       #header #page-title {
         @apply --paper-font-display2;
@@ -41,7 +35,7 @@
       }
       #header paper-icon-button {
         align-self: flex-end;
-        color: var(--white-color);
+        /*color: var(--white-color);*/
       }
       #header #search-layout {
         display: flex;
@@ -54,8 +48,8 @@
         margin-right: 8px;
       }
       #header paper-input {
-        color: var(--white-color);
-        --paper-input-container-input-color: var(--white-color);
+        color: var(--text-color);
+        --paper-input-container-input-color: var(--text-color);
         --paper-input-container-color: var(--text-light-color);
         --paper-input-container-focus-color: var(--app-highlight-color);
       }
@@ -70,11 +64,8 @@
         margin: auto;
         background-color: var(--white-color);
         border-radius: 6px;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
       }
-      .cell {
+      #table .cell {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -82,18 +73,18 @@
         border-bottom: 2px solid var(--border-color);
         @apply --paper-font-subhead;
       }
-      .cell:nth-last-child(-n+7) {
+      #table .cell:nth-last-child(-n+7) {
         border-bottom: none;
       }
       
       /*Styles for buttons in table*/
-      .icon-layout {
+      #table .icon-layout {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
       }
-      .icon-button {
+      #table .icon-button {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -101,43 +92,43 @@
         align-self: center;
         padding: 4px;
         border-radius: 50%;
-        color: var(--text-disabled-color);
+        color: var(--text-light-color);
         background-color: var(--gray-color);
-        border: 2px solid var(--text-disabled-color);
+        border: 2px solid var(--text-light-color);
         transition: all 0.2s;
       }
-      .icon-button:hover {
+      #table .icon-button:hover {
         cursor: pointer;
         color: var(--app-highlight-color);
         border: 2px solid var(--app-highlight-color);
         transition: all 0.2s;
       }
-      .icon-button + .icon-button {
+      #table .icon-button + .icon-button {
         margin-left: 12px;
       }
-      .icon-button iron-icon {
+      #table .icon-button iron-icon {
         width: 20px;
         height: 20px;
       }
       
       /*Styles for shape icon in table*/
-      .shape-icon {
+      #table .shape-icon {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: #a0adc6;
-        --iron-icon-stroke-color: var(--app-light-color);
         text-transform: capitalize;
       }
-      .shape-icon iron-icon {
+      #table .shape-icon iron-icon {
         height: 32px;
         width: 32px;
+        color: var(--app-light-color);
+        --iron-icon-stroke-color: var(--app-light-color);
       }
       
       /*Text Fields In Table*/
       #table .header {
-        background-color: var(--app-light-color);
+        background-color: var(--app-primary-color);
         border-bottom: none;
         color: white;
         @apply --paper-font-subhead;
@@ -152,17 +143,14 @@
       }
     </style>
     
-    <div id='header-background'>
       <div id='header'>
         <div id='page-title'>Tablet Library</div>
         <div id='search-layout'>
           <iron-icon id='search-icon' icon='my-icons:search'></iron-icon>
-          <paper-input value='{{filterTerm}}' placeholder='Search Product Name...' no-label-float></paper-input>
+          <paper-input value='{{filterTerm}}' placeholder='Search Tablets...' no-label-float></paper-input>
         </div>
       </div>
-    </div>
-    
-    <div id='table-background'>
+      
       <div id='table'>
           
           <div class='header cell'>Product</div>
@@ -175,7 +163,7 @@
           <template is='dom-repeat' items='[[_filterLibrary(library, filterTerm)]]'>
             <div class='cell'>
               <div class='item-title'>[[item.productName]]</div>
-              <div class='subtext'>[[item.companyName]] [[item.locationName]]</div>
+              <div class='subtext'>[[item.companyName]] [[item.contactName]]</div>
             </div>
             <div class='cell'>
               <div>[[item.productType]]</div>
@@ -192,15 +180,14 @@
               <div class='icon-button' on-click='_loadTablet'>
                 <iron-icon icon='my-icons:load'></iron-icon>
               </div>
-              <!--<div class='icon-button' on-click='_editTablet'>-->
-              <!--  <iron-icon icon='my-icons:edit'></iron-icon>-->
-              <!--</div>-->
+              <div class='icon-button' on-click='_editTablet'>
+                <iron-icon icon='my-icons:edit'></iron-icon>
+              </div>
              
             </div> 
           </template>
           
       </div>
-    </div>
       
   </template>
 
@@ -242,20 +229,31 @@
       _loadTablet(e) {
         this.dispatch({
           type: "LOAD_TABLET",
-          tablet: e.model.item
+          value: e.model.item
         });
         window.history.back();
       }
       _editTablet(e) {
         this.dispatch({
           type: "LOAD_TABLET",
-          tablet: e.model.item
+          value: e.model.item
         });
-        window.history.back();
+        window.scrollTo(0,0);
+        window.location = '#/tablet-editor';
       }
       _filterLibrary(library, searchTerm) {
         if(!searchTerm) { return library; }
-        return library.filter( tablet => { return tablet.productName.toLowerCase().includes(searchTerm.toLowerCase()); });
+        return library.filter( 
+          tablet => { 
+            return (
+              tablet.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              tablet.productType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              tablet.formulationName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              tablet.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              tablet.contactName.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+          }
+          );
       }
       _getIcon(shape) {
         return `my-icons:${shape}-tablet`;

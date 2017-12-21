@@ -7,8 +7,6 @@
 <link rel="import" href="../../elements/list-items/small-icon-item.html">
 <link rel="import" href="../../elements/my-icons.html">
 <link rel="import" href="../../redux/redux-mixin.html">
-<link rel="import" href="pan-library.html">
-<link rel="import" href="pan-editor.html">
 
 <dom-module id="pan-card">
   
@@ -29,7 +27,7 @@
       <p class='text' slot='description'>The coating pan setup, baffles and spray guns are responsible for mixing the tablets,
           disbursing the coating liquid. And these conditions can change with different pan sizes.
       </p>
-      <div class='title' slot='item-title'>[[pan.equipmentName]]</div>
+      <div class='title' slot='item-title'>[[pan.nickname]]</div>
       <small-icon-item slot='item' label='[[_getPanDiameterString(pan.panDiameter)]]' icon='my-icons:ruler'></small-icon-item>
       <small-icon-item slot='item' label='[[_getPanVolume(pan.brimVolume)]]' icon='my-icons:volume'></small-icon-item>
       <coating-pan-graphic slot='graphic' front-view pan='[[pan]]'></coating-pan-graphic>
@@ -37,9 +35,6 @@
       <paper-icon-button icon='my-icons:library' on-click='_openLibrary' slot='toolbar'></paper-icon-button>
       <paper-icon-button icon='my-icons:edit'  on-click='_openEditor' slot='toolbar'></paper-icon-button>
     </tagged-toolbar-card>  
-  
-    <pan-library id='library'></pan-library>
-    <pan-editor id='editor'></pan-editor>
     
   </template>
 
@@ -52,10 +47,12 @@
         };
       }
       _openLibrary() {
-        this.$.library.toggle();
+        window.scrollTo(0, 0);
+        window.location = '#/pan-library';
       }
       _openEditor() {
-        this.$.editor.toggle();
+        window.scrollTo(0, 0);
+        window.location = '#/pan-editor';
       }
       _getPanDiameterString(diameter) {
         return `${(diameter * 39.3701).toFixed(0)} inches`;
