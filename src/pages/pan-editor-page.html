@@ -1,11 +1,11 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../elements/inputs/text-input.html">
 <link rel="import" href="../elements/inputs/unit-input.html">
 <link rel="import" href="../elements/inputs/item-select-input.html">
 <link rel="import" href="../elements/buttons/icon-label-button.html">
+<link rel="import" href="../elements/graphics/pan-schematic-layout.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/coating-pan-class.html">
 
@@ -14,258 +14,132 @@
    <template>
     
     <style>
-      :host
-      {
+      :host {
         display: flex;
         flex-direction: column;
         padding: 64px 16px;
-        max-width: 1024px;
+        max-width: 600px;
         margin: auto;
-      }
-      
-      /*Card and Intro Section Styles*/
-      #card 
-      {
-        display: flex;
-        min-height: 500px;
-        background-color: var(--white-color);
         border-radius: 6px;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
-      }
-      iron-pages 
-      {
-        flex-grow: 1;
-        padding: 24px 32px;
-      }
-      .spacer 
-      {
-        flex-grow: 1;
       }
       
-      /*The intro highlight section*/
-      #title-section 
-      {
-        flex-grow: 1;
-        max-width: 40%;
+      /*The intro header*/
+      #header {
+        min-height: 240px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 24px 32px;
-        border-radius: 4px 0px 0px 4px;
+        border-radius: 6px 6px 0px 0px;
+        padding: 16px 32px;
         background-color: var(--app-primary-color);
         color: var(--white-color);
       }
-      #title-section .title 
-      {
+      #header .title {
         @apply --paper-font-display2;
       }
-      #title-section .description 
-      {
+      #header .description {
         padding-top: 16px;
         @apply --paper-font-body2;
       }
       
-      /*RIght side of card for inputs*/
-      .page {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      }
-      .inputs-layout {
+      /*The input pages element*/
+      #input-layout {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-auto-rows: auto;
         grid-gap: 24px 32px;
+        padding: 0px 32px 24px 32px;
+        background-color: var(--white-color);
+        border-radius: 0px 0px 6px 6px;
       }
-      .inputs-layout .card-title {
+      #input-layout .card-title {
         grid-column: 1 / 3;
         @apply --paper-font-headline;
         color: var(--app-light-color);
         padding-bottom: 4px;
+        padding-top: 32px;
         border-bottom: 2px solid var(--border-color);
         font-weight: bold;
       }
       
-      /*Navigation Toolbar*/
-      .nav-toolbar 
-      {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .nav-toolbar .icon-background 
-      {
-        padding: 8px;
-        border-radius: 50%;
-        background-color: var(--gray-color);
-        color: var(--text-light-color);
-      }
-      .nav-toolbar .icon-background.highlight,
-      .nav-toolbar .icon-background:hover 
-      {
-        cursor: pointer;
-        background-color: var(--app-highlight-color);
-        color: var(--white-color);
-      }
-      
       /*Details Card*/
-      #details-page text-input[label="Name"]
-      {
-        grid-column: 1 / 3;
-      }
-      
-      /*Dimensions Card*/
-      #dimensions-page shape-input 
-      {
+      #input-layout text-input[label="Name"], 
+      #input-layout text-input[label="Baffle Type"], 
+      #input-layout item-select-input,
+      #input-layout pan-schematic-layout {
         grid-column: 1/ 3;
       }
-      /*Airflow Card*/
-      #airflow-page text-input,
-      #airflow-page item-select-input {
+      #input-layout icon-label-button {
         grid-column: 1 / 3;
-      }
-      
-      /*Baffle Card*/
-      #baffles-page .inputs-layout {
-        grid-template-columns: 1fr;
-      }
-      #baffles-page text-input, 
-      #baffles-page unit-input {
-        grid-column: 1 / 2;
-      }
-      #baffles-page icon-label-button 
-      {
         background-color: var(--app-highlight-color);
         border-color: var(--app-highlight-color);
         color: var(--white-color);
         --app-primary-color: var(--app-highlight-color);
       }
       
-      /*Baffle Card*/
-      #guns-page text-input {
-        grid-column: 1 / 3;
+      #admin-buttons {
+        display: flex;
+        padding: 16px 0px;
+        justify-content: space-around;
       }
-      
       /*Used to hide elements based on data bindings*/
-      [hidden] 
-      {
+      [hidden] {
         visibility: hidden;
       }
     </style>
     
-    <div id='card'>
       
-      <div id='title-section'>
-        <div class='title'>Coating Pan Designer</div>
-        <div class='description'>The Coating Pan Designer estimsates important properties of a coating pan from basic dimensions 
-        and descriptions. 
-        </div>
+    <div id='header'>
+      <div class='title'>Coating Pan Designer</div>
+      <div class='description'>The Coating Pan Designer estimsates important properties of a coating pan from basic dimensions 
+      and descriptions. 
       </div>
-      
-      <iron-pages id='pages' selected='{{selectedSection}}'>
-        
-        <div class='page' id='details-page'>
-          <div class='inputs-layout double-column'>
-            <div class='card-title'>Description</div>
-          <text-input value='{{pan.nickname}}' icon='my-icons:product' label='Name'></text-input>
-          <text-input value='{{pan.manufacturer}}' options='[[manufacturerOptions]]' icon='my-icons:company' label='Manufacturer'></text-input>
-          <text-input value='{{pan.model}}' icon='my-icons:company' label='Model'></text-input>
-          <text-input value='{{pan.company}}' icon='my-icons:contact' label='Company'></text-input>
-          <text-input value='{{pan.locationName}}' icon='my-icons:location' label='Location'></text-input>
-          </div>
-          <div class='spacer'></div>
-          <div class='nav-toolbar'>
-              <div></div>
-              <div class='icon-background highlight' on-click='_next'>
-                <iron-icon icon='my-icons:arrow-right'></iron-icon>
-              </div>
-            </div>
-        </div>  
-        
-        <div class='page' id='dimensions-page'>
-          <div class='inputs-layout'>
-            <div class='card-title'>Main Dimensions</div>
-            <unit-input value='{{pan.panDiameter}}' icon='my-icons:ruler' label='Main Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
-            <unit-input value='{{pan.openingDiameter}}' icon='my-icons:ruler' label='Opening Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
-            <unit-input value='{{pan.brimWidth}}' icon='my-icons:ruler' label='Depth at Brim' type='length' selected-units='{{lengthUnits}}'></unit-input>
-            <unit-input value='{{pan.wallWidth}}' icon='my-icons:ruler' label='Depth at Perforated Wall' type='length' selected-units='{{lengthUnits}}'></unit-input>
-            <!--<pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>-->
-          </div>
-          <div class='spacer'></div>
-          <div class='nav-toolbar'>
-            <div class='icon-background' on-click='_previous'>
-              <iron-icon icon='my-icons:arrow-left'></iron-icon>
-            </div>
-            <div class='icon-background highlight' on-click='_next'>
-              <iron-icon icon='my-icons:arrow-right'></iron-icon>
-            </div>
-          </div>
-          
-        </div> 
-        
-        <div class='page' id='airflow-page'>
-          <div class='inputs-layout'>
-            <div class='card-title'>Airflow</div>
-              <item-select-input label='Pan Perforations' icon='my-icons:surface-area' items='["Fully", "Partially", "Solid"]' selected='{{pan.perforations}}'></item-select-input>
-              <!--<text-input value='{{pan.gunManfucaturer}}' icon='my-icons:product' label='Manufacturer'></text-input>-->
-              <unit-input value='{{pan.maxAirflow}}' icon='my-icons:ruler' type='airflow' selected-units='cfm' label='Max Airflow'></unit-input>
-          </div>
-          <div class='spacer'></div>
-          <div class='nav-toolbar'>
-            <div class='icon-background' on-click='_previous'>
-              <iron-icon icon='my-icons:arrow-left'></iron-icon>
-            </div>
-            <div class='icon-background highlight' on-click='_next'>
-              <iron-icon icon='my-icons:arrow-right'></iron-icon>
-            </div>
-          </div>
-          
-        </div>
-        
-        <div class='page' id='guns-page'>
-          <div class='inputs-layout'>
-            <div class='card-title'>Spray Guns</div>
-              <text-input value='{{pan.gunManfucaturer}}' icon='my-icons:product' label='Spray Gun Manufacturer'></text-input>
-              <text-input value='{{pan.gunModel}}' icon='my-icons:product' label='Spray Gun Model'></text-input>
-              <unit-input value='{{pan.gunCount}}' icon='my-icons:count' label='Spray Gun Count' decimals='0' step='1' selected-units='guns'></unit-input>
-              <unit-input value='{{pan.gunToGunDistance}}' icon='my-icons:ruler' type='length' selected-units='{{lengthUnits}}' label='Gun To Gun Distance'></unit-input>
-          </div>
-          <div class='spacer'></div>
-          <div class='nav-toolbar'>
-            <div class='icon-background' on-click='_previous'>
-              <iron-icon icon='my-icons:arrow-left'></iron-icon>
-            </div>
-            <div class='icon-background highlight' on-click='_next'>
-              <iron-icon icon='my-icons:arrow-right'></iron-icon>
-            </div>
-          </div>
-          
-        </div>
-        
-        <div class='page' id='baffles-page'>
-          <div class='inputs-layout'>
-            <div class='card-title'>Baffles</div>
-              <text-input value='{{pan.baffleType}}' options='[[baffleOptions]]' icon='my-icons:product' label='Baffle Type'></text-input>
-              <unit-input value='{{pan.baffleCount}}' icon='my-icons:count' label='Baffle Count' decimals='0' step='1' selected-units='baffles'></unit-input>
-              <unit-input value='{{pan.baffleHeight}}' icon='my-icons:ruler' label='Baffle Max height' type='length' selected-units='{{lengthUnits}}'></unit-input>
-          </div>
-          <div class='spacer'></div>
-          <div class='nav-toolbar'>
-            <div class='icon-background' on-click='_previous'>
-              <iron-icon icon='my-icons:arrow-left'></iron-icon>
-            </div>
-            <icon-label-button icon='my-icons:calculator' label='Calculate Pan' on-click='_save'></icon-label-button>
-          </div>
-          
-        </div>
-          
-      </iron-pages>
-      
     </div>
     
-    <div hidden$='[[!isAdmin]]'>
+    <div id='input-layout'>
+      <!--Description Section-->
+      <div class='card-title'>Description</div>
+      <text-input value='{{pan.nickname}}' icon='my-icons:product' label='Name'></text-input>
+      <text-input value='{{pan.manufacturer}}' options='[[manufacturerOptions]]' icon='my-icons:company' label='Manufacturer'></text-input>
+      <text-input value='{{pan.model}}' icon='my-icons:company' label='Model'></text-input>
+      <text-input value='{{pan.company}}' icon='my-icons:contact' label='Company'></text-input>
+      <text-input value='{{pan.locationName}}' icon='my-icons:location' label='Location'></text-input>
+      
+      
+      <!--Dimensions Section-->
+      <div class='card-title'>Dimensions</div>
+      <unit-input value='{{pan.panDiameter}}' icon='my-icons:ruler' label='Main Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
+      <unit-input value='{{pan.openingDiameter}}' icon='my-icons:ruler' label='Opening Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
+      <unit-input value='{{pan.brimWidth}}' icon='my-icons:ruler' label='Depth at Brim' type='length' selected-units='{{lengthUnits}}'></unit-input>
+      <unit-input value='{{pan.wallWidth}}' icon='my-icons:ruler' label='Depth at Perforated Wall' type='length' selected-units='{{lengthUnits}}'></unit-input>
+      <pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>
+      
+      
+      <!--Airlflow Section-->
+      <div class='card-title'>Airflow</div>
+      <item-select-input label='Pan Perforations' icon='my-icons:surface-area' items='["Fully", "Partially", "Solid"]' selected='{{pan.perforations}}'></item-select-input>
+      <unit-input value='{{pan.maxAirflow}}' icon='my-icons:ruler' type='airflow' selected-units='cfm' label='Max Airflow'></unit-input>
+      
+      
+      <!--Guns Section-->
+      <div class='card-title'>Spray Guns</div>
+      <text-input value='{{pan.gunManfucaturer}}' icon='my-icons:product' label='Manufacturer'></text-input>
+      <text-input value='{{pan.gunModel}}' icon='my-icons:product' label='Model'></text-input>
+      <unit-input value='{{pan.gunCount}}' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='guns'></unit-input>
+      <unit-input value='{{pan.gunToGunDistance}}' icon='my-icons:ruler' type='length' selected-units='{{lengthUnits}}' label='Gun To Gun Distance'></unit-input>
+      
+      
+      <!--Baffles Section-->
+      <div class='card-title'>Baffles</div>
+      <text-input value='{{pan.baffleType}}' options='[[baffleOptions]]' icon='my-icons:product' label='Baffle Type'></text-input>
+      <unit-input value='{{pan.baffleCount}}' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='baffles'></unit-input>
+      <unit-input value='{{pan.baffleHeight}}' icon='my-icons:ruler' label='Max height' type='length' selected-units='{{lengthUnits}}'></unit-input>
+      
+      <icon-label-button icon='my-icons:calculator' label='Calculate Pan' on-click='_save'></icon-label-button>
+       
+    </div>
+    
+    <div id='admin-buttons' hidden$='[[!isAdmin]]'>
       <icon-label-button icon='my-icons:save' label='Save to Firebase' on-click='_saveToFirebase'></icon-label-button>
       <icon-label-button icon='my-icons:save' label='Update on Firebase' on-click='_replaceOnFirebase'></icon-label-button>
     </div>
@@ -278,7 +152,6 @@
       static get properties() {
         return { 
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
-          selectedSection: { type: Number, value: 0},
           pan: { type: Object, statePath: 'pan'},
           lengthUnits: { type: String, value: 'in' },
           manufacturerOptions: { 
@@ -311,19 +184,12 @@
           }
         };
       }
-      _next() {
-        this.$.pages.selectNext();
-      }
-      _previous() {
-        this.$.pages.selectPrevious();
-      }
       _save() {
         let pan = new CoatingPan(this.pan).toJSON();
         this.dispatch({ 
           type: "LOAD_PAN",
           value: pan
         });
-        this.selectedSection = 0;
         window.history.back();
       }
       

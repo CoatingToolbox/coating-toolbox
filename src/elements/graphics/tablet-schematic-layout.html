@@ -45,7 +45,7 @@
       <div class='schematic-label'>Length View</div>
     </div>
     
-    <div class='graphic-layout' hidden$='[[_hideWidthView(tablet.isRound, noWidthView)]]'>
+    <div class='graphic-layout' hidden$='[[_isRound(tablet.shape)]]'>
       <tablet-graphic width-view tablet='[[tablet]]'></tablet-graphic>
       <div class='schematic-label'>Width View</div>
     </div>        
@@ -65,10 +65,8 @@
         };
       }
 
-      _hideWidthView(round, noWidth) {
-        console.log(round);
-        console.log(noWidth);
-        return (round || noWidth);
+      _isRound(shape) {
+        return (shape.toLowerCase() === 'round');
       }
     }
     
