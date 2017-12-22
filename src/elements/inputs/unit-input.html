@@ -19,14 +19,15 @@
           display: flex;
           align-items: center;
           padding-bottom: 8px;
+          color: var(--text-color);
         }
         #label {
             @apply --paper-font-subhead;
-            var(--text-light-color);
         }
         iron-icon {
             margin-right: 8px;
-            color: var(--app-light-color);
+            width: 18px;
+            height: 18px;
         }
         #input-layout {
           display: flex;
@@ -56,7 +57,7 @@
             margin: 0;
         }
         #input:focus {
-          color: var(--app-primary-color);
+          color: var(--app-highlight-color);
         }
         iron-dropdown {
             background-color: white;
@@ -72,7 +73,6 @@
           display: flex;
           align-items: center;
           @apply --paper-font-body1;
-          color: var(--text-color);
           padding: 8px 16px;
           height: 36px;
           width: 100%;
@@ -499,6 +499,7 @@
        * On tap toggle dropdown view
        */
       _toggleDropdown() {
+        
         this.$.dropdown.toggle();
       }
       

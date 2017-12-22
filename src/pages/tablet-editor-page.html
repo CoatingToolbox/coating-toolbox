@@ -1,0 +1,323 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../elements/inputs/text-input.html">
+<link rel="import" href="../elements/inputs/unit-input.html">
+<link rel="import" href="../elements/inputs/item-select-input.html">
+<link rel="import" href="../elements/inputs/shape-input.html">
+<link rel="import" href="../elements/graphics/tablet-schematic-layout.html">
+<link rel="import" href="../elements/charts/bulk-density-chart.html">
+<link rel="import" href="../elements/buttons/icon-label-button.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../data/tablet-class.html">
+
+<dom-module id="tablet-editor-page">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        padding: 64px 16px;
+        max-width: 1024px;
+        margin: auto;
+      }
+      
+      /*Card and Intro Section Styles*/
+      #card {
+        display: flex;
+        min-height: 500px;
+        background-color: var(--white-color);
+        border-radius: 6px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+      
+      /*The intro highlight section*/
+      #title-section {
+        flex-grow: 1;
+        max-width: 40%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 4px 0px 0px 4px;
+        background-color: var(--app-primary-color);
+        color: var(--white-color);
+      }
+      #title-section iron-selector {
+        display: flex;
+        justify-content: flex-end;
+        padding: 16px;
+      }
+      #title-section iron-icon  {
+        opacity: 0.5;
+        cursor: pointer;
+      }
+      #title-section iron-icon.iron-selected  {
+        opacity: 1;
+      }
+      #title-section iron-icon + iron-icon {
+        margin-left: 16px;
+      }
+      #title-section iron-pages {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0px 32px;
+      }
+      #title-section tablet-schematic-layout {
+        color: var(--text-color);
+        align-self: center;
+        justify-self: center;
+      }
+      #title-section .title {
+        @apply --paper-font-display2;
+      }
+      #title-section .description {
+        padding-top: 16px;
+        @apply --paper-font-body2;
+      }
+      
+      /*The input pages element*/
+      #pages {
+        flex-grow: 1;
+        padding: 24px 32px;
+      }
+      /*RIght side of card for inputs*/
+      .page {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      .inputs-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: auto;
+        grid-gap: 24px 32px;
+      }
+      .inputs-layout .card-title {
+        grid-column: 1 / 3;
+        @apply --paper-font-headline;
+        color: var(--app-light-color);
+        padding-bottom: 4px;
+        border-bottom: 2px solid var(--border-color);
+        font-weight: bold;
+      }
+      
+      /*Navigation Toolbar*/
+      .nav-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .nav-toolbar .icon-background {
+        padding: 8px;
+        border-radius: 50%;
+        background-color: var(--gray-color);
+        color: var(--text-light-color);
+      }
+      .nav-toolbar .icon-background.highlight,
+      .nav-toolbar .icon-background:hover {
+        cursor: pointer;
+        background-color: var(--app-highlight-color);
+        color: var(--white-color);
+      }
+      
+      /*Details Card*/
+      #details-page text-input[label="Product"], 
+      #details-page text-input[label="Formulation"] {
+        grid-column: 1 / 3;
+      }
+      
+      /*Dimensions Card*/
+      #dimensions-page shape-input {
+        grid-column: 1/ 3;
+      }
+      
+      /*Formulation Card*/
+      #formulation-page item-select-input {
+        grid-column: 1/ 3;
+      }
+      #formulation-page bulk-density-chart {
+        grid-column: 1 / 3;
+        margin: 24px 0px;
+        min-height: 175px;
+        max-height: 175px;
+      }
+      #formulation-page icon-label-button {
+        background-color: var(--app-highlight-color);
+        border-color: var(--app-highlight-color);
+        color: var(--white-color);
+        --app-primary-color: var(--app-highlight-color);
+      }
+      
+      /*class used to grow into empty space on input sections*/
+      .spacer {
+        flex-grow: 1;
+      }
+      /*Used to hide elements based on data bindings*/
+      [hidden] {
+        visibility: hidden;
+      }
+    </style>
+    
+    <div id='card'>
+      
+      <div id='title-section'>
+        
+        <iron-selector id='icons-toolbar' selected='{{iconSelected}}'>
+          <iron-icon icon='my-icons:info'></iron-icon>
+          <iron-icon icon='my-icons:chart'></iron-icon>
+        </iron-selector>
+        
+        <iron-pages selected='[[iconSelected]]'>
+          
+          <div>
+            <div class='title'>Tablet Designer</div>
+            <div class='description'>The Tablet Designer allows estimates important properties of a tablet. Starting with a compressed tablet input a few easy measurements like length, 
+              thickness, and weight to caluclate the tablets surface area, volume and more.
+            </div>
+          </div>
+          
+          <tablet-schematic-layout tablet='[[tablet]]' no-width-view></tablet-schematic-layout>
+          
+        </iron-pages>
+      </div>
+      
+      <iron-pages id='pages' selected='{{selectedSection}}'>
+        
+        <div class='page' id='details-page'>
+          <div class='inputs-layout double-column'>
+            <div class='card-title'>Description</div>
+            <text-input value='{{tablet.productName}}' icon='my-icons:product' label='Product'></text-input>
+            <text-input value='{{tablet.formulationName}}' icon='my-icons:product' label='Formulation'></text-input>
+            <text-input value='{{tablet.companyName}}' icon='my-icons:company' label='Company'></text-input>
+            <text-input value='{{tablet.contactName}}' icon='my-icons:contact' label='Contact'></text-input>
+          </div>
+          <div class='spacer'></div>
+          <div class='nav-toolbar'>
+              <div></div>
+              <div class='icon-background highlight' on-click='_next'>
+                <iron-icon icon='my-icons:arrow-right'></iron-icon>
+              </div>
+            </div>
+        </div>  
+        
+        <div class='page' id='dimensions-page'>
+          <div class='inputs-layout'>
+            <div class='card-title'>Shape & Size</div>
+          
+            <shape-input shape='{{tablet.shape}}'></shape-input>
+            
+            <unit-input value='{{tablet.length}}' icon='my-icons:ruler' label='Length' type='length' selected-units='{{lengthUnits}}'></unit-input>
+            <unit-input hidden$='{{_isRound(tablet.shape)}}' value='{{tablet.width}}' icon='my-icons:ruler' label='Width' type='length' selected-units='{{lengthUnits}}'></unit-input>
+            <unit-input value='{{tablet.totalThickness}}' icon='my-icons:ruler' label='Total Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>
+            <unit-input value='{{tablet.bandThickness}}' icon='my-icons:ruler' label='Band Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>  
+        
+          </div>
+          <div class='spacer'></div>
+          <div class='nav-toolbar'>
+            <div class='icon-background' on-click='_previous'>
+              <iron-icon icon='my-icons:arrow-left'></iron-icon>
+            </div>
+            <div class='icon-background highlight' on-click='_next'>
+              <iron-icon icon='my-icons:arrow-right'></iron-icon>
+            </div>
+          </div>
+          
+        </div> 
+        
+        <div class='page' id='formulation-page'>
+          <div class='inputs-layout'>
+            <div class='card-title'>Formulation</div>
+            <item-select-input label='Formulation Type' icon='my-icons:product' items='["Pharmaceutical", "Nutritional"]' selected='{{tablet.productType}}'></item-select-input>
+            <unit-input value='{{tablet.weight}}' icon='my-icons:weight' label='Tablet Weight' type='weight' selected-units='mg'></unit-input>
+            <unit-input value='{{tablet.bulkDensity}}' icon='my-icons:density' label='Tablet Bulk Density' type='density' selected-units='g/ml'></unit-input>
+            <bulk-density-chart id='chart' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
+          </div>
+          <div class='spacer'></div>
+          <div class='nav-toolbar'>
+            <div class='icon-background' on-click='_previous'>
+              <iron-icon icon='my-icons:arrow-left'></iron-icon>
+            </div>
+            <icon-label-button icon='my-icons:calculator' label='Calculate Tablet' on-click='_save'></icon-label-button>
+          </div>
+          
+        </div>
+          
+      </iron-pages>
+      
+    </div>
+    
+    <div hidden$='[[!isAdmin]]'>
+      <icon-label-button icon='my-icons:save' label='Save to Firebase' on-click='_saveToFirebase'></icon-label-button>
+      <icon-label-button icon='my-icons:save' label='Update on Firebase' on-click='_replaceOnFirebase'></icon-label-button>
+    </div>
+    
+  </template>
+
+  <script>
+    class TabletEditorPage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-editor-page'; }
+      static get properties() {
+        return { 
+          isAdmin: {type: Boolean, statePath: 'isAdmin'},
+          iconSelected: { type: Number, value: 1},
+          selectedSection: { type: Number, value: 0, observer: "_selectedSectionChanged"},
+          tablet: { type: Object, statePath: 'tablet'},
+          lengthUnits: { type: String, value: 'mm' },
+        };
+      }
+      _selectedSectionChanged(section) {
+        if(section === 2) {
+          this.$.chart._setChartDimensions();
+        }
+      }
+      _next() {
+        this.$.pages.selectNext();
+      }
+      _previous() {
+        this.$.pages.selectPrevious();
+      }
+      _save() {
+        let tablet = new Tablet(this.tablet).toJSON();
+        this.dispatch({ 
+          type: "LOAD_TABLET",
+          value: tablet
+        });
+        this.selectedSection = 0;
+        window.history.back();
+      }
+      
+      // Supported functions 
+      _isRound(shape) {
+        return (shape === 'round');
+      }
+      _saveToFirebase() {
+        if(!this.isAdmin) { return; }
+        
+        /*global firebase */
+        this.tablet.firebaseKey = firebase.database().ref('tablets/').push().key;
+        let tablet = new Tablet(this.tablet).toJSON();
+        firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
+      }
+      _replaceOnFirebase() {
+        if(!this.isAdmin) { return; }
+        
+        let tablet = new Tablet(this.tablet).toJSON();
+        if(tablet.firebaseKey) {
+          /*global firebase */
+          firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
+        } else {
+          console.log('could not replace firebase so loaded as new');
+          this._saveToFirebase();
+        }
+      }
+    }
+
+    window.customElements.define(TabletEditorPage.is, TabletEditorPage);
+  </script>
+</dom-module>

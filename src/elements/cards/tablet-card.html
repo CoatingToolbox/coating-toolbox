@@ -7,8 +7,6 @@
 <link rel="import" href="../../elements/list-items/small-icon-item.html">
 <link rel="import" href="../../elements/my-icons.html">
 <link rel="import" href="../../redux/redux-mixin.html">
-<link rel="import" href="tablet-library.html">
-<link rel="import" href="tablet-editor.html">
 
 <dom-module id="tablet-card">
   
@@ -34,10 +32,6 @@
       <paper-icon-button on-click='_openLibrary' icon='my-icons:library' slot='toolbar'></paper-icon-button>
       <paper-icon-button on-click='_openEditor' icon='my-icons:edit' slot='toolbar'></paper-icon-button>
     </tagged-toolbar-card>  
-
-    <tablet-library id='library'></tablet-library>
-    
-    <tablet-editor id='editor'></tablet-editor>
     
   </template>
 
@@ -64,10 +58,12 @@
         return `${(weight * 1000).toFixed(1)} mg`;
       }
       _openLibrary() {
-        this.$.library.toggle();
+        window.scrollTo(0, 0);
+        window.location = '#/tablet-library';
       }
       _openEditor() {
-        this.$.editor.toggle();
+        window.scrollTo(0, 0);
+        window.location = '#/tablet-editor';
       }
       
     }

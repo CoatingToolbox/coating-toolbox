@@ -14,9 +14,8 @@
             this.productName = 'Colorcon Round Placebo';
             this.formulationName = 'Placebo WP2';
             this.companyName = 'Colorcon';
-            this.locationName = 'Irvine, CA';
             this.contactName = 'Jason Hansell';
-            
+            this.firebaseKey = '';
             Object.getOwnPropertyNames(this).map(name => {
                 if(!parameters[name]) { return }
                 this[name] = parameters[name];
@@ -244,11 +243,11 @@
             productName: this.productName,
             formulationName: this.formulationName,
             companyName: this.companyName,
-            locationName: this.locationName,
             contactName: this.contactName,
             surfaceArea: this.totalArea,
             volume: this.totalVolume,
-            compressedDensity: this.compressedDensity
+            compressedDensity: this.compressedDensity,
+            firebaseKey: this.firebaseKey
         };
     }
     

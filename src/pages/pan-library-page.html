@@ -1,102 +1,89 @@
 
-<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../data/coating-pan-class.html">
-<link rel="import" href="../../redux/redux-mixin.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../data/coating-pan-class.html">
+<link rel="import" href="../redux/redux-mixin.html">
 
-<dom-module id="pan-library">
+<dom-module id="pan-library-page">
   
    <template>
     
     <style>
       :host {
-        display: none;
-      }
-      :host([opened]) {
         display: block;
-        
+        background-color: var(--background-color);
+        padding: 64px 16px;
+        max-width: 1024px;
+        margin: auto;
       }
-      #backdrop {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        background-color: rgba(158, 158, 158, 0.8);
-        z-index: 100;
-        overflow: auto;
-        padding: 72px;
-      }
-      #content {
-        max-width: 1050px;
-        overflow: hidden;
-        margin: 0px auto;
-        position: relative;
-        background-color: var(--white-color);
-        z-index: 101;
-        border-radius: 6px;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
-      }
-      
+      /*Header Styles*/
       #header {
         display: flex;
         flex-direction: column;
-        padding: 8px;
-        background-color: var(--app-primary-color);
-        color: var(--white-color);
+        max-width: 1024px;
+        margin: auto;
+        /*color: var(--white-color);*/
       }
-      
-      #table-layout {
-        display: grid;
-        grid-template-columns: auto auto auto auto auto auto;
-        grid-template-rows: 48px;
-        grid-auto-rows: auto;
-        margin-bottom: 8px;
-        background-color: var(--white-color);
+      #header #page-title {
+        @apply --paper-font-display2;
+        font-weight: bold;
       }
-      #page-title {
-        padding: 0px 24px;
-        @apply --paper-font-display1;
-      }
-      
       #header paper-icon-button {
         align-self: flex-end;
-        color: var(--white-color);
+        /*color: var(--white-color);*/
       }
-      #search-layout {
+      #header #search-layout {
         display: flex;
         align-items: center;
         justify-content: flex-end;
         margin: 16px 32px 0px;
-        /*height: 42px;*/
+      }
+      #header #search-icon {
+        color: var(--text-light-color);
+        margin-right: 8px;
+      }
+      #header paper-input {
+        color: var(--text-color);
+        --paper-input-container-input-color: var(--text-color);
+        --paper-input-container-color: var(--text-light-color);
+        --paper-input-container-focus-color: var(--app-highlight-color);
       }
       
-      /*Styles for Cells in Table*/
-      .cell {
+      /*Styles for Table and Cells*/
+      #table {
+        display: grid;
+        grid-template-columns: 2fr 1fr auto auto auto auto;
+        grid-template-rows: 48px;
+        grid-auto-rows: auto;
+        max-width: 1024px;
+        margin: auto;
+        background-color: var(--white-color);
+        border-radius: 6px;
+      }
+      #table .cell {
         display: flex;
         flex-direction: column;
         justify-content: center;
         padding: 16px;
-        border-bottom: 2px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
         @apply --paper-font-subhead;
       }
-      .cell:nth-last-child(-n+7) {
+      #table .cell:nth-last-child(-n+7) {
         border-bottom: none;
       }
       
       /*Styles for buttons in table*/
-      .icon-layout {
+      #table .icon-layout {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
       }
-      .icon-button {
+      #table .icon-button {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -104,103 +91,54 @@
         align-self: center;
         padding: 4px;
         border-radius: 50%;
-        color: var(--text-disabled-color);
+        color: var(--text-light-color);
         background-color: var(--gray-color);
-        border: 2px solid var(--text-disabled-color);
+        border: 2px solid var(--text-light-color);
         transition: all 0.2s;
       }
-      .icon-button:hover {
+      #table .icon-button:hover {
         cursor: pointer;
         color: var(--app-highlight-color);
         border: 2px solid var(--app-highlight-color);
         transition: all 0.2s;
       }
-      .icon-button + .icon-button {
+      #table .icon-button + .icon-button {
         margin-left: 12px;
       }
-      .icon-button iron-icon {
+      #table .icon-button iron-icon {
         width: 20px;
         height: 20px;
       }
       
-      /*Styles for shape icon iin table*/
-      .shape-icon {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: #a0adc6;
-        --iron-icon-stroke-color: var(--app-light-color);
-        text-transform: capitalize;
-      }
-      .shape-icon iron-icon {
-        height: 32px;
-        width: 32px;
-      }
-      
-      /*Search Icon and Input*/
-      #search-icon {
-        color: var(--app-light-color);
-        margin-right: 8px;
-      }
-      paper-input {
-        color: white;
-        --paper-input-container-input-color: var(--white-color);
-        --paper-input-container-color: var(--app-light-color);
-        --paper-input-container-focus-color: var(--app-highlight-color);
-      }
-      
-      /*Text Fields*/
-      #new-tablet-title {
-        @apply --paper-font-headline;
-      }
-      #new-tablet-button {
-        background-color: var(--white-color);
-        color: var(--app-highlight-color);
-        padding: 8px 16px;
-        border-radius: 12px;
-        text-align: center;
-        align-self: flex-end;
-      }
-      #new-tablet-button:hover {
-        cursor: pointer;
-      }
-      #new-tablet-description {
-        @apply --paper-font-body2;
-        padding: 16px 0px 32px;
-      }
-      .header {
-        background-color: var(--app-light-color);
+     
+      /*Text Fields In Table*/
+      #table .header {
+        background-color: var(--app-primary-color);
         border-bottom: none;
         color: white;
         @apply --paper-font-subhead;
       }
-      .subtext {
+      #table .subtext {
         color: var(--text-light-color);
         @apply --paper-font-body1;
       }
-      .number {
+      #table .number {
         @apply --paper-font-subhead;
         text-align: center;
       }
     </style>
-      
-    <div id='backdrop' on-click='toggle'>
-      
-    <div id='content' on-click='_stopPropagation'>
-      
+    
       <div id='header'>
-        <paper-icon-button icon='my-icons:close' on-click='toggle'></paper-icon-button>
         <div id='page-title'>Coating Pan Library</div>
         <div id='search-layout'>
           <iron-icon id='search-icon' icon='my-icons:search'></iron-icon>
-          <paper-input value='{{filterTerm}}' placeholder='Search Equipment Name...' no-label-float></paper-input>
+          <paper-input value='{{filterTerm}}' placeholder='Search Coating Pans...' no-label-float></paper-input>
         </div>
       </div>
       
-      <div id='table-layout'>
+      <div id='table'>
+        <div class='header cell'>Name</div>
         <div class='header cell'>Equipment</div>
-        <div class='header cell'>Nickname</div>
         <div class='header cell'>Location</div>
         <div class='header cell'>Diameter (in)</div>
         <div class='header cell'>Brim Volume (l)</div>
@@ -208,14 +146,14 @@
         
         <template is='dom-repeat' items='[[_filterLibrary(library, filterTerm)]]'>
           <div class='cell'>
-            <div class='subtext'>[[item.vendorName]]</div>
-            <div class='item-title'>[[item.equipmentName]]</div>
-          </div>
-          <div class='cell'>
             <div>[[item.nickname]]</div>
           </div>
           <div class='cell'>
-            <div>[[item.companyName]]</div>
+            <div class='subtext'>[[item.manufacturer]]</div>
+            <div class='item-title'>[[item.model]]</div>
+          </div>
+          <div class='cell'>
+            <div>[[item.company]]</div>
             <div class='subtext'>[[item.locationName]]</div>
           </div>
           <div class='cell number'>[[_convertDiameter(item.panDiameter)]]</div>
@@ -225,6 +163,9 @@
             <div class='icon-button' on-click='_load'>
               <iron-icon icon='my-icons:load'></iron-icon>
             </div>
+            <div class='icon-button' on-click='_edit'>
+              <iron-icon icon='my-icons:edit'></iron-icon>
+            </div>
            
           </div> 
         </template>
@@ -232,14 +173,12 @@
       </div>   
       
     </div>  
-        
       
-    
   </template>
 
   <script>
-    class PanLibrary extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'pan-library'; }
+    class PanLibraryPage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'pan-library-page'; }
       
       static get properties() {
         return {
@@ -295,41 +234,34 @@
           return new CoatingPan(params).toJSON();
         });
       }
-      _lockScroll(e) {
-        let overflow;
-        if(e.detail.value) {
-          overflow = 'hidden';
-        } else {
-          overflow = '';
-        }
-        document.querySelector('body').style.overflow = overflow;
-      }
-      _stopPropagation(e){
-        e.stopPropagation();        
-      }
-      toggle() {
-        this.opened = !this.opened;
-        
-        let overflow;
-        if(this.opened) {
-          this.$.backdrop.scrollTo(0, 0);
-          overflow = 'hidden';
-        } else {
-          this.filterTerm = '';
-          overflow = '';
-        }
-        document.querySelector('body').style.overflow = overflow;
-      }
       _load(e) {
         this.dispatch({
           type: "LOAD_PAN",
           value: e.model.item
         });
-        this.toggle();
+        window.history.back();
+      }
+      _edit(e) {
+        this.dispatch({
+          type: "LOAD_PAN",
+          value: e.model.item
+        });
+        window.scrollTo(0,0);
+        window.location = '#/pan-editor';
       }
       _filterLibrary(library, searchTerm) {
         if(!searchTerm) { return library; }
-        return library.filter( pan => { return pan.productName.toLowerCase().includes(searchTerm.toLowerCase()); });
+        return library.filter( 
+          pan => { 
+            return (
+              pan.manufacturer.toLowerCase().includes(searchTerm.toLowerCase()) || 
+              pan.model.toLowerCase().includes(searchTerm.toLowerCase()) || 
+              pan.nickname.toLowerCase().includes(searchTerm.toLowerCase()) || 
+              pan.company.toLowerCase().includes(searchTerm.toLowerCase()) || 
+              pan.locationName.toLowerCase().includes(searchTerm.toLowerCase()) 
+            );
+          }
+        );
       }
       
       _convertDiameter(diameter) {
@@ -340,6 +272,6 @@
       }
     }
 
-    window.customElements.define(PanLibrary.is, PanLibrary);
+    window.customElements.define(PanLibraryPage.is, PanLibraryPage);
   </script>
 </dom-module>
