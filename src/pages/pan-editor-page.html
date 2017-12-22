@@ -23,16 +23,6 @@
         margin: auto;
       }
       
-      icon-label-button 
-      {
-        align-self: flex-end;
-        margin-bottom: 16px;
-        background-color: var(--app-highlight-color);
-        border-color: var(--app-highlight-color);
-        color: var(--white-color);
-        --app-primary-color: var(--app-highlight-color);
-      }
-      
       /*Card and Intro Section Styles*/
       #card 
       {
@@ -103,6 +93,7 @@
       {
         display: flex;
         justify-content: space-between;
+        align-items: center;
       }
       .nav-toolbar .icon-background 
       {
@@ -144,6 +135,13 @@
       #baffles-page unit-input {
         grid-column: 1 / 2;
       }
+      #baffles-page icon-label-button 
+      {
+        background-color: var(--app-highlight-color);
+        border-color: var(--app-highlight-color);
+        color: var(--white-color);
+        --app-primary-color: var(--app-highlight-color);
+      }
       
       /*Baffle Card*/
       #guns-page text-input {
@@ -157,7 +155,6 @@
       }
     </style>
     
-    <icon-label-button icon='my-icons:calculator' label='Calculate Pan' on-click='_save'></icon-label-button>
     <div id='card'>
       
       <div id='title-section'>
@@ -259,6 +256,7 @@
             <div class='icon-background' on-click='_previous'>
               <iron-icon icon='my-icons:arrow-left'></iron-icon>
             </div>
+            <icon-label-button icon='my-icons:calculator' label='Calculate Pan' on-click='_save'></icon-label-button>
           </div>
           
         </div>
@@ -295,6 +293,20 @@
             value: function() 
             {
               return [ "Ploughshare", "Shark Fin", "Helical", "Rabbit Ear", "Double Helical" ];
+            }
+          },
+          gunOptions: { 
+            type: Array, 
+            value: function() 
+            {
+              return [ "Schlick", "Spraying Systems", "Fruend"];
+            }
+          },
+          gunTypeOptions: { 
+            type: Array, 
+            value: function() 
+            {
+              return [ "930 Series", "970 Series", "VAU", "JAU"];
             }
           }
         };

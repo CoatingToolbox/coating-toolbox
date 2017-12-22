@@ -36,17 +36,17 @@
     </style>
     
     <div class='graphic-layout'>
-      <tablet-graphic top-view tablet='[[_tablet]]'></tablet-graphic>
+      <tablet-graphic top-view tablet='[[tablet]]'></tablet-graphic>
       <div class='schematic-label'>Top View</div>
     </div>
     
     <div class='graphic-layout'>
-      <tablet-graphic length-view tablet='[[_tablet]]'></tablet-graphic>
+      <tablet-graphic length-view tablet='[[tablet]]'></tablet-graphic>
       <div class='schematic-label'>Length View</div>
     </div>
     
-    <div class='graphic-layout' hidden$='[[_tablet.isRound]]'>
-      <tablet-graphic width-view tablet='[[_tablet]]'></tablet-graphic>
+    <div class='graphic-layout' hidden$='[[_hideWidthView(tablet.isRound, noWidthView)]]'>
+      <tablet-graphic width-view tablet='[[tablet]]'></tablet-graphic>
       <div class='schematic-label'>Width View</div>
     </div>        
     
@@ -61,22 +61,15 @@
       static get properties() {
         return {
           tablet: Object,
-          _tablet: Object
+          noWidthView: Boolean
         };
       }
-      
-      static get observers() {
-        return [
-          '_calcTabletDimensions(tablet.*)'
-        ];
-      }
-      
-      // take the redux tablet properties and pass to a tablet class
-      // to calculate all the values required to map the tablet
-      _calcTabletDimensions() {
-        this._tablet = new Tablet(this.tablet);
-      }
 
+      _hideWidthView(round, noWidth) {
+        console.log(round);
+        console.log(noWidth);
+        return (round || noWidth);
+      }
     }
     
     window.customElements.define(TabletSchematicLayout.is,TabletSchematicLayout);

@@ -4,7 +4,9 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../elements/inputs/text-input.html">
 <link rel="import" href="../elements/inputs/unit-input.html">
+<link rel="import" href="../elements/inputs/item-select-input.html">
 <link rel="import" href="../elements/inputs/shape-input.html">
+<link rel="import" href="../elements/graphics/tablet-schematic-layout.html">
 <link rel="import" href="../elements/charts/bulk-density-chart.html">
 <link rel="import" href="../elements/buttons/icon-label-button.html">
 <link rel="import" href="../redux/redux-mixin.html">
@@ -23,15 +25,6 @@
         margin: auto;
       }
       
-      icon-label-button {
-        align-self: flex-end;
-        margin-bottom: 16px;
-        background-color: var(--app-highlight-color);
-        border-color: var(--app-highlight-color);
-        color: var(--white-color);
-        --app-primary-color: var(--app-highlight-color);
-      }
-      
       /*Card and Intro Section Styles*/
       #card {
         display: flex;
@@ -42,13 +35,6 @@
                   0 1px 5px 0 rgba(0, 0, 0, 0.12),
                   0 3px 1px -2px rgba(0, 0, 0, 0.2);
       }
-      iron-pages {
-        flex-grow: 1;
-        padding: 24px 32px;
-      }
-      .spacer {
-        flex-grow: 1;
-      }
       
       /*The intro highlight section*/
       #title-section {
@@ -56,11 +42,36 @@
         max-width: 40%;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        padding: 24px 32px;
         border-radius: 4px 0px 0px 4px;
         background-color: var(--app-primary-color);
         color: var(--white-color);
+      }
+      #title-section iron-selector {
+        display: flex;
+        justify-content: flex-end;
+        padding: 16px;
+      }
+      #title-section iron-icon  {
+        opacity: 0.5;
+        cursor: pointer;
+      }
+      #title-section iron-icon.iron-selected  {
+        opacity: 1;
+      }
+      #title-section iron-icon + iron-icon {
+        margin-left: 16px;
+      }
+      #title-section iron-pages {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0px 32px;
+      }
+      #title-section tablet-schematic-layout {
+        color: var(--text-color);
+        align-self: center;
+        justify-self: center;
       }
       #title-section .title {
         @apply --paper-font-display2;
@@ -70,6 +81,11 @@
         @apply --paper-font-body2;
       }
       
+      /*The input pages element*/
+      #pages {
+        flex-grow: 1;
+        padding: 24px 32px;
+      }
       /*RIght side of card for inputs*/
       .page {
         display: flex;
@@ -95,6 +111,7 @@
       .nav-toolbar {
         display: flex;
         justify-content: space-between;
+        align-items: center;
       }
       .nav-toolbar .icon-background {
         padding: 8px;
@@ -121,11 +138,25 @@
       }
       
       /*Formulation Card*/
+      #formulation-page item-select-input {
+        grid-column: 1/ 3;
+      }
       #formulation-page bulk-density-chart {
         grid-column: 1 / 3;
         margin: 24px 0px;
         min-height: 175px;
         max-height: 175px;
+      }
+      #formulation-page icon-label-button {
+        background-color: var(--app-highlight-color);
+        border-color: var(--app-highlight-color);
+        color: var(--white-color);
+        --app-primary-color: var(--app-highlight-color);
+      }
+      
+      /*class used to grow into empty space on input sections*/
+      .spacer {
+        flex-grow: 1;
       }
       /*Used to hide elements based on data bindings*/
       [hidden] {
@@ -133,14 +164,27 @@
       }
     </style>
     
-    <icon-label-button icon='my-icons:calculator' label='Calculate Tablet' on-click='_save'></icon-label-button>
     <div id='card'>
       
       <div id='title-section'>
-        <div class='title'>Tablet Designer</div>
-        <div class='description'>The Tablet Designer allows estimates important properties of a tablet. Starting with a compressed tablet input a few easy measurements like length, 
-          thickness, and weight to caluclate the tablets surface area, volume and more.
-        </div>
+        
+        <iron-selector id='icons-toolbar' selected='{{iconSelected}}'>
+          <iron-icon icon='my-icons:info'></iron-icon>
+          <iron-icon icon='my-icons:chart'></iron-icon>
+        </iron-selector>
+        
+        <iron-pages selected='[[iconSelected]]'>
+          
+          <div>
+            <div class='title'>Tablet Designer</div>
+            <div class='description'>The Tablet Designer allows estimates important properties of a tablet. Starting with a compressed tablet input a few easy measurements like length, 
+              thickness, and weight to caluclate the tablets surface area, volume and more.
+            </div>
+          </div>
+          
+          <tablet-schematic-layout tablet='[[tablet]]' no-width-view></tablet-schematic-layout>
+          
+        </iron-pages>
       </div>
       
       <iron-pages id='pages' selected='{{selectedSection}}'>
@@ -188,9 +232,10 @@
         
         <div class='page' id='formulation-page'>
           <div class='inputs-layout'>
-            <div class='card-title'>Weight & Density</div>
-            <unit-input value='{{tablet.weight}}' icon='my-icons:weight' label='Weight' type='weight' selected-units='mg'></unit-input>
-            <unit-input value='{{tablet.bulkDensity}}' icon='my-icons:density' label='Bulk Density' type='density' selected-units='g/ml'></unit-input>
+            <div class='card-title'>Formulation</div>
+            <item-select-input label='Formulation Type' icon='my-icons:product' items='["Pharmaceutical", "Nutritional"]' selected='{{tablet.productType}}'></item-select-input>
+            <unit-input value='{{tablet.weight}}' icon='my-icons:weight' label='Tablet Weight' type='weight' selected-units='mg'></unit-input>
+            <unit-input value='{{tablet.bulkDensity}}' icon='my-icons:density' label='Tablet Bulk Density' type='density' selected-units='g/ml'></unit-input>
             <bulk-density-chart id='chart' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
           </div>
           <div class='spacer'></div>
@@ -198,9 +243,7 @@
             <div class='icon-background' on-click='_previous'>
               <iron-icon icon='my-icons:arrow-left'></iron-icon>
             </div>
-            <!--<div class='icon-background highlight' on-click='_save'>-->
-            <!--  <iron-icon icon='my-icons:save'></iron-icon>-->
-            <!--</div>-->
+            <icon-label-button icon='my-icons:calculator' label='Calculate Tablet' on-click='_save'></icon-label-button>
           </div>
           
         </div>
@@ -222,7 +265,8 @@
       static get properties() {
         return { 
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
-          selectedSection: { type: Number, value: 0, observer: "_selectedSectionChanged"},
+          iconSelected: { type: Number, value: 0},
+          selectedSection: { type: Number, value: 1, observer: "_selectedSectionChanged"},
           tablet: { type: Object, statePath: 'tablet'},
           lengthUnits: { type: String, value: 'mm' },
         };
