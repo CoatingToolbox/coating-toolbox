@@ -265,8 +265,8 @@
       static get properties() {
         return { 
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
-          iconSelected: { type: Number, value: 0},
-          selectedSection: { type: Number, value: 1, observer: "_selectedSectionChanged"},
+          iconSelected: { type: Number, value: 1},
+          selectedSection: { type: Number, value: 0, observer: "_selectedSectionChanged"},
           tablet: { type: Object, statePath: 'tablet'},
           lengthUnits: { type: String, value: 'mm' },
         };
