@@ -51,8 +51,8 @@
     
         
         <div id='label-layout'>
-            <iron-icon icon='my-icons:shape'></iron-icon>
-            <div id='label'>Tablet Shape</div>
+            <iron-icon icon='[[icon]]'></iron-icon>
+            <div id='label'>[[label]]</div>
         </div>
         
         <iron-selector selected='{{selected}}' attr-for-selected='item'>
@@ -70,6 +70,8 @@
             
             static get properties() {
                 return {
+                    label: String,
+                    icon: String,
                     items: Array,
                     selected: {type: String, notify: true}
                 };

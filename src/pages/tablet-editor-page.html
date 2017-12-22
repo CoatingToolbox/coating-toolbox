@@ -110,7 +110,7 @@
       }
       
       /*Details Card*/
-      #details-page text-input[label="Product Name"], 
+      #details-page text-input[label="Product"], 
       #details-page text-input[label="Formulation"] {
         grid-column: 1 / 3;
       }
@@ -209,7 +209,7 @@
       
     </div>
     
-    <div hidden='[[!isAdmin]]'>
+    <div hidden$='[[!isAdmin]]'>
       <icon-label-button icon='my-icons:save' label='Save to Firebase' on-click='_saveToFirebase'></icon-label-button>
       <icon-label-button icon='my-icons:save' label='Update on Firebase' on-click='_replaceOnFirebase'></icon-label-button>
     </div>

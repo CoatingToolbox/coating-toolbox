@@ -16,8 +16,13 @@
         batch: new Batch()          /*global Batch*/
     };
     
+    
+    const storedState = JSON.parse(sessionStorage.getItem('coating-toolbox-state'));
+    
+    let startState = storedState || initialState;
+    
     // create a reducer for actions
-    const reducer = (state = initialState, action) => {
+    const reducer = (state = startState, action) => {
         let newState = Object.assign({}, state);
         switch(action.type) {
             case "SET_ADMIN":
@@ -31,6 +36,7 @@
                 newState.pan = action.value;
                 break;
         }
+        sessionStorage.setItem('coating-toolbox-state', JSON.stringify(newState));
         return newState;
     };
     

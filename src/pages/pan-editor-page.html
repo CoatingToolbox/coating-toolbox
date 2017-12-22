@@ -211,8 +211,8 @@
         <div class='page' id='airflow-page'>
           <div class='inputs-layout'>
             <div class='card-title'>Airflow</div>
-              <item-select-input items='["Fully", "Partially", "Solid"]' selected='{{pan.perforations}}'></item-select-input>
-              <text-input value='{{pan.gunManfucaturer}}' icon='my-icons:product' label='Manufacturer'></text-input>
+              <item-select-input label='Pan Perforations' icon='my-icons:surface-area' items='["Fully", "Partially", "Solid"]' selected='{{pan.perforations}}'></item-select-input>
+              <!--<text-input value='{{pan.gunManfucaturer}}' icon='my-icons:product' label='Manufacturer'></text-input>-->
               <unit-input value='{{pan.maxAirflow}}' icon='my-icons:ruler' type='airflow' selected-units='cfm' label='Max Airflow'></unit-input>
           </div>
           <div class='spacer'></div>
@@ -250,7 +250,7 @@
         <div class='page' id='baffles-page'>
           <div class='inputs-layout'>
             <div class='card-title'>Baffles</div>
-              <text-input value='{{pan.baffleType}}' icon='my-icons:product' label='Baffle Type'></text-input>
+              <text-input value='{{pan.baffleType}}' options='[[baffleOptions]]' icon='my-icons:product' label='Baffle Type'></text-input>
               <unit-input value='{{pan.baffleCount}}' icon='my-icons:count' label='Baffle Count' decimals='0' step='1' selected-units='baffles'></unit-input>
               <unit-input value='{{pan.baffleHeight}}' icon='my-icons:ruler' label='Baffle Max height' type='length' selected-units='{{lengthUnits}}'></unit-input>
           </div>
@@ -267,7 +267,7 @@
       
     </div>
     
-    <div hidden='[[!isAdmin]]'>
+    <div hidden$='[[!isAdmin]]'>
       <icon-label-button icon='my-icons:save' label='Save to Firebase' on-click='_saveToFirebase'></icon-label-button>
       <icon-label-button icon='my-icons:save' label='Update on Firebase' on-click='_replaceOnFirebase'></icon-label-button>
     </div>
@@ -280,7 +280,7 @@
       static get properties() {
         return { 
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
-          selectedSection: { type: Number, value: 1},
+          selectedSection: { type: Number, value: 0},
           pan: { type: Object, statePath: 'pan'},
           lengthUnits: { type: String, value: 'in' },
           manufacturerOptions: { 
@@ -288,6 +288,13 @@
             value: function() 
             {
               return [ "Thomas Engineering", "O'Hara", "GEA", "Manesty", "IMA", "Freund-Vector", "Other" ];
+            }
+          },
+          baffleOptions: { 
+            type: Array, 
+            value: function() 
+            {
+              return [ "Ploughshare", "Shark Fin", "Helical", "Rabbit Ear", "Double Helical" ];
             }
           }
         };

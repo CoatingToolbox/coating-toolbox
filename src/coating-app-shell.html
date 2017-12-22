@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --app-light-color: #88A2CC;
         --app-highlight-color: #ED5D5D;
         --background-color: #e6e6e8;
-        --border-color: #e3e7ea;
+        --border-color: #dcdcdf;
         
         /*Text colors*/
         --text-color: #758794;
@@ -177,9 +177,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class CoatingAppShell extends ReduxMixin(Polymer.Element) {
       static get is() { return 'coating-app-shell'; }
       
-      attached() {
-        this.$.auth.signInWithEmailAndPassword('jhansell@colorcon.com', 'opadry');
-      }
+      // attached() {
+      //   this.$.auth.signInWithEmailAndPassword('jhansell@colorcon.com', 'opadry');
+      // }
       
       static get properties() {
         return {
