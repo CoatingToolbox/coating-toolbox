@@ -1,5 +1,6 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
@@ -128,6 +129,8 @@
       }
     </style>
     
+      <firebase-query path="pans" data="{{library}}"></firebase-query>
+    
       <div id='header'>
         <div id='page-title'>Coating Pan Library</div>
         <div id='search-layout'>
@@ -184,56 +187,10 @@
         return {
           filterTerm: String,
           opened: { type: Boolean, reflectToAttribute: true, value: false },
-          panParameters: {
-            type: Array,
-            value: function() {
-              return [
-                {nickname: '9" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
-                equipmentName: 'M Coater', panDiameter: 0.2286, openingDiameter: 0.127, brimWidth: 0.1651, wallWidth: 0.1143}, 
-                
-                {nickname: '12" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-                equipmentName: 'Labcoat IIX', panDiameter: 0.3048, openingDiameter: 0.1524, brimWidth: 0.2032, wallWidth: 0.1143},
-                
-                {nickname: '15" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-                equipmentName: 'Labcoat IIX', panDiameter: 0.381, openingDiameter: 0.2032, brimWidth: 0.31115, wallWidth: 0.2032},
-                
-                {nickname: '19" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-                equipmentName: 'Labcoat IIX', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794},
-                
-                {nickname: '24" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-                equipmentName: 'Labcoat IIX', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.508, wallWidth: 0.3302},
-                
-                {nickname: '30" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-                equipmentName: 'Labcoat IIX', panDiameter: 0.762, openingDiameter: 0.254, brimWidth: 0.6477, wallWidth: 0.381},
-                
-                {nickname: '48" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
-                equipmentName: 'Fastcoat', panDiameter: 1.2192, openingDiameter: 0.4826, brimWidth: 0.93345, wallWidth: 0.508},
-                
-                {nickname: '15" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-                equipmentName: 'Compu-Lab', panDiameter: 0.381, openingDiameter: 0.254, brimWidth: 0.2159, wallWidth: 0.1524}, 
-                
-                {nickname: '19" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-                equipmentName: 'Compu-Lab', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794}, 
-                
-                {nickname: '24" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-                equipmentName: 'Compu-Lab', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.53975, wallWidth: 0.3302},
-                
-                {nickname: '60" Pan', locationName: 'Irvine, CA', companyName: 'Par', vendorName: "Thomas Engineering", 
-                equipmentName: 'Accela-Cota', panDiameter: 1.524, openingDiameter: 0.4826, brimWidth: 1.2192, wallWidth: 0.635}
-              ];
-            }
-          },
-          library: {
-            type: Array,
-            computed: '_computeLibrary(panParameters)'
-          }
+          library: Array
         };
       }
-      _computeLibrary(parameters) {
-        return parameters.map( params => {
-          return new CoatingPan(params).toJSON();
-        });
-      }
+      
       _load(e) {
         this.dispatch({
           type: "LOAD_PAN",
