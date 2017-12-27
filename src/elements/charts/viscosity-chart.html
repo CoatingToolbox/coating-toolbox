@@ -63,16 +63,17 @@
                     }},
                     height: Number,
                     width: Number,
-                    xScale: {type: Object, computed: '_computeXScale(width)'},
-                    yScale: {type: Object, computed: '_computeYScale(height, intercept, exponent)'},
+                    xScale: {type: Object, computed: '_computeXScale(width, intercept, exponent)'},
+                    yScale: {type: Object, computed: '_computeYScale(height)'},
                     d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'}
                 };
             }
             
-            _computeXScale(chartWidth) {
+            _computeXScale(chartWidth, intercept, exponent) {
                 /*global d3*/
                 // max 40% solids
-                let max = this._computeSolids(600);
+                let max = this._computeSolids(600) * 100;
+                max = (max < 35) ? max : 35;
                 return d3.scaleLinear().range([0, chartWidth]).domain([0, max]).nice();
             }
             _computeYScale(chartHeight) {
@@ -128,7 +129,7 @@
                 
                 let step = 0.025;
                 
-                for(var i = 0; i <= 0.5; i = i + step) {
+                for(var i = 0; i <= 0.35; i = i + step) {
                     vals.push({x: (i * 100), y: this._computeViscosity(i)});
                     if(this._computeViscosity(i) > 600) break;
                 }

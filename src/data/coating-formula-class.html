@@ -1,7 +1,7 @@
 <script>
     class CoatingFormula {
 
-        constructor() {
+        constructor(parameters={}) {
             this.density = 1100000;
             this.solids = 0.2;
             this.productName = 'Opadry II';
@@ -9,9 +9,29 @@
             this.type = 'aesthetic';
             this.color = 'White';
 
-            this.viscosityIntercept = 19.06;
-            this.viscosityExponent = 0.1977;
+            this.viscosityIntercept = 20;
+            this.viscosityExponent = 10;
+            
+            Object.getOwnPropertyNames(this).map(name => {
+                if(!parameters[name]) { return }
+                this[name] = parameters[name];
+            });
         }
+        
+        toJSON() {
+            return {
+                density: this.density,
+                solids: this.solids,
+                productName: this.productName,
+                formulaName: this.formulaName,
+                type: this.type,
+                color: this.color,
+                viscosityExponent: this.viscosityExponent,
+                viscosityIntercept: this.viscosityIntercept,
+                viscosity: this.viscosity
+            };
+        }
+        
         
         get viscosity() {
             return this.viscosityIntercept * Math.exp(this.viscosityExponent * this.solids);

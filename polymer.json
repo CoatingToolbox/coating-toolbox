@@ -6,7 +6,7 @@
     "src/pages/tablet-library-page.html",
     "src/pages/tablet-editor-page.html",
     "src/pages/pan-library-page.html",
-    "src/pages/pan-editor-page.html"
+    "src/pages/pan-editor-page.html",
     "src/pages/coating-library-page.html",
     "src/pages/coating-editor-page.html"
   ],
