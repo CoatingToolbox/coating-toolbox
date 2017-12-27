@@ -9,7 +9,7 @@
 <link rel="import" href="../data/coating-pan-class.html">
 <link rel="import" href="../redux/redux-mixin.html">
 
-<dom-module id="pan-library-page">
+<dom-module id="coating-library-page">
   
    <template>
     
@@ -132,7 +132,7 @@
       <firebase-query path="pans" data="{{library}}"></firebase-query>
     
       <div id='header'>
-        <div id='page-title'>Coating Pan Library</div>
+        <div id='page-title'>Coating Formulation Library</div>
         <div id='search-layout'>
           <iron-icon id='search-icon' icon='my-icons:search'></iron-icon>
           <paper-input value='{{filterTerm}}' placeholder='Search Coating Pans...' no-label-float></paper-input>
@@ -180,8 +180,8 @@
   </template>
 
   <script>
-    class PanLibraryPage extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'pan-library-page'; }
+    class CoatingLibraryPage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'coating-library-page'; }
       
       static get properties() {
         return {
@@ -229,6 +229,6 @@
       }
     }
 
-    window.customElements.define(PanLibraryPage.is, PanLibraryPage);
+    window.customElements.define(CoatingLibraryPage.is, CoatingLibraryPage);
   </script>
 </dom-module>

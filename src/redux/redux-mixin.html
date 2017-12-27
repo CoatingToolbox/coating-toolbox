@@ -3,6 +3,7 @@
 
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
 <link rel="import" href="../data/coating-pan-class.html">
+<link rel="import" href="../data/coating-formula-class.html">
 <link rel="import" href="../data/tablet-class.html">
 <link rel="import" href="../data/batch-class.html">
 
@@ -13,13 +14,15 @@
         isAdmin: false,
         pan: new CoatingPan().toJSON(),      /*global CoatingPan*/
         tablet: new Tablet().toJSON(),       /*global Tablet*/
-        batch: new Batch()          /*global Batch*/
+        batch: new Batch(),                 /*global Batch*/
+        coatingFormula: new CoatingFormula()
     };
     
     
     const storedState = JSON.parse(sessionStorage.getItem('coating-toolbox-state'));
     
     let startState = storedState || initialState;
+    startState = initialState;
     
     // create a reducer for actions
     const reducer = (state = startState, action) => {
@@ -34,6 +37,9 @@
             case "LOAD_PAN":
                 newState.pan = action.value;
                 break;
+            case "LOAD_COATING_FORMULA":
+                newState.coatingFormula = action.value;
+                break;
         }
         sessionStorage.setItem('coating-toolbox-state', JSON.stringify(newState));
         return newState;
@@ -47,55 +53,5 @@
     /* global PolymerRedux*/
     const ReduxMixin = PolymerRedux(store);
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // We have a library of pans that can be used
-    // since pan is a coating class we have an array of objects with the required inputs for each coating pan class. 
-    // const panLibraryInputs = [
-    //   {nickname: '9" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
-    //   equipmentName: 'M Coater', panDiameter: 0.2286, openingDiameter: 0.127, brimWidth: 0.1651, wallWidth: 0.1143}, 
-      
-    //   {nickname: '12" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-    //   equipmentName: 'Labcoat IIX', panDiameter: 0.3048, openingDiameter: 0.1524, brimWidth: 0.2032, wallWidth: 0.1143},
-      
-    //   {nickname: '15" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-    //   equipmentName: 'Labcoat IIX', panDiameter: 0.381, openingDiameter: 0.2032, brimWidth: 0.31115, wallWidth: 0.2032},
-      
-    //   {nickname: '19" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-    //   equipmentName: 'Labcoat IIX', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794},
-      
-    //   {nickname: '24" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-    //   equipmentName: 'Labcoat IIX', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.508, wallWidth: 0.3302},
-      
-    //   {nickname: '30" Pan', locationName: 'Irvine, CA', companyName: 'Colorcon', vendorName: "O'Hara", 
-    //   equipmentName: 'Labcoat IIX', panDiameter: 0.762, openingDiameter: 0.254, brimWidth: 0.6477, wallWidth: 0.381},
-      
-    //   {nickname: '48" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "O'Hara", 
-    //   equipmentName: 'Fastcoat', panDiameter: 1.2192, openingDiameter: 0.4826, brimWidth: 0.93345, wallWidth: 0.508},
-      
-    //   {nickname: '15" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-    //   equipmentName: 'Compu-Lab', panDiameter: 0.381, openingDiameter: 0.254, brimWidth: 0.2159, wallWidth: 0.1524}, 
-      
-    //   {nickname: '19" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-    //   equipmentName: 'Compu-Lab', panDiameter: 0.4826, openingDiameter: 0.2032, brimWidth: 0.43815, wallWidth: 0.2794}, 
-      
-    //   {nickname: '24" Pan', locationName: 'West Point, PA', companyName: 'Colorcon', vendorName: "Thomas Engineering", 
-    //   equipmentName: 'Compu-Lab', panDiameter: 0.6096, openingDiameter: 0.254, brimWidth: 0.53975, wallWidth: 0.3302},
-      
-    //   {nickname: '60" Pan', locationName: 'Irvine, CA', companyName: 'Par', vendorName: "Thomas Engineering", 
-    //   equipmentName: 'Accela-Cota', panDiameter: 1.524, openingDiameter: 0.4826, brimWidth: 1.2192, wallWidth: 0.635}
-    // ];
-    // const panLibrary = panLibraryInputs.map( pan => {
-    //     return Object.assign(new CoatingPan(), pan); /*global CoatingPan*/
-    // });
-     
 </script>
 

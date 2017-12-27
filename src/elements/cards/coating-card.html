@@ -27,8 +27,8 @@
       <div class='title' slot='item-title'>Opadry II 85F</div>
       <small-icon-item slot='item' label='10% solids' icon='my-icons:volume'></small-icon-item>
       <small-icon-item slot='item' label='140 cps' icon='my-icons:viscosity'></small-icon-item>
-      <paper-icon-button icon='my-icons:library' slot='toolbar'></paper-icon-button>
-      <paper-icon-button icon='my-icons:edit' slot='toolbar'></paper-icon-button>
+      <paper-icon-button icon='my-icons:library' on-click='_openLibrary'  slot='toolbar'></paper-icon-button>
+      <paper-icon-button icon='my-icons:edit' on-click='_openEditor'  slot='toolbar'></paper-icon-button>
     </tagged-toolbar-card>
       
       
@@ -43,18 +43,13 @@
         };
       }
       
-       _getTabletDimensionString(shape, length, width) {
-        // values in meters and need to convert to mm.
-        let conv = 1000;
-        if(shape === 'round') {
-          return `${(length * conv).toFixed(1)} mm`;
-        } else {
-          return `${(length * conv).toFixed(1)} x ${(width * conv).toFixed(1)} mm`;
-        }
+      _openLibrary() {
+        window.scrollTo(0, 0);
+        window.location = '#/coating-library';
       }
-      
-      _getTabletWeightString(weight) {
-        return `${(weight * 1000).toFixed(1)} mg`;
+      _openEditor() {
+        window.scrollTo(0, 0);
+        window.location = '#/coating-editor';
       }
       
     }

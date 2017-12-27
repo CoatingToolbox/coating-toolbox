@@ -1,0 +1,49 @@
+<script>
+    class CoatingFormula {
+
+        constructor() {
+            this.density = 1100000;
+            this.solids = 0.2;
+            this.productName = 'Opadry II';
+            this.formulaName = '85F18422';
+            this.type = 'aesthetic';
+            this.color = 'White';
+
+            this.viscosityIntercept = 19.06;
+            this.viscosityExponent = 0.1977;
+        }
+        
+        get viscosity() {
+            return this.viscosityIntercept * Math.exp(this.viscosityExponent * this.solids);
+        }
+        set viscosity(viscosity) {
+            this.solids = Math.log(this.viscosity / this.viscosityIntercept) / this.viscosityExponent;
+        }
+        
+        // get coatingWeight() {
+        //     return this.tabletWeight * this.weightGain;
+        // }
+        
+        // set coatingWeight(val) {
+        //     this.weightGain = val / this.tabletWeight;
+        // }
+
+        // get filmThickness() {
+        //     // (grams / meters^2) / (grams / meters^3) = meters
+        //     return this.coatingCoverage / this.density;
+        // }
+
+        // set filmThickness(val) {
+        //     this.coatingCoverage = val * this.density;
+        // }
+
+        // get coatingCoverage() {
+        //     // grams * percent / meters^2 = grams / meters^2
+        //     return this.coatingWeight / this.tabletArea;
+        // }
+
+        // set coatingCoverage(val) {
+        //     this.coatingWeight = val * this.tabelArea;
+        // }
+    }
+</script>

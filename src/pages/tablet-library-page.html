@@ -213,7 +213,8 @@
           type: "LOAD_TABLET",
           value: e.model.item
         });
-        window.history.back();
+        window.location = '#/home';
+        // window.history.back();
       }
       _editTablet(e) {
         this.dispatch({
