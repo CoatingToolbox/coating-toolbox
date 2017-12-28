@@ -16,6 +16,9 @@
       :host {
         display: flex;
       }
+      viscosity-chart {
+        height: 215px;
+      }
     </style>
         
       
@@ -29,7 +32,7 @@
       <small-icon-item slot='item' label='[[_getSolids(coating.solids)]]' icon='my-icons:volume'></small-icon-item>
       <small-icon-item slot='item' label='[[_getViscosity(coating.viscosity)]]' icon='my-icons:viscosity'></small-icon-item>
       <viscosity-chart slot='graphic' intercept='[[coating.viscosityIntercept]]' exponent='[[coating.viscosityExponent]]' solids='[[coating.solids]]'></viscosity-chart>
-      <paper-icon-button icon='my-icons:library' on-click='_openLibrary'  slot='toolbar'></paper-icon-button>
+      <!--<paper-icon-button icon='my-icons:library' on-click='_openLibrary'  slot='toolbar'></paper-icon-button>-->
       <paper-icon-button icon='my-icons:edit' on-click='_openEditor'  slot='toolbar'></paper-icon-button>
     </tagged-toolbar-card>
       

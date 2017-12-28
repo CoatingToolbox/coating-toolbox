@@ -7,6 +7,13 @@
 <dom-module id='viscosity-chart'>
     <template>
         <style include='chart-styles'>
+        :host {
+            display: flex;
+            flex-direction: column;
+        }
+        svg {
+            flex-grow: 1;
+        }
         .circle:nth-child(odd) {
             display: none;
         }
