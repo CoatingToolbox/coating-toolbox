@@ -61,12 +61,12 @@
     <div id='line'></div>
     
     <section id='overview'>
-      <div>[[tablet.productName]]</div>
+      <div>[[name]]</div>
       <div id='details-layout'>
-        <small-icon-item icon='my-icons:company' label='[[tablet.companyName]]'></small-icon-item> 
-        <small-icon-item icon='my-icons:contact' label='[[tablet.contactName]]'></small-icon-item>
-        <small-icon-item icon='my-icons:product' label='[[tablet.productType]]'></small-icon-item>
-        <small-icon-item icon='my-icons:product' label='[[tablet.formulationName]]'></small-icon-item>
+        <small-icon-item icon='my-icons:company' label='[[company]]'></small-icon-item> 
+        <small-icon-item icon='my-icons:contact' label='[[contact]]'></small-icon-item>
+        <small-icon-item icon='my-icons:product' label='[[productType]]'></small-icon-item>
+        <small-icon-item icon='my-icons:product' label='[[formulation]]'></small-icon-item>
       </div>
     </section>
     
@@ -75,32 +75,32 @@
       <icon-label-item 
       label='Dimensions' 
       icon='my-icons:ruler' 
-      value='[[_getDimensionString(tablet.shape, tablet.length, tablet.width)]] mm'>
+      value='[[dimensions]] mm'>
       </icon-label-item>
       <icon-label-item 
       label='Weight' 
       icon='my-icons:weight' 
-      value='[[_getWeightString(tablet.weight)]] mg'>
+      value='[[weight]] mg'>
       </icon-label-item>
       <icon-label-item 
       label='Surface Area' 
       icon='my-icons:surface-area' 
-      value='[[_getSurfaceAreaString(tablet.surfaceArea)]] cm2'>
+      value='[[area]] cm2'>
       </icon-label-item>
       <icon-label-item 
       label='Compressed Density' 
       icon='my-icons:density' 
-      value='[[_getDensityString(tablet.compressedDensity)]] g/ml'>
+      value='[[compressed]] g/ml'>
       </icon-label-item>
       <icon-label-item 
       label='Volume' 
       icon='my-icons:volume' 
-      value='[[_getVolumeString(tablet.volume)]] cm3'>
+      value='[[volume]] cm3'>
       </icon-label-item>
       <icon-label-item 
       label='Bulk Density' 
       icon='my-icons:density' 
-      value='[[_getDensityString(tablet.bulkDensity)]] g/ml'>
+      value='[[bulk]] g/ml'>
       </icon-label-item>
       <div class='section-title' id='graphic-title'>Tablet Schematic</div>
       <tablet-schematic-layout tablet='[[tablet]]'></tablet-schematic-layout>
@@ -113,34 +113,20 @@
       static get is() { return 'tablet-section'; }
       static get properties() {
         return {
-          tablet: { type: Object, statePath: 'tablet' }
+          tablet: { type: Object, statePath: 'tablet' },
+          name: {type: String, statePath: 'tablet.productName'},
+          company: {type: String, statePath: 'tablet.companyName'},
+          contact: {type: String, statePath: 'tablet.contactName'},
+          productType: {type: String, statePath: 'tablet.productName'},
+          formulation: {type: String, statePath: 'tablet.formulationName'},
+          dimensions: {type: String, statePath: 'tablet.dimensionsInMM'},
+          weight: {type: String, statePath: 'tablet.weightInMG'},
+          area: {type: String, statePath: 'tablet.surfaceAreaInCM2'},
+          volume: {type: String, statePath: 'tablet.volumeInCM3'},
+          bulk: {type: String, statePath: 'tablet.bulkDensityInGML'},
+          compressed: {type: String, statePath: 'tablet.compressedDensityInGML'},
+          
         };
-      }
-      
-      _getDimensionString(shape, length, width, thickness) {
-        // values in meters and need to convert to mm.
-        let conv = 1000;
-        if(shape === 'round') {
-          return `${(length * conv).toFixed(1)}`;
-        } else {
-          return `${(length * conv).toFixed(1)}`;
-        }
-      }
-      
-      _getDensityString(density) {
-        return (density * 1e-6).toFixed(2);
-      }
-      
-      _getWeightString(weight) {
-        return (weight * 1000).toFixed(1);
-      }
-      
-      _getVolumeString(volume) {
-        return (volume * 1000000).toFixed(2);
-      }
-      
-      _getSurfaceAreaString(surfaceArea) {
-        return (surfaceArea * 10000).toFixed(2);
       }
       _openLibrary() {
         window.scrollTo(0, 0);

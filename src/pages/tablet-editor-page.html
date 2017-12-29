@@ -149,10 +149,9 @@
         };
       }
       _save() {
-        let tablet = new Tablet(this.tablet).toJSON();
         this.dispatch({ 
-          type: "LOAD_TABLET",
-          value: tablet
+          type: "CALCULATE_TABLET",
+          value: this.tablet
         });
         window.location = '#/materials';
       }
@@ -166,13 +165,13 @@
         
         /*global firebase */
         this.tablet.firebaseKey = firebase.database().ref('tablets/').push().key;
-        let tablet = new Tablet(this.tablet).toJSON();
+        let tablet = this._tabletToJSON();
         firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
       }
       _replaceOnFirebase() {
         if(!this.isAdmin) { return; }
         
-        let tablet = new Tablet(this.tablet).toJSON();
+        let tablet = this._tabletToJSON();
         if(tablet.firebaseKey) {
           /*global firebase */
           firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
@@ -180,6 +179,11 @@
           console.log('could not replace firebase so loaded as new');
           this._saveToFirebase();
         }
+      }
+      
+      _tabletToJSON() {
+        return Object.assign({}, this.tablet);
+        
       }
     }
 

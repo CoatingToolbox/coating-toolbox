@@ -9,7 +9,6 @@
 
 <script>
   
-  
     const initialPan = {
         panDiameter: 1.2192,
         openingDiameter: 0.4826,
@@ -32,11 +31,26 @@
         firebaseKey: ''
     };
     
+    const initialTablet = {
+        shape: 'round',
+        length: 0.01,
+        width: 0.0075,
+        totalThickness: 0.00475,
+        bandThickness: 0.00275,
+        weight: 0.4,
+        bulkDensity: 760000,
+        productType: 'Pharmaceutical',
+        productName: 'Colorcon Round Placebo',
+        formulationName: 'Placebo WP2',
+        companyName: 'Colorcon',
+        contactName: 'Jason Hansell'
+    };
+    
     // create an initial state 
     const initialState = {
         isAdmin: false,
         pan: new CoatingPan(initialPan),                    /*global CoatingPan*/
-        tablet: new Tablet(),                       /*global Tablet*/
+        tablet: new Tablet(initialTablet),                       /*global Tablet*/
         coatingFormula: new CoatingFormula()        /*global CoatingFormula*/
     };
     
@@ -51,8 +65,8 @@
             case "SET_ADMIN":
                 newState.isAdmin = action.value;
                 break;
-            case "LOAD_TABLET":
-                newState.tablet = action.value;
+            case "CALCULATE_TABLET":
+                newState.tablet = new Tablet(action.value);
                 break;
             case "CALCULATE_PAN":
                 newState.pan = new CoatingPan(action.value);
