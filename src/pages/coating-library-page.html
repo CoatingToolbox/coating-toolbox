@@ -6,7 +6,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../data/coating-pan-class.html">
+<link rel="import" href="../data/coating-formula-class.html">
 <link rel="import" href="../redux/redux-mixin.html">
 
 <dom-module id="coating-library-page">
@@ -57,7 +57,7 @@
       /*Styles for Table and Cells*/
       #table {
         display: grid;
-        grid-template-columns: 2fr 1fr auto auto auto auto;
+        grid-template-columns: 2fr 1fr 1fr auto auto auto;
         grid-template-rows: 48px;
         grid-auto-rows: auto;
         max-width: 1024px;
@@ -129,38 +129,37 @@
       }
     </style>
     
-      <firebase-query path="pans" data="{{library}}"></firebase-query>
+      <firebase-query path="coatingFormulas" data="{{firebaseLibrary}}"></firebase-query>
     
       <div id='header'>
         <div id='page-title'>Coating Formulation Library</div>
         <div id='search-layout'>
           <iron-icon id='search-icon' icon='my-icons:search'></iron-icon>
-          <paper-input value='{{filterTerm}}' placeholder='Search Coating Pans...' no-label-float></paper-input>
+          <paper-input value='{{filterTerm}}' placeholder='Search Coating Formulas...' no-label-float></paper-input>
         </div>
       </div>
       
       <div id='table'>
-        <div class='header cell'>Name</div>
-        <div class='header cell'>Equipment</div>
-        <div class='header cell'>Location</div>
-        <div class='header cell'>Diameter (in)</div>
-        <div class='header cell'>Brim Volume (l)</div>
+        <div class='header cell'>Product</div>
+        <div class='header cell'>Functionality</div>
+        <div class='header cell'>Color</div>
+        <div class='header cell'>Solids (%)</div>
+        <div class='header cell'>Viscosity (cps)</div>
         <div class='header cell'></div>
         
-        <template is='dom-repeat' items='[[_filterLibrary(library, filterTerm)]]'>
+        <template is='dom-repeat' items='[[_filterLibrary(coatingLibrary, filterTerm)]]'>
           <div class='cell'>
-            <div>[[item.nickname]]</div>
+            <div>[[item.productName]]</div>
+            <div class='item-title'>[[item.formulaName]]</div>
           </div>
           <div class='cell'>
-            <div class='subtext'>[[item.manufacturer]]</div>
-            <div class='item-title'>[[item.model]]</div>
+            <div class='subtext'>[[item.type]]</div>
           </div>
           <div class='cell'>
-            <div>[[item.company]]</div>
-            <div class='subtext'>[[item.locationName]]</div>
+            <div>[[item.color]]</div>
           </div>
-          <div class='cell number'>[[_convertDiameter(item.panDiameter)]]</div>
-          <div class='cell number'>[[_convertVolume(item.brimVolume)]]</div>
+          <div class='cell number'>[[item.solidsInPercent]]</div>
+          <div class='cell number'>[[item.viscosityRounded]]</div>
           
           <div class='cell icon-layout'>
             <div class='icon-button' on-click='_load'>
@@ -187,24 +186,31 @@
         return {
           filterTerm: String,
           opened: { type: Boolean, reflectToAttribute: true, value: false },
-          library: Array
+          firebaseLibrary: Array,
+          coatingLibrary: {type: Array, computed: '_computeCoatingLibrary(firebaseLibrary)'}
         };
       }
       
+      _computeCoatingLibrary(firebase) {
+        return firebase.map(coat => {
+          return new CoatingFormula(coat);
+        });
+      }
       _load(e) {
         this.dispatch({
-          type: "LOAD_PAN",
-          value: e.model.item
-        });
-        window.location = '#/home';
-      }
-      _edit(e) {
-        this.dispatch({
-          type: "LOAD_PAN",
+          type: "CALCULATE_COATING_FORMULA",
           value: e.model.item
         });
         window.scrollTo(0,0);
-        window.location = '#/pan-editor';
+        window.location = '#/materials';
+      }
+      _edit(e) {
+        this.dispatch({
+          type: "CALCULATE_COATING_FORMULA",
+          value: e.model.item
+        });
+        window.scrollTo(0,0);
+        window.location = '#/coating-editor';
       }
       _filterLibrary(library, searchTerm) {
         if(!searchTerm) { return library; }
@@ -221,12 +227,6 @@
         );
       }
       
-      _convertDiameter(diameter) {
-        return `${(diameter * 39.3701).toFixed(0)}`;
-      }
-      _convertVolume(volume) {
-        return `${(volume * 1000).toFixed(0)}`;
-      }
     }
 
     window.customElements.define(CoatingLibraryPage.is, CoatingLibraryPage);

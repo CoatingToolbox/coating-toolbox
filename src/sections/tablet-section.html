@@ -13,6 +13,9 @@
    <template>
     
     <style include='section-shared-styles'>
+      :host {
+        background-color: var(--background-color);
+      }
       #details {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -42,6 +45,12 @@
         tablet-schematic-layout {
           grid-column: 3 / 4;
           grid-row: 2 / 6;
+        }
+      }
+      
+      @media(min-width: 1264px) {
+        :host {
+          background-color: var(--white-color);
         }
       }
     </style>
@@ -117,7 +126,7 @@
           name: {type: String, statePath: 'tablet.productName'},
           company: {type: String, statePath: 'tablet.companyName'},
           contact: {type: String, statePath: 'tablet.contactName'},
-          productType: {type: String, statePath: 'tablet.productName'},
+          productType: {type: String, statePath: 'tablet.productType'},
           formulation: {type: String, statePath: 'tablet.formulationName'},
           dimensions: {type: String, statePath: 'tablet.dimensionsInMM'},
           weight: {type: String, statePath: 'tablet.weightInMG'},

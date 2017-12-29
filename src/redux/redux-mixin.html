@@ -9,7 +9,10 @@
 
 <script>
   
-    const initialPan = {
+    
+    const storedState = JSON.parse(sessionStorage.getItem('coating-toolbox-state'));
+    
+    const initialPan = (storedState.pan) ? storedState.pan : {
         panDiameter: 1.2192,
         openingDiameter: 0.4826,
         wallWidth: 0.508,
@@ -31,7 +34,7 @@
         firebaseKey: ''
     };
     
-    const initialTablet = {
+    const initialTablet = (storedState.tablet) ? storedState.tablet : {
         shape: 'round',
         length: 0.01,
         width: 0.0075,
@@ -46,17 +49,20 @@
         contactName: 'Jason Hansell'
     };
     
+    const initialCoatingFormula = (storedState.coatingFormula) ? storedState.coatingFormula : {
+        productName: 'Opadry II 85F Series',
+        formulaName: '85F18422',
+        type: 'Immediate',
+        color: 'White'
+    };
+    
     // create an initial state 
     const initialState = {
         isAdmin: false,
         pan: new CoatingPan(initialPan),                    /*global CoatingPan*/
         tablet: new Tablet(initialTablet),                       /*global Tablet*/
-        coatingFormula: new CoatingFormula()        /*global CoatingFormula*/
+        coatingFormula: new CoatingFormula(initialCoatingFormula)        /*global CoatingFormula*/
     };
-    
-    
-    // const storedState = JSON.parse(sessionStorage.getItem('coating-toolbox-state'));
-    // let startState = storedState || initialState;
     
     // create a reducer for actions
     const reducer = (state = initialState, action) => {
@@ -71,11 +77,11 @@
             case "CALCULATE_PAN":
                 newState.pan = new CoatingPan(action.value);
                 break;
-            case "LOAD_COATING_FORMULA":
-                newState.coatingFormula = action.value;
+            case "CALCULATE_COATING_FORMULA":
+                newState.coatingFormula = new CoatingFormula(action.value);
                 break;
         }
-        // sessionStorage.setItem('coating-toolbox-state', JSON.stringify(newState));
+        sessionStorage.setItem('coating-toolbox-state', JSON.stringify(newState));
         return newState;
     };
     

@@ -1,10 +1,11 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../elements/inputs/text-input.html">
-<link rel="import" href="../elements/inputs/unit-input.html">
-<link rel="import" href="../elements/buttons/icon-label-button.html">
-<link rel="import" href="../elements/charts/viscosity-chart.html">
+<link rel="import" href="../inputs/text-input.html">
+<link rel="import" href="../inputs/unit-input.html">
+<link rel="import" href="../inputs/item-select-input.html">
+<link rel="import" href="../buttons/icon-label-button.html">
+<link rel="import" href="../charts/viscosity-chart.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/coating-formula-class.html">
 
@@ -63,7 +64,7 @@
       
       /*Details Card*/
       #input-layout text-input[label="Product"], 
-      #input-layout text-input[label="Formula"],
+      #input-layout item-select-input, 
       #input-layout viscosity-chart {
         grid-column: 1/ 3;
       }
@@ -103,7 +104,7 @@
       <text-input value='{{coat.productName}}' icon='my-icons:product' label='Product'></text-input>
       <text-input value='{{coat.formulaName}}' icon='my-icons:product' label='Formula'></text-input>
       <text-input value='{{coat.color}}' icon='my-icons:product' label='Color'></text-input>
-      <text-input value='{{coat.type}}' icon='my-icons:product' label='Function'></text-input>
+      <item-select-input label='Functionality' icon='my-icons:product' items='["Immediate", "Delayed", "Extended"]' selected='{{coat.type}}'></item-select-input>
       
       
       <!-- Section-->
@@ -142,33 +143,35 @@
         }
       }
       _save() {
-        let value = new CoatingFormula(this.coat).toJSON();
         this.dispatch({ 
-          type: "LOAD_COATING_FORMULA",
-          value: value
+          type: "CALCULATE_COATING_FORMULA",
+          value: this.coat
         });
-        window.location = '#/home';
+        window.location = '#/materials';
       }
       
       _saveToFirebase() {
         if(!this.isAdmin) { return; }
         
         // /*global firebase */
-        // this.pan.firebaseKey = firebase.database().ref('pans/').push().key;
-        // let pan = new CoatingPan(this.pan).toJSON();
-        // firebase.database().ref(`pans/${pan.firebaseKey}`).set(pan);
+        this.coat.firebaseKey = firebase.database().ref('coatingFormulas/').push().key;
+        let coat =this._coatToJSON();
+        firebase.database().ref(`coatingFormulas/${coat.firebaseKey}`).set(coat);
       }
       _replaceOnFirebase() {
         if(!this.isAdmin) { return; }
         
-        // let pan = new CoatingPan(this.pan).toJSON();
-        // if(pan.firebaseKey) {
-        //   /*global firebase */
-        //   firebase.database().ref(`pans/${pan.firebaseKey}`).set(pan);
-        // } else {
-        //   console.log('could not replace firebase so loaded as new');
-        //   this._saveToFirebase();
-        // }
+        let coat =this._coatToJSON();
+        if(coat.firebaseKey) {
+          /*global firebase */
+          firebase.database().ref(`coatingFormulas/${coat.firebaseKey}`).set(coat);
+        } else {
+          console.log('could not replace firebase so loaded as new');
+          this._saveToFirebase();
+        }
+      }
+      _coatToJSON() {
+        return Object.assign({}, this.coat);
       }
     }
 
