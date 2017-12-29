@@ -1,11 +1,11 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../elements/inputs/text-input.html">
-<link rel="import" href="../elements/inputs/unit-input.html">
-<link rel="import" href="../elements/inputs/item-select-input.html">
-<link rel="import" href="../elements/buttons/icon-label-button.html">
-<link rel="import" href="../elements/graphics/pan-schematic-layout.html">
+<link rel="import" href="../inputs/text-input.html">
+<link rel="import" href="../inputs/unit-input.html">
+<link rel="import" href="../inputs/item-select-input.html">
+<link rel="import" href="../buttons/icon-label-button.html">
+<link rel="import" href="../graphics/pan-schematic-layout.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/coating-pan-class.html">
 
@@ -123,7 +123,7 @@
       
       <!--Guns Section-->
       <div class='card-title'>Spray Guns</div>
-      <text-input value='{{pan.gunManfucaturer}}' icon='my-icons:product' label='Manufacturer'></text-input>
+      <text-input value='{{pan.gunMake}}' icon='my-icons:product' label='Manufacturer'></text-input>
       <text-input value='{{pan.gunModel}}' icon='my-icons:product' label='Model'></text-input>
       <unit-input value='{{pan.gunCount}}' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='guns'></unit-input>
       <unit-input value='{{pan.gunToGunDistance}}' icon='my-icons:ruler' type='length' selected-units='{{lengthUnits}}' label='Gun To Gun Distance'></unit-input>
@@ -185,26 +185,25 @@
         };
       }
       _save() {
-        let pan = new CoatingPan(this.pan).toJSON();
         this.dispatch({ 
-          type: "LOAD_PAN",
-          value: pan
+          type: "CALCULATE_PAN",
+          value: this.pan
         });
-        window.location = '#/home';
+        window.location = '#/materials';
       }
       
       _saveToFirebase() {
         if(!this.isAdmin) { return; }
-        
         /*global firebase */
         this.pan.firebaseKey = firebase.database().ref('pans/').push().key;
-        let pan = new CoatingPan(this.pan).toJSON();
+        // create a copy add copy over specific values from getters
+        let pan = this._panToJSON();
         firebase.database().ref(`pans/${pan.firebaseKey}`).set(pan);
       }
       _replaceOnFirebase() {
-        if(!this.isAdmin) { return; }
+        // if(!this.isAdmin) { return; }
         
-        let pan = new CoatingPan(this.pan).toJSON();
+        let pan = this._panToJSON();
         if(pan.firebaseKey) {
           /*global firebase */
           firebase.database().ref(`pans/${pan.firebaseKey}`).set(pan);
@@ -212,6 +211,12 @@
           console.log('could not replace firebase so loaded as new');
           this._saveToFirebase();
         }
+      }
+      // Convert pan class to JSON and add save certain getter values
+      _panToJSON() {
+        let pan = Object.assign({}, this.pan);
+        pan.diameterInInchesString = this.pan.diameterInInchesString;
+        pan.brimVolumeInLitersString = this.pan.brimVolumeInLitersString;
       }
     }
 

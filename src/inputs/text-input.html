@@ -1,0 +1,95 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id='text-input'>
+    <template>
+        <style>
+        :host {
+            display: flex;
+            flex-direction: column;
+        }
+        #label-layout {
+            display: flex;
+            align-items: center;
+            padding-bottom: 8px;
+        }
+        #input, 
+        #input:focus {
+            padding: 12px 16px;
+              appearance: none;
+              -moz-appearance: none;
+              -webkit-appearance: none;
+            background-color: var(--gray-color);
+            border-radius: 4px;
+            color: var(--text-color);
+            @apply --paper-font-title;
+          border: none;
+          outline: none;
+          text-align: start;
+          text-overflow: ellipsis;
+        }
+        
+        #input:focus {
+          color: var(--app-primary-color);
+        }
+        
+        #input[type=number]::-webkit-inner-spin-button,
+        #input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            margin: 0;
+        }
+        
+        #label {
+            @apply --paper-font-subhead;
+        }
+        
+        iron-icon {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+    
+        
+        <div id='label-layout'>
+            <iron-icon icon='[[icon]]'></iron-icon>
+            <div id='label'>[[label]]</div>
+        </div>
+            
+        <input
+            id='input' 
+            type="text" 
+            value='{{value::change}}' 
+            size='1'
+            autocapitalize='words'
+            list='list'>
+            
+        <datalist id='list'>
+            <template is='dom-repeat' items='[[options]]'>
+                <option value='[[item]]'></option>
+            </template>
+        </datalist>
+        
+    </template>
+    <script>
+        class TextInput extends Polymer.Element {
+            static get is() { return 'text-input';}
+            
+            static get properties() {
+                return {
+                    value: { type: String, notify: true },
+                    label: String,
+                    options: Array,
+                    icon: String
+                };
+            }
+        }
+        
+        window.customElements.define(TextInput.is, TextInput);
+    </script>
+</dom-module>

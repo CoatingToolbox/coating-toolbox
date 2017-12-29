@@ -28,10 +28,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="elements/my-icons.html">
+<link rel="import" href="my-icons.html">
 <link rel="import" href="redux/redux-mixin.html">
 
-<link rel="lazy-import" href="pages/home-page.html">
+<link rel="lazy-import" href="pages/materials-page.html">
 <link rel="lazy-import" href="pages/tablet-library-page.html">
 <link rel="lazy-import" href="pages/tablet-editor-page.html">
 <link rel="lazy-import" href="pages/pan-library-page.html">
@@ -140,7 +140,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home" href="#/home">Home</a>
+          <a name="materials" href="#/materials">Materials</a>
           <a name="tablet-library" href="#/tablet-library">Tablet Library</a>
           <a name="tablet-editor" href="#/tablet-editor">Tablet Editor</a>
           <a name="pan-library" href="#/pan-library">Coating Pan Library</a>
@@ -153,16 +153,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header slot='header' fixed effects='waterfall'>
           
           <app-toolbar>
-            <paper-icon-button hidden$='[[_isHome(routeData.page)]]' icon='my-icons:arrow-left' on-click='_goHome'></paper-icon-button>
-            <paper-icon-button hidden$='[[!_isHome(routeData.page)]]' icon='my-icons:menu' drawer-toggle></paper-icon-button>
+            <paper-icon-button icon='my-icons:menu' drawer-toggle></paper-icon-button>
             <div main-title>Coating Toolbox</div>
             <div id='login-button'>[[user.email]]</div>
           </app-toolbar>
-          
         </app-header>
         
-        <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
-          <home-page name='home'></home-page>
+        <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='materials'>
+          <materials-page name='materials'></materials-page>
           <tablet-library-page name='tablet-library'></tablet-library-page>
           <tablet-editor-page name='tablet-editor'></tablet-editor-page>
           <pan-library-page name='pan-library'></pan-library-page>
@@ -201,30 +199,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: isAdmin
         });
       }
+      
       static get observers() {
         return [
           '_routePageChanged(routeData.page)'
         ];
       }
-
-      _isHome(page) {
-        return (page === 'home' || !page);
-      }
-      _goHome() {
-        window.location = '#/home';
-      }
-      
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
-        this.page = page || 'home';
+        this.page = page || 'materials';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
       }
-
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl(`pages/${page}-page.html`);

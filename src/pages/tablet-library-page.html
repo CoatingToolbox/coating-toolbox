@@ -8,7 +8,7 @@
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../data/tablet-class.html">
 <link rel="import" href="../redux/redux-mixin.html">
-<link rel="import" href="../elements/my-icons.html">
+<link rel="import" href="../my-icons.html">
 
 <dom-module id="tablet-library-page">
   
@@ -144,7 +144,7 @@
       }
     </style>
     
-      <firebase-query path="tablets" data="{{library}}"></firebase-query>
+      <firebase-query path="tablets" data="{{firebaseLibrary}}"></firebase-query>
       
       <div id='header'>
         <div id='page-title'>Tablet Library</div>
@@ -164,7 +164,7 @@
           <div class='header cell'>Weight (mg)</div>
           <div class='header cell'></div>
           
-          <template is='dom-repeat' items='[[_filterLibrary(library, filterTerm)]]'>
+          <template is='dom-repeat' items='[[_filterLibrary(tabletLibrary, filterTerm)]]'>
             <div class='cell'>
               <div class='item-title'>[[item.productName]]</div>
               <div class='subtext'>[[item.formulationName]]</div>
@@ -180,8 +180,8 @@
               <iron-icon icon='[[_getIcon(item.shape)]]'></iron-icon>
               <div class=''>[[item.shape]]</div>
             </div>
-            <div class='cell number'>[[_convertDimensions(item.shape, item.length, item.width, item.totalThickness)]]</div>
-            <div class='cell number'>[[_convertWeight(item.weight)]]</div>
+            <div class='cell number'>[[item.dimensionsInMM]]</div>
+            <div class='cell number'>[[item.weightInMG]]</div>
             
             <div class='cell icon-layout'>
               <div class='icon-button' on-click='_loadTablet'>
@@ -205,20 +205,25 @@
       static get properties() {
         return {
           filterTerm: String,
-          library: Array
+          firebaseLibrary: Array,
+          tabletLibrary: {type: Array, computed: '_computeTabletLibrary(firebaseLibrary)'}
         };
+      }
+      _computeTabletLibrary(firebase) {
+        return firebase.map(tablet => {
+          return new Tablet(tablet);
+        });
       }
       _loadTablet(e) {
         this.dispatch({
-          type: "LOAD_TABLET",
+          type: "CALCULATE_TABLET",
           value: e.model.item
         });
-        window.location = '#/home';
-        // window.history.back();
+        window.location = '#/materials';
       }
       _editTablet(e) {
         this.dispatch({
-          type: "LOAD_TABLET",
+          type: "CALCULATE_TABLET",
           value: e.model.item
         });
         window.scrollTo(0,0);

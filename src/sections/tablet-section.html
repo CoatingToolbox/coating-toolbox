@@ -1,0 +1,144 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../graphics/tablet-schematic-layout.html">
+<link rel="import" href="../list-items/small-icon-item.html">
+<link rel="import" href="../list-items/icon-label-item.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href='section-shared-styles.html'>
+
+<dom-module id="tablet-section">
+  
+   <template>
+    
+    <style include='section-shared-styles'>
+      #details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: auto;
+        grid-gap: 16px;
+        padding: 16px;
+      }
+      #properties-title,
+      #graphic-title,
+      tablet-schematic-layout {
+        grid-column: 1 / 3;
+      }
+      
+      @media(min-width: 600px) {
+        #details {
+          grid-template-columns: 1fr 1fr 2fr;
+          padding: 24px 32px;
+        }
+        #properties-title {
+          grid-column: 1 / 3;
+          grid-row: 1 / 2;
+        }
+        #graphic-title {
+          grid-column: 3 / 4;
+          grid-row: 1 / 2;
+        }
+        tablet-schematic-layout {
+          grid-column: 3 / 4;
+          grid-row: 2 / 6;
+        }
+      }
+    </style>
+        
+    <header>
+      <div id='tag'>Coating Substrate</div>
+      <div class='flex-spacer'></div>
+      <paper-icon-button on-click='_openLibrary' icon='my-icons:library' slot='toolbar'></paper-icon-button>
+      <paper-icon-button on-click='_openEditor' icon='my-icons:edit' slot='toolbar'></paper-icon-button>
+    </header>
+    
+    <section id='intro'>
+        The tablet shape, size and formulation effect the coating process
+        in many ways. Including the film thickness, coating uniformity and optimal batch size.
+    </section>
+    
+    <div id='line'></div>
+    
+    <section id='overview'>
+      <div>[[name]]</div>
+      <div id='details-layout'>
+        <small-icon-item icon='my-icons:company' label='[[company]]'></small-icon-item> 
+        <small-icon-item icon='my-icons:contact' label='[[contact]]'></small-icon-item>
+        <small-icon-item icon='my-icons:product' label='[[productType]]'></small-icon-item>
+        <small-icon-item icon='my-icons:product' label='[[formulation]]'></small-icon-item>
+      </div>
+    </section>
+    
+    <section id='details'>
+      <div class='section-title' id='properties-title'>Tablet Properties</div>
+      <icon-label-item 
+      label='Dimensions' 
+      icon='my-icons:ruler' 
+      value='[[dimensions]] mm'>
+      </icon-label-item>
+      <icon-label-item 
+      label='Weight' 
+      icon='my-icons:weight' 
+      value='[[weight]] mg'>
+      </icon-label-item>
+      <icon-label-item 
+      label='Surface Area' 
+      icon='my-icons:surface-area' 
+      value='[[area]] cm2'>
+      </icon-label-item>
+      <icon-label-item 
+      label='Compressed Density' 
+      icon='my-icons:density' 
+      value='[[compressed]] g/ml'>
+      </icon-label-item>
+      <icon-label-item 
+      label='Volume' 
+      icon='my-icons:volume' 
+      value='[[volume]] cm3'>
+      </icon-label-item>
+      <icon-label-item 
+      label='Bulk Density' 
+      icon='my-icons:density' 
+      value='[[bulk]] g/ml'>
+      </icon-label-item>
+      <div class='section-title' id='graphic-title'>Tablet Schematic</div>
+      <tablet-schematic-layout tablet='[[tablet]]'></tablet-schematic-layout>
+    </section>
+    
+  </template>
+
+  <script>
+    class TabletSection extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'tablet-section'; }
+      static get properties() {
+        return {
+          tablet: { type: Object, statePath: 'tablet' },
+          name: {type: String, statePath: 'tablet.productName'},
+          company: {type: String, statePath: 'tablet.companyName'},
+          contact: {type: String, statePath: 'tablet.contactName'},
+          productType: {type: String, statePath: 'tablet.productName'},
+          formulation: {type: String, statePath: 'tablet.formulationName'},
+          dimensions: {type: String, statePath: 'tablet.dimensionsInMM'},
+          weight: {type: String, statePath: 'tablet.weightInMG'},
+          area: {type: String, statePath: 'tablet.surfaceAreaInCM2'},
+          volume: {type: String, statePath: 'tablet.volumeInCM3'},
+          bulk: {type: String, statePath: 'tablet.bulkDensityInGML'},
+          compressed: {type: String, statePath: 'tablet.compressedDensityInGML'},
+          
+        };
+      }
+      _openLibrary() {
+        window.scrollTo(0, 0);
+        window.location = '#/tablet-library';
+      }
+      _openEditor() {
+        window.scrollTo(0, 0);
+        window.location = '#/tablet-editor';
+      }
+      
+    }
+
+    window.customElements.define(TabletSection.is, TabletSection);
+  </script>
+</dom-module>

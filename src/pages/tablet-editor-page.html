@@ -1,13 +1,13 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../elements/inputs/text-input.html">
-<link rel="import" href="../elements/inputs/unit-input.html">
-<link rel="import" href="../elements/inputs/item-select-input.html">
-<link rel="import" href="../elements/inputs/shape-input.html">
-<link rel="import" href="../elements/graphics/tablet-schematic-layout.html">
-<link rel="import" href="../elements/charts/bulk-density-chart.html">
-<link rel="import" href="../elements/buttons/icon-label-button.html">
+<link rel="import" href="../inputs/text-input.html">
+<link rel="import" href="../inputs/unit-input.html">
+<link rel="import" href="../inputs/item-select-input.html">
+<link rel="import" href="../inputs/shape-input.html">
+<link rel="import" href="../graphics/tablet-schematic-layout.html">
+<link rel="import" href="../charts/bulk-density-chart.html">
+<link rel="import" href="../buttons/icon-label-button.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/tablet-class.html">
 
@@ -149,13 +149,11 @@
         };
       }
       _save() {
-        let tablet = new Tablet(this.tablet).toJSON();
         this.dispatch({ 
-          type: "LOAD_TABLET",
-          value: tablet
+          type: "CALCULATE_TABLET",
+          value: this.tablet
         });
-        window.location = '#/home';
-        window.history.back();
+        window.location = '#/materials';
       }
       
       // Supported functions 
@@ -167,13 +165,13 @@
         
         /*global firebase */
         this.tablet.firebaseKey = firebase.database().ref('tablets/').push().key;
-        let tablet = new Tablet(this.tablet).toJSON();
+        let tablet = this._tabletToJSON();
         firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
       }
       _replaceOnFirebase() {
         if(!this.isAdmin) { return; }
         
-        let tablet = new Tablet(this.tablet).toJSON();
+        let tablet = this._tabletToJSON();
         if(tablet.firebaseKey) {
           /*global firebase */
           firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
@@ -181,6 +179,11 @@
           console.log('could not replace firebase so loaded as new');
           this._saveToFirebase();
         }
+      }
+      
+      _tabletToJSON() {
+        return Object.assign({}, this.tablet);
+        
       }
     }
 
