@@ -7,15 +7,15 @@ class CoatingPan {
     this.openingDiameter = 0.4826;
     this.wallWidth = 0.508;
     this.brimWidth = 0.93345;
-    this.model = "Fastcoat";
-    this.manufacturer = "O'Hara"
-    this.nickname = "O'Hara Fastcoat 48\" Room";
-    this.company = 'Colorcon';
-    this.locationName = 'Harlyesville, PA';
+    this.model = "";
+    this.manufacturer = "";
+    this.nickname = "";
+    this.company = '';
+    this.locationName = '';
     this.baffleType = '';
-    this.baffleCount = '0';
-    this.baffleHeight = '0';
-    this.gunManfucaturer = '';
+    this.baffleCount = '';
+    this.baffleHeight = '';
+    this.gunMake = '';
     this.gunModel = '';
     this.gunCount = '';
     this.gunToGunDistance = '';
@@ -24,91 +24,53 @@ class CoatingPan {
     this.firebaseKey = '';
     
     
-    Object.getOwnPropertyNames(this).map(name => {
-        if(!parameters[name]) { return }
-        this[name] = parameters[name];
+    Object.getOwnPropertyNames(this).map(prop => {
+        if(!parameters[prop]) { return }
+        this[prop] = parameters[prop];
     });
   }
   
-  
-  toJSON() {
-    return {
-      panDiameter: this.panDiameter,
-      openingDiameter: this.openingDiameter,
-      brimVolume: this.brimVolume,
-      wallWidth: this.wallWidth,
-      brimWidth: this.brimWidth,
-      brimHeight: this.brimHeight,
-      brimLength: this.brimLength,
-      radius: this.radius,
-      sideWallSlope: this.sideWallSlope,
-      sideWallLength: this.sideWallLength,
-      locationName: this.locationName,
-      company: this.company,
-      nickname: this.nickname,
-      manufacturer: this.manufacturer,
-      model: this.model,
-      baffleType: this.baffleType,
-      baffleCount: this.baffleCount,
-      maxAirflow: this.maxAirflow,
-      perforations: this.perforations,
-      gunManfucaturer: this.gunManfucaturer,
-      gunCount: this.gunCount,
-      gunModel: this.gunModel,
-      gunToGunDistance: this.gunToGunDistance,
-      firebaseKey: this.firebaseKey
-    };
-  }
-  
+  // GETTERS FOR PAN DIMENSIONS
   get brimHeight() {
     return (this.panDiameter - this.openingDiameter) / 2;
   }
-  
   get brimLength() {
     return this.calcChordLength(this.radius, this.brimHeight);
   }
-  
   get brimVolume() {
     let volume =  this.calcVolume(this.brimHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
     // console.assert((volume > 0.17 * 0.9 && volume < 0.17 * 1.1), `The total volume is outside the O'Hara 48" pan target of 170L. The calculated volume is ${volume} m3`);
     // console.assert((volume > 0.0145 * 0.9 && volume < 0.0145 * 1.1), `The total volume is outside the O'Hara 19" pan target of 14.5L. The calculated volume is ${volume} m3`);
     return volume;
   }
-  
-  // get maxFillHeight() {
-  //   let limit = 0.0254;
-  //   if(this.brimHeight < 0.0254 * 4) {
-  //     limit = 0.0254 / 2;
-  //   }
-  //   return this.brimHeight - limit;
-  // }
-  
-  // get minFillHeight() {
-  //   if(this.baffleHeight > 0) {
-  //     return this.baffleHeight;
-  //   } else {
-  //     return this.brimHeight * 0.6;
-  //   }
-  // }
-  
-  // get maxFillVolume() {
-  //   return this.calcVolume(this.maxFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
-  // }
-  
-  // get minFillVolume() {
-  //   return this.calcVolume(this.minFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
-  // }
-  
+  get maxFillHeight() {
+    let limit = 0.0254;
+    if(this.brimHeight < 0.0254 * 4) {
+      limit = 0.0254 / 2;
+    }
+    return this.brimHeight - limit;
+  }
+  get minFillHeight() {
+    if(this.baffleHeight > 0) {
+      return this.baffleHeight;
+    } else {
+      return this.brimHeight * 0.6;
+    }
+  }
+  get maxFillVolume() {
+    return this.calcVolume(this.maxFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
+  }
+  get minFillVolume() {
+    return this.calcVolume(this.minFillHeight, this.wallWidth, this.panDiameter, this.sideWallSlope);
+  }
   get radius() {
     return this.panDiameter / 2;
   }
-  
   get sideWallSlope() {
     // slope = rise / run
     // run = the distance on one side
     return this.brimHeight / ((this.brimWidth - this.wallWidth) / 2);
   }
-  
   get sideWallLength() {
     // pythogrean theroem
     // a2 + b2 = c2
@@ -118,13 +80,50 @@ class CoatingPan {
     return Math.sqrt(a2 + b2);
   }
   
+  // GETTERS FOR DISPLAYING VALUES AS STRINGS
+  get baffleString() {
+    if(this.baffleType && this.baffleCount > 1) {
+      return `${this.baffleType} x${this.baffleCount}`;
+    } else if (this.baffleType) {
+      return this.baffleType;
+    } else {
+      return ` - `;
+    }
+  }
+  get sprayGunString() {
+    if(this.gunMake && this.gunModel && this.gunCount > 1) {
+      return `${this.gunMake} ${this.gunModel} x${this.gunCount}`;
+    } else if(this.gunMake || this.gunModel){
+      return `${this.gunMake} ${this.gunModel}`;
+    } else {
+      return 'NA';
+    }
+  }
+  get dimensionsInInchesString() {
+    return `${this.metersToInches(this.panDiameter).toFixed(1)} x ${this.metersToInches(this.brimWidth).toFixed(1)}`;
+  }
+  get brimVolumeInLitersString() {
+    return this.m3ToLiters(this.brimVolume).toFixed(0);
+  }
+  get workingVolumeInLitersString() {
+    return `${ this.m3ToLiters(this.minFillVolume).toFixed(0)} - ${ this.m3ToLiters(this.maxFillVolume).toFixed(0)}`;
+  }
+  get diameterInInchesString() {
+    return this.metersToInches(this.panDiameter).toFixed(1);
+  }
+  // HELPER FUNCTIONS
+  m3ToLiters(val) {
+    return val * 1000;
+  }
+  metersToInches(val) {
+    return val * 39.3701;
+  }
   calcChordLength(radius, saggita) {
     //brim width... the chord length at the brim height
     //typically close to the full diameter as the brim height is near the center
     //determined from pythogrean therom of a triangle from the brim height chord and radius
     return 2 * Math.sqrt(Math.pow(radius, 2) - Math.pow((radius - saggita), 2)); 
   }
-  
   calcSphereSectionArea(radius, chord, saggita){
     //see link for more details
     // http://mathworld.wolfram.com/CircularSegment.html
@@ -151,7 +150,6 @@ class CoatingPan {
     //remove the triangle area leaving the area of the circle segment
     return sectionArea - triangleArea;
   }
-  
   calcSideWallVolume(coneRadius, fillHeight, slope) {
     // following the formula for a partial cone section
     // http://keisan.casio.com/exec/system/14748682342922
@@ -168,7 +166,6 @@ class CoatingPan {
     
     return part1 * (part2 - part3 - part4 + part5);
   }
-  
   calcVolume(brimHeight, wallWidth, panDiameter, sideWallSlope) {
         
       //two section to get the volume

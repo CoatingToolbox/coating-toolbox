@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="tablet-graphic.html">
+
+<dom-module id="tablet-schematic-layout">
+  <template>
+    <style>
+    /*Schematic Styles*/
+      :host {
+        display: flex;
+        width: calc(100% - 32px - 10px);
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 16px;
+        background-color: var(--gray-color);
+        border: 5px solid var(--border-color);
+        padding: 8px 16px 16px 16px;
+      }
+      .graphic-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      tablet-graphic {
+        width: 175px;
+        height: 175px;
+      }
+      .schematic-label {
+        @apply --paper-font-subhead;
+        text-align: center;
+      }
+      
+      [hidden] {
+        display: none;
+      }  
+    </style>
+    
+    <div class='graphic-layout'>
+      <tablet-graphic top-view tablet='[[tablet]]'></tablet-graphic>
+      <div class='schematic-label'>Top View</div>
+    </div>
+    
+    <div class='graphic-layout'>
+      <tablet-graphic length-view tablet='[[tablet]]'></tablet-graphic>
+      <div class='schematic-label'>Length View</div>
+    </div>
+    
+    <div class='graphic-layout' hidden$='[[_isRound(tablet.shape)]]'>
+      <tablet-graphic width-view tablet='[[tablet]]'></tablet-graphic>
+      <div class='schematic-label'>Width View</div>
+    </div>        
+    
+  </template>
+
+  <script>
+  
+    class TabletSchematicLayout extends Polymer.Element {
+      
+      static get is() { return 'tablet-schematic-layout';}
+      
+      static get properties() {
+        return {
+          tablet: Object,
+          noWidthView: Boolean
+        };
+      }
+
+      _isRound(shape) {
+        return (shape.toLowerCase() === 'round');
+      }
+    }
+    
+    window.customElements.define(TabletSchematicLayout.is,TabletSchematicLayout);
+    
+  </script>
+
+</dom-module>

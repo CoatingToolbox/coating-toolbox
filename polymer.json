@@ -2,7 +2,7 @@
   "entrypoint": "index.html",
   "shell": "src/coating-app-shell.html",
   "fragments": [
-    "src/pages/home-page.html",
+    "src/pages/materials-page.html",
     "src/pages/tablet-library-page.html",
     "src/pages/tablet-editor-page.html",
     "src/pages/pan-library-page.html",

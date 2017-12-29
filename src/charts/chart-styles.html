@@ -1,0 +1,89 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="chart-styles">
+  <template>
+    <style>
+    
+      :host {
+        display: block;
+        flex-grow: 1;
+        height: 100%;
+      }
+      
+      #chart {
+          height: 100%;
+          /*min-height: 300px;*/
+          width: 100%;
+          /*max-height: 350px;*/
+          font-family: inherit;
+          font-size: 14px;
+          font-weight: 400;
+          letter-spacing: 0.011em;
+          line-height: 20px;
+          fill: var(--text-light-color);
+      }
+      .title {
+          text-anchor: middle;
+      }
+      .y.title {
+          transform: rotate(-90deg);
+      }
+      .axis text {
+          font-size: 12px;
+          font-weight: 200;
+          fill: var(--text-light-color);
+      }
+      .axis line,
+      .axis .domain {
+          stroke: var(--text-light-color);
+      }
+      .line {
+        fill: none;
+        stroke: var(--app-primary-color);
+        stroke-width: 3px;
+        stroke-linecap: 'round';
+      }
+      .secondary.line {
+        stroke: var(--border-color);
+      }
+      .dotted.line {
+        stroke-dasharray: 10;
+      }
+      .area {
+          fill: var(--app-primary-color);
+          fill-opacity: 0.25;
+      }
+      .secondary.area {
+          fill: var(--border-color);
+      }
+      .circle {
+          stroke: var(--app-primary-color);
+          stroke-width: 4px;
+          fill: white;
+      }
+      #tooltip.hide {
+          opacity: 0;
+          transition: opacity 0.5s 0.5s;
+      }
+      #tooltip {		
+          position: absolute;
+          text-align: center;			
+          width: 96px;					
+          height: 40px;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.011em;
+          line-height: 20px;
+          padding: 4px;	
+          background: white;	
+          border: 1.5px solid var(--border-color);		
+          border-radius: 4px;			
+          pointer-events: none;
+          opacity: 1;
+          transition: opacity 0.2s;	
+      }
+      
+    </style>
+  </template>
+</dom-module>

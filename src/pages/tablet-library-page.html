@@ -8,7 +8,7 @@
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../data/tablet-class.html">
 <link rel="import" href="../redux/redux-mixin.html">
-<link rel="import" href="../elements/my-icons.html">
+<link rel="import" href="../my-icons.html">
 
 <dom-module id="tablet-library-page">
   
@@ -213,8 +213,7 @@
           type: "LOAD_TABLET",
           value: e.model.item
         });
-        window.location = '#/home';
-        // window.history.back();
+        window.location = '#/materials';
       }
       _editTablet(e) {
         this.dispatch({

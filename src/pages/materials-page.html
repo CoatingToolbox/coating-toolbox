@@ -1,0 +1,77 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../sections/tablet-section.html">
+<link rel="import" href="../sections/pan-section.html">
+
+<dom-module id="materials-page">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
+      header {
+        background-color: var(--app-primary-color);
+        color: var(--white-color);
+        padding: 16px;
+      }
+      header div {
+        max-width: 960px;
+        margin: auto;
+      }
+      header h1 {
+        margin: 0px;
+        @apply --paper-font-display1;
+      }
+      header p {
+        max-width: 600px;
+        text-align: justify;
+        @apply --paper-font-body1;
+      }
+      
+      @media(min-width: 600px) {
+        header {
+          padding: 48px 32px;
+        }
+        header h1 {
+          @apply --paper-font-display2;
+        }
+      }
+      
+      @media(min-width: 1024px) {
+        header {
+          padding: 48px 32px;
+        }
+        header h1 {
+          @apply --paper-font-display2;
+        }
+      }
+    </style>
+    
+    <header>
+      <div>
+        <h1>Materials & Equipment</h1>
+        <p>
+          The material and equipment used for the coating process determine the the 
+          coating process parameters, the batch size and target coating weight gain. 
+          Below load the materials and equipment from the library or quickly design your own.
+        </p>
+      </div>
+    </header>
+    
+    <pan-section></pan-section>
+    <tablet-section></tablet-section>
+
+  </template>
+
+  <script>
+    class MaterialsPage extends Polymer.Element {
+      static get is() { return 'materials-page'; }
+    }
+
+    window.customElements.define(MaterialsPage.is, MaterialsPage);
+  </script>
+</dom-module>

@@ -129,7 +129,7 @@
       }
     </style>
     
-      <firebase-query path="pans" data="{{library}}"></firebase-query>
+      <firebase-query path="pans" data="{{firebaseLibrary}}"></firebase-query>
     
       <div id='header'>
         <div id='page-title'>Coating Pan Library</div>
@@ -147,7 +147,7 @@
         <div class='header cell'>Brim Volume (l)</div>
         <div class='header cell'></div>
         
-        <template is='dom-repeat' items='[[_filterLibrary(library, filterTerm)]]'>
+        <template is='dom-repeat' items='[[_filterLibrary(panLibrary, filterTerm)]]'>
           <div class='cell'>
             <div>[[item.nickname]]</div>
           </div>
@@ -159,8 +159,8 @@
             <div>[[item.company]]</div>
             <div class='subtext'>[[item.locationName]]</div>
           </div>
-          <div class='cell number'>[[_convertDiameter(item.panDiameter)]]</div>
-          <div class='cell number'>[[_convertVolume(item.brimVolume)]]</div>
+          <div class='cell number'>[[item.diameterInInchesString]]</div>
+          <div class='cell number'>[[item.brimVolumeInLitersString]]</div>
           
           <div class='cell icon-layout'>
             <div class='icon-button' on-click='_load'>
@@ -187,20 +187,26 @@
         return {
           filterTerm: String,
           opened: { type: Boolean, reflectToAttribute: true, value: false },
-          library: Array
+          firebaseLibrary: Array,
+          panLibrary: {type: Array, computed: '_computePanLibrary(firebaseLibrary)'}
         };
       }
       
+      _computePanLibrary(firebaseLibrary) {
+        return firebaseLibrary.map(pan => {
+          return new CoatingPan(pan);
+        });
+      }
       _load(e) {
         this.dispatch({
-          type: "LOAD_PAN",
+          type: "CALCULATE_PAN",
           value: e.model.item
         });
-        window.location = '#/home';
+        window.location = '#/materials';
       }
       _edit(e) {
         this.dispatch({
-          type: "LOAD_PAN",
+          type: "CALCULATE_PAN",
           value: e.model.item
         });
         window.scrollTo(0,0);
@@ -221,12 +227,6 @@
         );
       }
       
-      _convertDiameter(diameter) {
-        return `${(diameter * 39.3701).toFixed(0)}`;
-      }
-      _convertVolume(volume) {
-        return `${(volume * 1000).toFixed(0)}`;
-      }
     }
 
     window.customElements.define(PanLibraryPage.is, PanLibraryPage);
