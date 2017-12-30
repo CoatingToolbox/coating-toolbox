@@ -2,46 +2,79 @@
    class Tablet {
     
     constructor(parameters = {}) {
-
+        // TABLET DIMENSIONS
         this.shape = 'round';
         this.length = 0.01;
         this.width = 0.0075;
         this.totalThickness = 0.00475;
         this.bandThickness = 0.00275;
         this.weight = 0.4;
+        // BATCH 
         this.bulkDensity = 760000;
+        this.batchWeight = 120000;
+        // DESCRIPTION
         this.productType = '';
         this.productName = '';
         this.formulationName = '';
         this.companyName = '';
         this.contactName = '';
         this.firebaseKey = '';
+        // SET PROPERTIES PASSED THROUGH
         Object.getOwnPropertyNames(this).map(name => {
             if (!parameters[name]) { return }
             this[name] = parameters[name];
         });
     }
         
-        
-    // DIMENENSIONS AND PROPERTIES OF TABLET
-    get totalVolume() {
-        return this.bandVolume + this.cupVolume * 2;
+    // BATCH 
+    get batchVolume() {
+        return this.batchWeight / this.bulkDensity;
     }
-    get totalArea() {
-        return this.bandArea + this.cupArea * 2;
+    set batchVolume(value) {
+        this.batchWeight = value * this.bulkDensity;
     }
-    get cupThickness() {
-        return (this.totalThickness - this.bandThickness) / 2;
+    get count() {
+        return Math.ceil(this.batchWeight / this.weight);
     }
-    get bandArea() {
-        return this.perimeter * this.bandThickness;
+    set count(value) {
+        this.batchWeight = value * this.weight;
     }
-    get bandVolume() {
-        return this.crossSectionArea * this.bandThickness;
+    get surfaceArea() {
+        return this.count * this.totalArea;
     }
+    get batchVolumeLargerThanTabletVolumes() {
+        return this.volume > (this.count * this.totalVolume);
+    }
+    
+    
+    // TABLET
     get compressedDensity() {
       // if it is a measured tablet we calculated the density.
       return this.weight / this.totalVolume;
+    }
+    
+    
+    // TOOLING
+    get cupThickness() {
+        return (this.totalThickness - this.bandThickness) / 2;
+    }
+    get lengthCupRadius() {
+            
+        // see the link for more details on calculations
+        // http://liutaiomottola.com/formulae/sag.htm
+        let part1 = Math.pow(this.cupThickness, 2);
+        let part2 = Math.pow(this.length / 2, 2);
+        let part3 = 2 * this.cupThickness;
+        return (part1 + part2) / part3;
+    }
+    get widthCupRadius() {
+            
+        // see the link for more details on calculations
+        // http://liutaiomottola.com/formulae/sag.htm
+        let part1 = Math.pow(this.cupThickness, 2);
+        let part2 = Math.pow(this.width / 2, 2);
+        let part3 = 2 * this.cupThickness;
+        return (part1 + part2) / part3;
     }
     get perimeter() {
         
@@ -129,6 +162,9 @@
 
       return crossSection;
     }
+    
+    
+    // SUFACE AREA
     get cupArea() {
         
         let area;
@@ -160,6 +196,21 @@
         }
 
         return area;
+    }
+    get bandArea() {
+        return this.perimeter * this.bandThickness;
+    }
+    get totalArea() {
+        return this.bandArea + this.cupArea * 2;
+    }
+    
+    
+    // VOLUME
+    get totalVolume() {
+        return this.bandVolume + this.cupVolume * 2;
+    }
+    get bandVolume() {
+        return this.crossSectionArea * this.bandThickness;
     }
     get cupVolume() {
         
@@ -194,24 +245,6 @@
         }
 
         return vol;
-    }
-    get lengthCupRadius() {
-            
-        // see the link for more details on calculations
-        // http://liutaiomottola.com/formulae/sag.htm
-        let part1 = Math.pow(this.cupThickness, 2);
-        let part2 = Math.pow(this.length / 2, 2);
-        let part3 = 2 * this.cupThickness;
-        return (part1 + part2) / part3;
-    }
-    get widthCupRadius() {
-            
-        // see the link for more details on calculations
-        // http://liutaiomottola.com/formulae/sag.htm
-        let part1 = Math.pow(this.cupThickness, 2);
-        let part2 = Math.pow(this.width / 2, 2);
-        let part3 = 2 * this.cupThickness;
-        return (part1 + part2) / part3;
     }
     
     

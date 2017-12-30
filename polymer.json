@@ -3,6 +3,7 @@
   "shell": "src/coating-app-shell.html",
   "fragments": [
     "src/pages/materials-page.html",
+    "src/pages/pan-fill-page.html",
     "src/pages/tablet-library-page.html",
     "src/pages/tablet-editor-page.html",
     "src/pages/pan-library-page.html",
@@ -16,7 +17,7 @@
   ],
   "extraDependencies": [
     "manifest.json",
-    "node_modules/redux/dist/redux.js",
+    "node_modules/redux/dist/redux.min.js",
     "node_modules/d3/build/d3.js",
     "bower_components/webcomponentsjs/webcomponents-lite.js"
   ],
@@ -24,7 +25,6 @@
     "rules": ["polymer-2"]
   },
   "builds": [
-    { "preset": "es6-unbundled" },
     { "preset": "es6-bundled" }
   ]
 }

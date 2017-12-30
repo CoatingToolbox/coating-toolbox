@@ -1,5 +1,5 @@
 
-<script src="../../node_modules/redux/dist/redux.js"></script>
+<script src="../../node_modules/redux/dist/redux.min.js"></script>
 
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
 <link rel="import" href="../data/coating-pan-class.html">
@@ -10,9 +10,9 @@
 <script>
   
     
-    const storedState = JSON.parse(sessionStorage.getItem('coating-toolbox-state'));
+    const storedState = JSON.parse(sessionStorage.getItem('coating-toolbox-state')) || {};
     
-    const initialPan = (storedState.pan) ? storedState.pan : {
+    const initialPan = storedState.pan || {
         panDiameter: 1.2192,
         openingDiameter: 0.4826,
         wallWidth: 0.508,
@@ -34,7 +34,7 @@
         firebaseKey: ''
     };
     
-    const initialTablet = (storedState.tablet) ? storedState.tablet : {
+    const initialTablet = storedState.tablet || {
         shape: 'round',
         length: 0.01,
         width: 0.0075,
@@ -49,7 +49,7 @@
         contactName: 'Jason Hansell'
     };
     
-    const initialCoatingFormula = (storedState.coatingFormula) ? storedState.coatingFormula : {
+    const initialCoatingFormula = storedState.coatingFormula || {
         productName: 'Opadry II 85F Series',
         formulaName: '85F18422',
         type: 'Immediate',

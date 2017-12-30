@@ -19,7 +19,6 @@
         align-items: center;
         padding: 12px 0px 4px 0px;
         margin: 0px 16px;
-        color: var(--text-light-color);
         border-bottom: 2px solid var(--gray-color);
         @apply --paper-font-title;
       }
@@ -88,6 +87,10 @@
       
       
       @media(min-width: 600px) {
+        header paper-icon-button {
+          width: 44px;
+          height: 44px;
+        }
         /*Intro Section*/
         #intro {
           padding: 24px 48px;
@@ -109,10 +112,6 @@
         /*Header Section*/
         header {
           border-bottom: none;
-        }
-        header paper-icon-button {
-          width: 44px;
-          height: 44px;
         }
         header #tag {
           padding: 8px 16px;

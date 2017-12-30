@@ -3,18 +3,17 @@
 <script>
     class Batch {
         
-        constructor(weight = 120000, density = 760000, tablet= new Tablet()) {
+        constructor(weight = 120000, tablet= new Tablet()) {
             this.weight = weight;
-            this.density = density;
             this.tablet = tablet;
         }
         
         get volume() {
-            return this.weight / this.density;
+            return this.weight / this.tablet.buklDensity;
         }
         
         set volume(value) {
-            this.weight = value * this.density;
+            this.weight = value * this.tablet.buklDensity;
         }
         
         get count() {
@@ -27,6 +26,14 @@
         
         get surfaceArea() {
             return this.count * this.tablet.totalArea;
+        }
+        
+        get tabletVolume() {
+            return this.count * this.tablet.totalVolume;
+        }
+        
+        get batchVolumeLargerThanTablet() {
+            return this.volume > this.tabletVolume;
         }
     }
 </script>

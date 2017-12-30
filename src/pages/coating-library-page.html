@@ -215,13 +215,13 @@
       _filterLibrary(library, searchTerm) {
         if(!searchTerm) { return library; }
         return library.filter( 
-          pan => { 
+          coat => { 
+            let term = searchTerm.toLowerCase();
             return (
-              pan.manufacturer.toLowerCase().includes(searchTerm.toLowerCase()) || 
-              pan.model.toLowerCase().includes(searchTerm.toLowerCase()) || 
-              pan.nickname.toLowerCase().includes(searchTerm.toLowerCase()) || 
-              pan.company.toLowerCase().includes(searchTerm.toLowerCase()) || 
-              pan.locationName.toLowerCase().includes(searchTerm.toLowerCase()) 
+              coat.productName.toLowerCase().includes(term) || 
+              coat.type.toLowerCase().includes(term) || 
+              coat.color.toLowerCase().includes(term) || 
+              coat.formulaName.toLowerCase().includes(term)
             );
           }
         );

@@ -38,6 +38,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="pages/pan-library-page.html">
 <link rel="lazy-import" href="pages/coating-editor-page.html">
 <link rel="lazy-import" href="pages/coating-editor-page.html">
+<link rel="lazy-import" href="pages/pan-fill-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -84,15 +85,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       
     /*Drawer navigation styles*/
-      .drawer-list {
-        margin: 0 20px;
+      .drawer app-toolbar {
+        font-weight: bold;
       }
       .drawer-list a {
         display: block;
-        padding: 0 16px;
+        padding: 0 32px;
         text-decoration: none;
         color: var(--app-secondary-color);
         line-height: 40px;
+      }
+      .drawer-list a:hover {
+        background-color: var(--gray-color);
       }
       .drawer-list a.iron-selected {
         color: var(--app-primary-color);
@@ -138,13 +142,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-drawer-layout fullbleed force-narrow on-toggle-drawer='_toggleDrawer'>
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer">
-        <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="materials" href="#/materials">Materials</a>
-          <a name="tablet-library" href="#/tablet-library">Tablet Library</a>
-          <a name="tablet-editor" href="#/tablet-editor">Tablet Editor</a>
-          <a name="pan-library" href="#/pan-library">Coating Pan Library</a>
-          <a name="pan-editor" href="#/pan-editor">Coating Pan Editor</a>
+        <app-toolbar>Process</app-toolbar>
+        <a name="materials" href="#/materials">Materials & Equipment</a>
+        <a name="materials" href="#/pan-fill">Pan Fill</a>
+          
+        <app-toolbar>Libraries</app-toolbar>
+        <a name="tablet-library" href="#/tablet-library">Coating Substrate</a>
+        <a name="pan-library" href="#/pan-library">Coating Equipment</a>
+        <a name="pan-library" href="#/pan-library">Coating Formula</a>
+          
+        <app-toolbar>Design</app-toolbar>
+        <a name="tablet-editor" href="#/tablet-editor">Tablet</a>
+        <a name="pan-editor" href="#/pan-editor">Coating Equipment</a>
+        <a name="pan-editor" href="#/pan-editor">Coating Formula</a>
         </iron-selector>
       </app-drawer>
       
@@ -167,6 +178,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <pan-editor-page name='pan-editor'></pan-editor-page>
           <coating-library-page name='coating-library'></coating-library-page>
           <coating-editor-page name='coating-editor'></coating-editor-page>
+          <pan-fill-page name='pan-fill'></pan-fill-page>
         </iron-pages>
         
       </app-header-layout>

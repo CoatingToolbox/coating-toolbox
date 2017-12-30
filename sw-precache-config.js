@@ -12,6 +12,8 @@
 
 module.exports = {
   staticFileGlobs: [
+    "node_modules/redux/dist/redux.min.js",
+    "node_modules/d3/build/d3.js",
     'bower_components/webcomponentsjs/webcomponents-loader.js',
     'images/*',
     'manifest.json',
