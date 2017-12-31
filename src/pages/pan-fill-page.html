@@ -68,16 +68,12 @@
       static get properties() {
         return {
           pan: {type: Object, statePath: "pan"},
-          panBatchVolume: {type: Number, statePath: 'pan.batchVolume', observer: '_updateChart'},
           tablet: {type: Object, statePath: "tablet"},
           weight: {type: Object, statePath: 'tablet.batchWeight'},
           volume: {type: Object, statePath: 'tablet.batchVolume'},
           count: {type: Object, statePath: 'tablet.count'},
-          _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
+          _selectedGraphic: {type: Number, value: 1, observer: '_graphicChanged'}
         };
-      }
-      _updateChart(){
-        this.$.chart.updateChart();
       }
       _setBatchWeight(e) {
         this.dispatch({
