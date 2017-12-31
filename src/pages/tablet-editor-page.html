@@ -1,6 +1,8 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../inputs/text-input.html">
 <link rel="import" href="../inputs/unit-input.html">
 <link rel="import" href="../inputs/item-select-input.html">
@@ -10,131 +12,88 @@
 <link rel="import" href="../buttons/icon-label-button.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/tablet-class.html">
+<link rel="import" href="input-graphic-layout-styles.html">
 
 <dom-module id="tablet-editor-page">
   
    <template>
     
-    <style>
-      :host {
-        display: flex;
-        flex-direction: column;
-        padding: 64px 16px;
-        max-width: 600px;
-        margin: auto;
-        border-radius: 6px;
-      }
+    <style include='input-graphic-layout-styles'>
+    
       
-      /*The intro header*/
-      #header {
-        min-height: 240px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        border-radius: 6px 6px 0px 0px;
-        padding: 16px 32px;
-        background-color: var(--app-primary-color);
-        color: var(--white-color);
-      }
-      #header .title {
-        @apply --paper-font-display2;
-      }
-      #header .description {
-        padding-top: 16px;
-        @apply --paper-font-body2;
-      }
-      
-      /*The input pages element*/
-      #input-layout {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-auto-rows: auto;
-        grid-gap: 24px 32px;
-        padding: 0px 32px 24px 32px;
-        background-color: var(--white-color);
-        border-radius: 0px 0px 6px 6px;
-      }
-      #input-layout .card-title {
-        grid-column: 1 / 3;
-        @apply --paper-font-headline;
-        color: var(--app-light-color);
-        padding-bottom: 4px;
-        padding-top: 32px;
-        border-bottom: 2px solid var(--border-color);
-        font-weight: bold;
-      }
-      
-      /*Details Card*/
-      #input-layout text-input[label="Product"], 
-      #input-layout text-input[label="Formulation"],
-      #input-layout shape-input,
-      #input-layout item-select-input,
-      #input-layout tablet-schematic-layout {
-        grid-column: 1/ 3;
-      }
-      #input-layout bulk-density-chart {
-        grid-column: 1 / 3;
-        margin: 24px 0px;
-        min-height: 175px;
-        max-height: 175px;
-      }
-      #input-layout icon-label-button {
-        grid-column: 1 / 3;
-        background-color: var(--app-highlight-color);
-        border-color: var(--app-highlight-color);
-        color: var(--white-color);
-        --app-primary-color: var(--app-highlight-color);
-      }
-      
-      #admin-buttons {
-        display: flex;
-        padding: 16px 0px;
-        justify-content: space-around;
-      }
-      /*Used to hide elements based on data bindings*/
-      [hidden] {
-        visibility: hidden;
-      }
+    .card text-input[label="Product"], 
+    .card text-input[label="Formulation"],
+    .card shape-input {
+      grid-column: 1/ 3;
+    }
     </style>
     
       
-      <div id='header'>
-        <div class='title'>Tablet Designer</div>
-        <div class='description'>The Tablet Designer allows estimates important properties of a tablet. Starting with a compressed tablet input a few easy measurements like length, 
+    <section id='left-section'>
+      <div class='card highlight top'>
+        <div class='card-title'>Compressed Tablet Editor</div>
+        <div class='card-description'>The Compressed Tablet Designer estimates important properties of a tablet. Starting with a compressed tablet measure and input a few easy to obtain dimensions like length, 
           thickness, and weight to caluclate the tablets surface area, volume and more.
         </div>
       </div>
-      
-      <div id='input-layout'>
+      <div class='card'>
         <!--First section to input descriptoin-->
-        <div class='card-title'>Description</div>
+        <div class='card-title underline'>Description</div>
         <text-input value='{{tablet.productName}}' icon='my-icons:product' label='Product'></text-input>
         <text-input value='{{tablet.formulationName}}' icon='my-icons:product' label='Formulation'></text-input>
         <text-input value='{{tablet.companyName}}' icon='my-icons:company' label='Company'></text-input>
         <text-input value='{{tablet.contactName}}' icon='my-icons:contact' label='Contact'></text-input>
-          
+      </div>
+      
+      <div class='card'>
         <!--Section for Shape and Size-->
-        <div class='card-title'>Shape & Size</div>
+        <div class='card-title underline'>Shape & Size</div>
         <shape-input shape='{{tablet.shape}}'></shape-input>
         <unit-input value='{{tablet.length}}' icon='my-icons:ruler' label='Length' type='length' selected-units='{{lengthUnits}}'></unit-input>
         <unit-input hidden$='{{_isRound(tablet.shape)}}' value='{{tablet.width}}' icon='my-icons:ruler' label='Width' type='length' selected-units='{{lengthUnits}}'></unit-input>
         <unit-input value='{{tablet.totalThickness}}' icon='my-icons:ruler' label='Total Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>
         <unit-input value='{{tablet.bandThickness}}' icon='my-icons:ruler' label='Band Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>  
-        <tablet-schematic-layout tablet='[[tablet]]'></tablet-schematic-layout>
-         
-        <div class='card-title'>Formulation</div>
-        <item-select-input label='Formulation Type' icon='my-icons:product' items='["Pharmaceutical", "Nutritional", "Other"]' selected='{{tablet.productType}}'></item-select-input>
+      </div>
+      
+      <div class='card'>
+        <div class='card-title underline'>Formulation</div>
+        <item-select-input label='Formulation Type' icon='my-icons:product' items='["Pharmaceutical", "Nutritional"]' selected='{{tablet.productType}}'></item-select-input>
         <unit-input value='{{tablet.weight}}' icon='my-icons:weight' label='Tablet Weight' type='weight' selected-units='mg'></unit-input>
         <unit-input value='{{tablet.bulkDensity}}' icon='my-icons:density' label='Tablet Bulk Density' type='density' selected-units='g/ml'></unit-input>
-        <bulk-density-chart id='chart' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
-          
-        <icon-label-button icon='my-icons:calculator' label='Calculate Tablet' on-click='_save'></icon-label-button>
-      </div>
+      </div>  
+      
+      <div class='card underline'>
+        <div class='card-title'>Calculate</div>
+        <div class='card-description'>Click calcualte to determine the surface area, volume, density and more.</div>
+        <icon-label-button class='wide' icon='my-icons:calculator' label='Calculate Tablet' on-click='_save'></icon-label-button>
+      
+        <div id='admin-buttons' hidden$='[[!isAdmin]]'>
+          <icon-label-button icon='my-icons:save' label='Save Firebase' on-click='_saveToFirebase'></icon-label-button>
+          <icon-label-button icon='my-icons:save' label='Update Firebase' on-click='_replaceOnFirebase'></icon-label-button>
+        </div>
+      </div>  
     
-    <div id='admin-buttons' hidden$='[[!isAdmin]]'>
-      <icon-label-button icon='my-icons:save' label='Save to Firebase' on-click='_saveToFirebase'></icon-label-button>
-      <icon-label-button icon='my-icons:save' label='Update on Firebase' on-click='_replaceOnFirebase'></icon-label-button>
-    </div>
+    </section>
+    
+    <section id='right-section'>
+      
+      <iron-selector selected='{{_selectedGraphic}}'>
+          <icon-label-button icon='my-icons:table' label='Dimensions'></icon-label-button>
+          <icon-label-button icon='my-icons:line-chart' label='Density'></icon-label-button>
+      </iron-selector>
+      
+      <iron-pages selected='[[_selectedGraphic]]'>
+        <div>
+          <div class='card-title'>Tablet Schematic</div>
+          <tablet-schematic-layout class='graphic' tablet='[[tablet]]'></tablet-schematic-layout>
+        </div>
+        <div>
+          <div class='card-title'>Tablet Bulk Density</div>
+          <bulk-density-chart id='chart' class='graphic' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
+        </div>
+      </iron-pages>
+      
+    </section>
     
   </template>
 
@@ -146,7 +105,15 @@
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
           tablet: { type: Object, statePath: 'tablet'},
           lengthUnits: { type: String, value: 'mm' },
+          _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
+      }
+      _graphicChanged(page) {
+        switch(page) {
+          case 1:
+            this.$.chart._setChartDimensions();
+            break;
+        }
       }
       _save() {
         this.dispatch({ 

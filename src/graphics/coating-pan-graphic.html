@@ -36,14 +36,14 @@
       <svg viewbox='0 0 24 24'>
       <path class='outline' d$='[[_getFrontPan(_pan.panDiameter)]]'></path>
       <path class='outline' d$='[[_getFrontPan(_pan.openingDiameter)]]'></path>
-      <path class='volume' d$='[[_getFrontFill(_pan.panDiameter, _pan.brimHeight)]]'></path>
+      <path class='volume' d$='[[_getFrontFill(_pan.panDiameter, _pan.batchVolume)]]'></path>
       </svg>
     </template>
     
     <template is='dom-if' if='[[sideView]]'>
       <svg viewbox='0 0 24 24'>
         <path class='outline' d$='[[_getSidePan(_pan.panDiameter, _pan.openingDiameter, _pan.wallWidth, _pan.brimWidth)]]'></path>
-        <path class='volume' d$='[[_getSideFill(_pan.panDiameter, _pan.openingDiameter, _pan.wallWidth, _pan.brimWidth, _pan.brimHeight)]]'></path>
+        <path class='volume' d$='[[_getSideFill(_pan.panDiameter, _pan.openingDiameter, _pan.wallWidth, _pan.brimWidth, _pan.batchVolume)]]'></path>
       </svg>
     </template>
             
@@ -59,6 +59,7 @@
         return {
           frontView: Boolean,
           sideView: Boolean,
+          volumeType: String,
           pan: Object,
           _pan: Object,
           svg: {
@@ -102,6 +103,7 @@
       // take the redux tablet properties and pass to a tablet class
       // to calculate all the values required to map the tablet
       _calcPanDimensions() {
+        console.log('pan prop changed')
         this._pan = new CoatingPan(this.pan);
       }
 
@@ -141,12 +143,29 @@
                   " a " + rad + " " + rad + " 0 0 0 " + scaledDiameter + " 0" +
                   " a " + rad + " " + rad + " 0 0 0 " + -scaledDiameter + " 0 z";
       } 
-      _getFrontFill(diameter, fill){
+      _getFrontFill(diameter, volume){
         let svg = this.svg;
+        let fill = 0;
+        switch(this.volumeType) {
+          case 'min':
+            fill = this.pan.minFillHeight;
+            break;
+          case 'max':
+            fill = this.pan.maxFillHeight;
+            break;
+          case 'brim':
+            fill = this.pan.brimHeight;
+            break;
+          default:
+            fill = this.pan.batchFillHeight;
+            break;
+        }
+        
         //helper values
+        let scaledFill = fill * svg.scale;
         let scaledDiameter = diameter * svg.scale;
         let scaledRadius = scaledDiameter / 2;
-        let scaledFill = fill * svg.scale;
+        
         
         //we stopp the graphic if fill height is bigger than pan radius
         if(scaledFill > scaledRadius){
@@ -161,8 +180,23 @@
         return  "M " + (svg.center - fillHalfChord) + " " + (svg.center + gapHeight) +
                       " a " + scaledRadius + " " + scaledRadius + " 0 0 0 " + (2 * fillHalfChord) + " 0 z";
       }
-      _getSideFill(diameter, open, wall, brim, fill) {
+      _getSideFill(diameter, open, wall, brim, volume) {
         let svg = this.svg;
+        let fill = 0;
+        switch(this.volumeType) {
+          case 'min':
+            fill = this.pan.minFillHeight;
+            break;
+          case 'max':
+            fill = this.pan.maxFillHeight;
+            break;
+          case 'brim':
+            fill = this.pan.brimHeight;
+            break;
+          default:
+            fill = this.pan.batchFillHeight;
+            break;
+        }
         //helper values
         let scaledDiameter = diameter * svg.scale;
         let scaledOpen = open * svg.scale;

@@ -1,63 +1,105 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../inputs/unit-input.html">
+<link rel="import" href="../buttons/icon-label-button.html">
+<link rel="import" href="../charts/pan-fill-chart.html">
+<link rel="import" href="../graphics/pan-schematic-layout.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="input-graphic-layout-styles.html">
 
 <dom-module id="pan-fill-page">
   
    <template>
     
-    <style>
-      :host {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        grid-auto-rows: auto auto auto;
-        grid-gap: 32px;
-        padding: 48px 64px;
-        height: calc(100vh - 64px - 48px - 48px);
-        max-width: 1328px;
-        margin: auto;
-        overflow: hidden;
-      }
-      #intro {
-        grid-column: 1 / 2;
-        grid-row: 1 / 2;
-        background-color: var(--app-primary-color);
-        color: var(--white-color);
-      }
-      #inputs {
-        grid-column: 1 / 2;
-        grid-row: 2 / 3;
-        background-color: var(--white-color);
-      }
-      #graphic {
-        grid-column: 2 / 3;
-        grid-row: 1 / 4;
-        background-color: var(--text-light-color);
-        border-radius: 12px;
-      }
-      .card {
-        display: flex;
-        flex-direction: column;
-        border-radius: 6px;
-      }
+    <style include='input-graphic-layout-styles'>
+      
     </style>
     
-    <section id='intro' class='card'>
-      <h1>Batch Size and Pan Fill</h1>
-    </section>
-
-    <section id='inputs' class='card'>
-      <h1>Batch Size - <i>Inputs</i></h1>
+    <section id='left-section'>
+      
+      <div class='card highlight top'>
+        <div class='card-title'>Batch Size and Pan Fill</div>
+        <div class='card-description'>The batch size is dependent on the coating pan volume. Determining
+        the right pan fill ensures good tablet flow and mixing, reduce coating defects and increase coating effeciency.
+        Below explore the optimal batch size for your tablet and coating equipment.</div>
+      </div>
+      
+      <div class='card'>
+        <div class='card-title underline'>Batch Size</div>
+        <div class='card-description'>Batch sizes can be desribed by volume, weight or counting units. <b>[[tablet.productName]]</b> has a 
+        <b>[[tablet.weightInMG]] mg tablet weight</b>
+        and <b>[[tablet.bulkDensityInGML]] g/ml bulk density</b>. Based on these values input any value and see how this translates to the other values.
+        </div>
+        <unit-input label='Batch Volume' icon='my-icons:volume' type='volume' selected-units='l' value='[[volume]]' on-value-changed='_setBatchVolume'></unit-input>
+        <unit-input label='Batch Weight' icon='my-icons:weight' type='weight' selected-units='kg' value='[[weight]]' on-value-changed='_setBatchWeight'></unit-input>
+        <unit-input label='Tablet Count' icon='my-icons:count' type='' selected-units='tabs' value='[[count]]' on-value-changed='_setBatchCount'></unit-input>
+      </div>
+      
     </section>
     
-    <section id='graphic'>
-    
+    <section id='right-section'>
+      
+      <iron-selector selected='{{_selectedGraphic}}'>
+          <icon-label-button icon='my-icons:line-chart' label='Chart'></icon-label-button>
+          <icon-label-button icon='my-icons:table' label='Graphic'></icon-label-button>
+      </iron-selector>
+      
+      <iron-pages selected='[[_selectedGraphic]]'>
+        <div>
+          <div class='card-title'>Batch Size vs Pan Fill Height</div>
+          <pan-fill-chart id='chart' class='graphic' pan='[[pan]]'></pan-fill-chart>
+        </div>
+        <div>
+          <div class='card-title'>Pan Fill Schematic</div>
+          <pan-schematic-layout class='graphic' pan='[[pan]]'></pan-schematic-layout>
+        </div>
+      </iron-pages>
+      
     </section>
+    
   </template>
 
   <script>
-    class PanFillPage extends Polymer.Element {
+    class PanFillPage extends ReduxMixin(Polymer.Element) {
       static get is() { return 'pan-fill-page'; }
+      static get properties() {
+        return {
+          pan: {type: Object, statePath: "pan"},
+          tablet: {type: Object, statePath: "tablet"},
+          weight: {type: Object, statePath: 'tablet.batchWeight'},
+          volume: {type: Object, statePath: 'tablet.batchVolume'},
+          count: {type: Object, statePath: 'tablet.count'},
+          _selectedGraphic: {type: Number, value: 1, observer: '_graphicChanged'}
+        };
+      }
+      _setBatchWeight(e) {
+        this.dispatch({
+          type: "SET_BATCH_WEIGHT",
+          value: e.detail.value
+        });
+      }
+      _setBatchVolume(e) {
+        this.dispatch({
+          type: "SET_BATCH_VOLUME",
+          value: e.detail.value
+        });
+      }
+      _setBatchCount(e) {
+        this.dispatch({
+          type: "SET_BATCH_COUNT",
+          value: e.detail.value
+        });
+      }
+      _graphicChanged(page) {
+        switch(page) {
+          case 0:
+            this.$.chart._setChartDimensions();
+            break;
+        }
+      }
     }
 
     window.customElements.define(PanFillPage.is, PanFillPage);

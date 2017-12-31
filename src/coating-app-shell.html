@@ -32,6 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="redux/redux-mixin.html">
 
 <link rel="lazy-import" href="pages/materials-page.html">
+<link rel="lazy-import" href="pages/tablet-overview-page.html">
 <link rel="lazy-import" href="pages/tablet-library-page.html">
 <link rel="lazy-import" href="pages/tablet-editor-page.html">
 <link rel="lazy-import" href="pages/pan-library-page.html">
@@ -85,8 +86,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       
     /*Drawer navigation styles*/
-      .drawer app-toolbar {
-        font-weight: bold;
+      #drawer div {
+        overflow: auto;
+        height: 100%;
       }
       .drawer-list a {
         display: block;
@@ -142,21 +144,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-drawer-layout fullbleed force-narrow on-toggle-drawer='_toggleDrawer'>
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer">
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-        <app-toolbar>Process</app-toolbar>
+        <div selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+        <app-toolbar>Overview</app-toolbar>
         <a name="materials" href="#/materials">Materials & Equipment</a>
-        <a name="materials" href="#/pan-fill">Pan Fill</a>
-          
-        <app-toolbar>Libraries</app-toolbar>
-        <a name="tablet-library" href="#/tablet-library">Coating Substrate</a>
-        <a name="pan-library" href="#/pan-library">Coating Equipment</a>
-        <a name="pan-library" href="#/pan-library">Coating Formula</a>
-          
-        <app-toolbar>Design</app-toolbar>
-        <a name="tablet-editor" href="#/tablet-editor">Tablet</a>
-        <a name="pan-editor" href="#/pan-editor">Coating Equipment</a>
-        <a name="pan-editor" href="#/pan-editor">Coating Formula</a>
-        </iron-selector>
+        <app-toolbar>Tablet</app-toolbar>
+        <a name="tablet-overview" href="#/tablet-overview">Tablet Overview</a>
+        <a name="tablet-editor" href="#/tablet-editor">Tablet Editor</a>
+        <a name="tablet-library" href="#/tablet-library">Tablet Library</a>
+        
+        <app-toolbar>Equipment</app-toolbar>
+        <!--<a name="pan-overview" href="#/pan-overview">Pan Overview</a>-->
+        <a name="pan-editor" href="#/pan-editor">Pan Editor</a>
+        <a name="pan-library" href="#/pan-library">Pan Library</a>
+        
+        <app-toolbar>Coating</app-toolbar>
+        <!--<a name="coating-overview" href="#/coating-overview">Coating Overview</a>-->
+        <a name="coating-editor" href="#/coating-editor">Coating Editor</a>
+        <a name="coating-library" href="#/coating-library">Coating Library</a>
+        
+        <app-toolbar>Explore</app-toolbar>
+        <a name="pan-fill" href="#/pan-fill">Batch Size & Pan Fill</a>
+        </div>
       </app-drawer>
       
       <app-header-layout>
@@ -172,6 +180,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='materials'>
           <materials-page name='materials'></materials-page>
+          <tablet-overview-page name='tablet-overview'></tablet-overview-page>
           <tablet-library-page name='tablet-library'></tablet-library-page>
           <tablet-editor-page name='tablet-editor'></tablet-editor-page>
           <pan-library-page name='pan-library'></pan-library-page>

@@ -22,7 +22,7 @@
           color: var(--text-color);
         }
         #label {
-            @apply --paper-font-subhead;
+            @apply --paper-font-body1;
         }
         iron-icon {
             margin-right: 8px;
@@ -37,7 +37,7 @@
         }
         #input,
         #input:focus {
-          padding: 12px 16px;
+          padding: 8px 16px;
           width: calc(100% - 80px - 32px);
           background-color: inherit;
           appearance: none;
@@ -48,7 +48,7 @@
           text-align: end;
           text-overflow: ellipsis;
           color: var(--text-color);
-          @apply --paper-font-title;
+          @apply --paper-font-body2;
         }
         #input[type=number]::-webkit-inner-spin-button,
         #input[type=number]::-webkit-outer-spin-button {
@@ -83,7 +83,7 @@
         .dropdown-trigger {
           @apply --paper-font-caption;
           padding: 0px 4px;
-          margin: 12px 0px;
+          margin: 8px 0px;
           border-left: 2px solid var(--border-color);
           display: flex;
           min-width: 64px;
