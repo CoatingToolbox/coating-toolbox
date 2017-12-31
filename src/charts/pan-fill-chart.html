@@ -1,27 +1,22 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
-<link rel="import" href="d3-import.html">
-<link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/coating-pan-class.html">
+<link rel="import" href="d3-import.html">
 <link rel="import" href="chart-styles.html">
 
 <dom-module id='pan-fill-chart'>
     <template>
         <style include='chart-styles'>
-            :host {
-                padding: 16px;
-            }
-
+        
             .circle.batch-volume {
                 stroke: var(--red-color);
             }
+            .reference-labels text {
+                text-align: right;
+                direction: rtl;
+            }
+            
         </style>
-        
-        <div id='tooltip' class='hide'>
-            <div>Weight</div>
-            <div>[[_convertToKGString(pan.fillWeight)]] kg</div>
-        </div>
         
         <svg id="chart">
             <g class="chart">
@@ -32,8 +27,11 @@
                 <path class="dotted line"></path>
                 <path class="working-volume area"></path>
                 <path class="working-volume line"></path>
-                <g class="volume-circles circle"></g>
-                <circle r="7" class="batch-volume circle" on-track="_trackBatch"></circle>
+                <g class='references'>
+                    <g class="reference-circles circle"></g>
+                    <g class='reference-labels'></g>
+                </g>
+                <circle r="7" class="batch-volume circle"></circle>
             </g>
         </svg>
         
@@ -43,7 +41,7 @@
     <script>
         
         /*global ReduxMixin Polymer */
-        class PanFillChart extends ReduxMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+        class PanFillChart extends Polymer.Element {
             
             static get is() { return 'pan-fill-chart'; }
             
@@ -66,10 +64,9 @@
             
             static get properties() {
                 return {
-                    pan: {type: Object, statePath: 'pan'},
+                    pan: Object,
                     volumeUnits: {type: String, value: "l"},
                     volumeSelected: {type: String, value: "brim"},
-                    horizontalLayout: {type: Boolean, value: true, reflectToAttribute: true},
                     chart: {type: Object},
                     margin: {type: Object, value: function() {
                         return {top: 20, right: 20, bottom: 50, left: 50};
@@ -92,15 +89,15 @@
             }
             _computeD3Line(xScale, yScale) {
                 return d3.line()
-                    .x(function(d) { return xScale(d.x); })
-                    .y(function(d) { return yScale(d.y); })
+                    .x(function(d) { return xScale(d.weight); })
+                    .y(function(d) { return yScale(d.height); })
                     .curve(d3.curveNatural);
             }
             _computeD3Area(xScale, yScale, height) {
                 return d3.area()
-                         .x(function(d) { return xScale(d.x); })
+                         .x(function(d) { return xScale(d.weight); })
                          .y0(height)
-                         .y1(function(d) { return yScale(d.y); }); 
+                         .y1(function(d) { return yScale(d.height); }); 
             }
         
             static get observers() {
@@ -110,7 +107,7 @@
                     '_updateDottedLine(pan, chart, d3Line, d3Area)',
                     '_updateWorkingVolume(pan, chart, d3Line, d3Area)',
                     '_updateVolumePoints(pan, chart, xScale, yScale)',
-                    '_updateBatchPoint(pan, pan.fillWeight, chart, xScale, yScale)'
+                    '_updateBatchPoint(pan.batchWeightVsHeight, chart, xScale, yScale)'
                 ];
             }
             
@@ -142,24 +139,8 @@
                 if(!pan || !chart || !line || !area) {
                     return;
                 }
-                
-                // create a new coating pan object to make changes to
-                let p = Object.assign(new CoatingPan(), pan);
-                
-                // initiate an empty array to store values in for loop
-                let vals = [];
-                let step = pan.brimWeight / 25;
-                
-                // loop through different volumes and store the volume and height values
-                for(var i=0; i < pan.brimWeight; i = i + step) {
-                    p.fillWeight = i;
-                    vals.push({x: this._convertToKG(p.fillWeight), y: this._convertToInches(p.fillHeight)});
-                }
-                // finally store the max values 
-                vals.push({x: this._convertToKG(pan.brimWeight), y: this._convertToInches(pan.brimHeight)});
-                
                 // Add the line
-                let lines = chart.select('.dotted.line').data([vals]);
+                let lines = chart.select('.dotted.line').data([pan.panRangeWeightVsFillHeight]);
                 lines.enter()
                     .merge(lines)
                         .attr("d", line);  
@@ -170,30 +151,15 @@
                     return;
                 }
                 
-                // create a new coating pan object to make changes to
-                let p = Object.assign(new CoatingPan(), pan);
-                
-                // initiate an empty array to store values in for loop
-                let vals = [];
-                let step = (pan.maxFillWeight - pan.minFillWeight) / 10;
-                
-                // loop through different volumes and store the volume and height values
-                for(var i=pan.minFillWeight; i < pan.maxFillWeight; i = i + step) {
-                    p.fillWeight = i;
-                    vals.push({x: this._convertToKG(p.fillWeight), y: this._convertToInches(p.fillHeight)});
-                }
-                // finally store the max values 
-                vals.push({x: this._convertToKG(pan.maxFillWeight), y: this._convertToInches(pan.maxFillHeight)});
-                
                 // Add the line
-                let lines = chart.select('.working-volume.line').data([vals]);
+                let lines = chart.select('.working-volume.line').data([pan.workingFillWeightVsFillHeight]);
                 lines.enter()
                     .merge(lines)
                         .attr("d", line);  
                 lines.exit().remove();
                                 
                 // Add the area
-                let areas = chart.select('.working-volume.area').data([vals]);
+                let areas = chart.select('.working-volume.area').data([pan.workingFillWeightVsFillHeight]);
                 areas.enter()
                     .merge(areas)
                         .attr("d", area);  
@@ -203,81 +169,59 @@
                 if(!pan || !chart || !xScale || !yScale) {
                     return;
                 }
-                let vals = [];
-                vals.push({x: this._convertToKG(pan.minFillWeight), y: this._convertToInches(pan.minFillHeight)});
-                vals.push({x: this._convertToKG(pan.maxFillWeight), y: this._convertToInches(pan.maxFillHeight)});
-                vals.push({x: this._convertToKG(pan.brimWeight), y: this._convertToInches(pan.brimHeight)});
-                
                 // Add the dots
-                let circles = chart.select('.volume-circles').selectAll('circle').data(vals);
+                let circles = chart.select('.reference-circles').selectAll('circle').data(pan.referencePointsWeightVsHeight);
                 
                 circles.enter()
                         .append('circle')
                             .attr('r', 7)
                         .merge(circles)
-                          .attr('cx', function(d) { return xScale(d.x);})
-                          .attr('cy', function(d) { return yScale(d.y);});
+                          .attr('cx', function(d) { return xScale(d.weight);})
+                          .attr('cy', function(d) { return yScale(d.height);});
                 
                 circles.exit().remove();
+                
+                
+                let text = chart.select('.reference-labels').selectAll('text').data(pan.referencePointsWeightVsHeight);
+                
+                text.enter()
+                    .append('text')
+                        .attr('class', 'references')
+                    .merge(text)
+                        .attr('x', function(d) { return xScale(d.weight) - 8; })
+                        .attr('y', function(d) { return yScale(d.height) - 8; })
+                        .text(function(d) { return d.label; });
+                text.exit().remove();
             }
-            _updateBatchPoint(pan, fillWeight, chart, xScale, yScale) {
-                if(!pan || !chart || !xScale || !yScale) {
+            _updateBatchPoint(data, chart, xScale, yScale) {
+                if(!data || !chart || !xScale || !yScale) {
                     return;
                 }
-                let vals = [];
-                vals.push({x: this._convertToKG(fillWeight), y: this._convertToInches(pan.fillHeight)});
-                
                 // Add the dots
-                let circles = chart.selectAll('circle.batch-volume').data(vals);
+                let circles = chart.selectAll('circle.batch-volume').data(data);
                 
                 circles.enter()
                         .append('circle')
                             .attr('class', 'batch-volume')
                         .merge(circles)
                           .attr('r', 7)
-                          .attr('cx', function(d) { return xScale(d.x);})
-                          .attr('cy', function(d) { return yScale(d.y);});
+                          .attr('cx', function(d) { return xScale(d.weight);})
+                          .attr('cy', function(d) { return yScale(d.height);});
                     
                 circles.exit().remove();
                 
                 
-                let tooltip = d3.select(this.$.tooltip)
-                                .data(vals)
-                                    .style('transform', function(d) { return 'translateX(' + xScale(d.x) + 'px) translateY(' + (yScale(d.y) - 48) + 'px)';});
-                
-            }
-            
-            _trackBatch(e) {
-                switch(e.detail.state) {
-                    case 'start':
-                        this.startFill = this.pan.fillWeight;
-                        this.$.tooltip.classList.remove('hide');
-                        break;
-                    case 'track':
-                        this.pan.fillWeight = this.startFill + (this.xScale.invert(e.detail.dx) * 1000);
-                        
-                        this.dispatch({
-                            type: "SET_PAN", 
-                            value: this.pan
-                        });
-                        break;
-                    case 'end':
-                        this.$.tooltip.classList.add('hide');
-                        break;
-                }
             }
             
             _convertToInches(val) {
                 return val * 39.37;
             }
-            _convertToLiters(val) {
-                return (val / 0.001) ;
-            }
             _convertToKG(val) {
                 return (val / 1000) ;
             }
-            _convertToKGString(val) {
-                return this._convertToKG(val).toFixed(1);
+            
+            updateChart(){
+                this._updateBatchPoint(this.pan.batchWeightVsHeight, this.chart, this.xScale, this.yScale);
             }
         }
         

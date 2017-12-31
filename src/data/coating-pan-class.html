@@ -7,7 +7,8 @@ class CoatingPan {
     this.openingDiameter = 0.4826;
     this.wallWidth = 0.508;
     this.brimWidth = 0.93345;
-    this.batchVolume = 120000;
+    this.batchVolume = 95000;
+    this.batchBulkDensity = 760000;
     this.model = "";
     this.manufacturer = "";
     this.nickname = "";
@@ -57,9 +58,12 @@ class CoatingPan {
   }
   get brimVolume() {
     let volume =  this.calcVolume(this.brimHeight);
-    console.assert((volume > 0.17 * 0.9 && volume < 0.17 * 1.1), `The total volume is outside the O'Hara 48" pan target of 170L. The calculated volume is ${volume} m3`);
-    console.assert((volume > 0.0145 * 0.9 && volume < 0.0145 * 1.1), `The total volume is outside the O'Hara 19" pan target of 14.5L. The calculated volume is ${volume} m3`);
+    // console.assert((volume > 0.17 * 0.9 && volume < 0.17 * 1.1), `The total volume is outside the O'Hara 48" pan target of 170L. The calculated volume is ${volume} m3`);
+    // console.assert((volume > 0.0145 * 0.9 && volume < 0.0145 * 1.1), `The total volume is outside the O'Hara 19" pan target of 14.5L. The calculated volume is ${volume} m3`);
     return volume;
+  }
+  get brimWeight() {
+    return this.calcWeight(this.brimVolume);
   }
   
   // MAX WORKING VOLUME - Calculations for 100% to the brim of the pan
@@ -76,20 +80,27 @@ class CoatingPan {
   get maxFillLength() {
     return this.calcChordLength(this.maxFillHeight);
   }
+  get maxFillWeight() {
+    return this.calcWeight(this.maxFillVolume);
+  }
   
   // MIN VOLUME - Calculations for 100% to the brim of the pan
   get minFillHeight() {
     if(this.baffleHeight > 0) {
       return this.baffleHeight;
     } else {
-      return this.brimHeight * 0.6;
+      return this.brimHeight * 0.7;
     }
+  
   }
   get minFillVolume() {
     return this.calcVolume(this.minFillHeight);
   }
   get minFillLength() {
     return this.calcChordLength(this.minFillHeight);
+  }
+  get minFillWeight() {
+    return this.calcWeight(this.minFillVolume);
   }
   
   // BATCH FILL VOLUME - Calculation based on batch volume
@@ -99,7 +110,7 @@ class CoatingPan {
     let step = this.brimHeight / 500;
     for(let i=0; i<this.brimHeight; i = i + step){
       saggita = this.brimHeight - i;
-      let volume = this.pan.calcVolume(saggita);
+      let volume = this.calcVolume(saggita);
       if(volume <= this.batchVolume){
         break;
       }
@@ -107,10 +118,21 @@ class CoatingPan {
     return saggita;
   }
   get batchFillVolume() {
+    // console.assert(
+    //   (this.calcVolume(this.batchFillHeight) > this.batchVolume * 0.9 && 
+    //   this.calcVolume(this.batchFillHeight) < this.batchVolume * 1.1), 
+    //   `The calcualted batch volume is different than what is set. The calcualted batch volume is ${this.calcVolume(this.batchFillHeight)} m3`);
     return this.calcVolume(this.batchFillHeight);
   }
   get batchFillLength() {
     return this.calcChordLength(this.batchFillHeight);
+  }
+  get batchFillWeight() {
+    // console.assert(
+    //   (this.calcWeight(this.batchFillVolume) > (this.batchVolume * this.batchBulkDensity * 0.9) && 
+    //   this.calcWeight(this.batchFillVolume) < (this.batchVolume * this.batchBulkDensity * 1.1)), 
+    //   `The calcualted batch volume is different than what is set. The calcualted batch volume is ${this.calcWeight(this.batchFillVolume)} g`);
+    return this.calcWeight(this.batchFillVolume);
   }
   
   
@@ -146,6 +168,69 @@ class CoatingPan {
     return this.metersToInches(this.panDiameter).toFixed(1);
   }
   
+  // DATA FOR GRAPHS 
+  get panRangeWeightVsFillHeight() {
+    // initiate an empty array to store values in for loop
+    let vals = [];
+    let step = this.brimHeight / 50;
+    
+    // loop through different volumes and store the volume and height values
+    for(var i=0; i <= this.brimHeight; i = i + step) {
+        let fillHeight = i;
+        let fillVolume = this.calcVolume(fillHeight);
+        let fillWeight = this.calcWeight(fillVolume);
+        vals.push({weight: this.gramsToKilograms(fillWeight), height: this.metersToInches(fillHeight)});
+    }
+    return vals;
+  }
+  get workingFillWeightVsFillHeight() {
+    // initiate an empty array to store values in for loop
+    let vals = [];
+    let step = (this.maxFillHeight - this.minFillHeight) / 50;
+    
+    // loop through different volumes and store the volume and height values
+    for(var i = this.minFillHeight; i <= this.maxFillHeight; i = i + step) {
+        let fillHeight = i;
+        let fillVolume = this.calcVolume(fillHeight);
+        let fillWeight = this.calcWeight(fillVolume);
+        vals.push({weight: this.gramsToKilograms(fillWeight), height: this.metersToInches(fillHeight)});
+    }
+    return vals;
+    
+  }
+  get batchWeightVsHeight() {
+    
+    let vals = [];       
+    vals.push({weight: this.gramsToKilograms(this.batchFillWeight), 
+               height: this.metersToInches(this.batchFillHeight),
+               label: "Batch Size"});
+    return vals;
+  }
+  get referencePointsWeightVsHeight() {
+    
+    let vals = [];
+    vals.push({weight: this.gramsToKilograms(this.minFillWeight), 
+               height: this.metersToInches(this.minFillHeight),
+               label:"Min Recommended"});
+               
+    vals.push({weight: this.gramsToKilograms(this.maxFillWeight), 
+               height: this.metersToInches(this.maxFillHeight), 
+               label:"Max Recommended"});
+               
+    vals.push({weight: this.gramsToKilograms(this.brimWeight), 
+               height: this.metersToInches(this.brimHeight),
+               label: "Brim Height"});
+               
+    if(this.baffleHeight > 0) {
+      
+      let vol = this.calcVolume(this.baffleHeight);
+      let weight = this.calcWeight(vol);
+      vals.push({weight: this.gramsToKilograms(weight), 
+                 height: this.metersToInches(this.baffleHeight),
+                 label: "Baffle Height"});
+    }
+    return vals;
+  }
   
   // HELPER FUNCTIONS
   m3ToLiters(val) {
@@ -153,6 +238,9 @@ class CoatingPan {
   }
   metersToInches(val) {
     return val * 39.3701;
+  }
+  gramsToKilograms(val) {
+    return val / 1000;
   }
   calcChordLength(saggita) {
     //brim width... the chord length at the brim height
@@ -229,6 +317,8 @@ class CoatingPan {
       return center + cone + cone;
       
     }
-      
+  calcWeight(volume) {
+    return volume * this.batchBulkDensity;
+  }
   }
 </script>
