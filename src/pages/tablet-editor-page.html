@@ -7,12 +7,14 @@
 <link rel="import" href="../inputs/unit-input.html">
 <link rel="import" href="../inputs/item-select-input.html">
 <link rel="import" href="../inputs/shape-input.html">
+<link rel="import" href="../list-items/list-unit-item.html">
 <link rel="import" href="../graphics/tablet-schematic-layout.html">
 <link rel="import" href="../charts/bulk-density-chart.html">
+<link rel="import" href="../buttons/pages-tab-button.html">
 <link rel="import" href="../buttons/icon-label-button.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/tablet-class.html">
-<link rel="import" href="input-graphic-layout-styles.html">
+<link rel="import" href="../styles/input-graphic-layout-styles.html">
 
 <dom-module id="tablet-editor-page">
   
@@ -20,14 +22,13 @@
     
     <style include='input-graphic-layout-styles'>
     
+      .card text-input[label="Product"], 
+      .card text-input[label="Formulation"],
+      .card shape-input {
+        grid-column: 1/ 3;
+      }
       
-    .card text-input[label="Product"], 
-    .card text-input[label="Formulation"],
-    .card shape-input {
-      grid-column: 1/ 3;
-    }
     </style>
-    
       
     <section id='left-section'>
       <div class='card highlight top'>
@@ -78,18 +79,40 @@
     <section id='right-section'>
       
       <iron-selector selected='{{_selectedGraphic}}'>
-          <icon-label-button icon='my-icons:table' label='Dimensions'></icon-label-button>
-          <icon-label-button icon='my-icons:line-chart' label='Density'></icon-label-button>
+          <pages-tab-button icon='my-icons:table' label='Dimensions'></pages-tab-button>
+          <pages-tab-button icon='my-icons:line-chart' label='Density'></pages-tab-button>
       </iron-selector>
       
       <iron-pages selected='[[_selectedGraphic]]'>
-        <div>
+        <div class='page'>
           <div class='card-title'>Tablet Schematic</div>
           <tablet-schematic-layout class='graphic' tablet='[[tablet]]'></tablet-schematic-layout>
+          <div class='card-title'>Calculated Tablet Properties</div>
+          <list-unit-item 
+            icon='my-icons:surface-area' 
+            title='Surface Area' 
+            subtitle='The total surface area of a compressed tablet.'
+            type='area' 
+            selected-units='cm2' 
+            value='[[tabletArea]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:volume' 
+            title='Volume' 
+            subtitle='The total volume of a compressed tablet.'
+            type='volume' 
+            selected-units='cm3' 
+            value='[[tabletVolume]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:density' 
+            title='Compressed Density' 
+            subtitle='The compressed density of the tablet.'
+            type='density' 
+            selected-units='g/ml' 
+            value='[[compressedDensity]]'></list-unit-item>
         </div>
-        <div>
+        <div class='page'>
           <div class='card-title'>Tablet Bulk Density</div>
-          <bulk-density-chart id='chart' class='graphic' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
+          <bulk-density-chart id='chart' class='chart' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
         </div>
       </iron-pages>
       
@@ -105,8 +128,21 @@
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
           tablet: { type: Object, statePath: 'tablet'},
           lengthUnits: { type: String, value: 'mm' },
+          tabletArea: Number,
+          compressedDensity: Number,
+          tabletVolume: Number,
           _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
+      }
+      static get observers() {
+        return [
+          '_setTabletValues(tablet.*)'
+        ];
+      }
+      _setTabletValues() {
+        this.set('tabletArea', this.tablet.totalArea);
+        this.set('tabletVolume', this.tablet.totalVolume);
+        this.set('compressedDensity', this.tablet.compressedDensity);
       }
       _graphicChanged(page) {
         switch(page) {
@@ -121,7 +157,7 @@
           value: this.tablet
         });
         window.scrollTo(0, 0);
-        window.location = '#/materials';
+        window.location = '#/home';
       }
       
       // Supported functions 
@@ -148,7 +184,6 @@
           this._saveToFirebase();
         }
       }
-      
       _tabletToJSON() {
         return Object.assign({}, this.tablet);
         

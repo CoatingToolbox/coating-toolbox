@@ -1,0 +1,64 @@
+<link rel="import" href='../../bower_components/polymer/polymer-element.html'>
+<link rel="import" href='../../bower_components/iron-icon/iron-icon.html'>
+<link rel="import" href="../my-icons.html">
+
+<dom-module id='home-nav-button'>
+    <template>
+        <style>
+            :host {
+                display: flex;
+                align-items: center;
+                padding: 8px 16px 8px 12px;
+                border-radius: 8px;
+                color: var(--text--light-color);
+                background-color: var(--gray-color);
+                @apply --paper-font-body1;
+                transition: background-color 0.2s;
+            }
+            :host(:hover) {
+                cursor: pointer;
+                background-color: var(--app-highlight-color);
+                color: var(--white-color);
+                transition: background-color 0.2s;
+            }
+            
+            iron-icon {
+                height: 18px;
+                width: 18px;
+            }
+            
+            #label {
+                margin-left: 8px;
+            }
+        </style>
+        
+        <iron-icon icon='[[icon]]'></iron-icon>
+        <div id='label'>[[label]]</div>
+        
+    </template>
+    
+    <script>
+        
+        class HomeNavButton extends Polymer.Element {
+            static get is() { return 'home-nav-button'; }
+            ready() {
+              super.ready();
+              this.addEventListener('click', this._gotoLink);
+            }
+            static get properties() {
+                return {
+                    icon: String,
+                    label: String,
+                    link: String
+                };
+            }
+            _gotoLink() {
+                if(!this.link) { return; }
+                window.location = this.link;
+            }
+            
+        }
+        
+        window.customElements.define(HomeNavButton.is, HomeNavButton);
+    </script>
+</dom-module>

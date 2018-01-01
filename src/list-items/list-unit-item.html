@@ -1,11 +1,11 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/paper-styles/typography.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/iron-dropdown/iron-dropdown.html">
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-dropdown/iron-dropdown.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../my-icons.html">
 
-<dom-module id="list-unit-input">
+<dom-module id="list-unit-item">
 
   <template>
     
@@ -13,13 +13,11 @@
         
         :host {
           max-width: 600px;
-          margin: auto;
           display: grid;
           grid-template-rows: auto auto;
           grid-template-columns: auto 1fr auto;
           align-items: center;
           padding: 8px 0px;
-          margin: 0px 16px;
         }
         #icon {
           grid-column: 1 / 2;
@@ -53,7 +51,6 @@
           grid-column: 2 / 3;
           align-self: start;
           @apply --paper-font-caption;
-          color: var(--text-light-color);
         }
         #input-layout {
           grid-row: 1 / 3;
@@ -62,32 +59,9 @@
           align-items: baseline;
         }
         #input {
-          width: 96px;
           color: var(--text-color);
-          @apply --paper-font-body1;
-          text-align: right;
+          @apply --paper-font-body2;
           margin-right: 8px;
-          background-color: inherit;
-          appearance: none;
-          -moz-appearance: none;
-          -webkit-appearance: none;
-          border: none;
-          border-bottom: 2px solid var(--white-color);
-          outline: none;
-          text-overflow: ellipsis;
-        }
-        #input[type=number]::-webkit-inner-spin-button,
-        #input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            margin: 0;
-        }
-        #input:focus {
-          color: var(--text-color);
-          border-color: var(--app-highlight-color);
-          appearance: none;
-          -moz-appearance: none;
-          -webkit-appearance: none;
         }
         #dropdown-trigger {
           @apply --paper-font-body2;
@@ -133,7 +107,7 @@
       
       <div id='input-layout'>
       
-        <input type='number' id='input' size='1' step='[[step]]' min='0' disabled='[[noInput]]' on-change='_userInputValue'>
+        <div id='input'>[[_formattedValue]]</div>
         
         <div id='dropdown-trigger' on-tap='_toggleDropdown'>
           <div>[[selectedUnits]]</div>
@@ -158,25 +132,20 @@
 
   <script>
   
-    class ListUnitInput extends Polymer.Element {
+    class ListUnitItem extends Polymer.Element {
       
-      static get is() { return 'list-unit-input';}
+      static get is() { return 'list-unit-item';}
       
       static get properties() {
         
         return {
-          noInput: Boolean,
           icon: String,
           title: String,
           subtitle: String,
-          step: {
-            type: Number,
-            computed: '_computeStep(decimals)'
-          },
-          value: {
-            type: Number,
-            notify: true,
-            observer: '_valueChanged'
+          value: Number,
+          _formattedValue: {
+            type: String, 
+            computed: "_computeFormattedValue(value, decimals, multiplier)"
           },
           type: {
             type: String,
@@ -197,32 +166,12 @@
           },
           multiplier: {
             type: Number,
-            computed: '_computeMultiplier(selectedUnits)',
-            observer: '_multiplierChanged'
+            computed: '_computeMultiplier(selectedUnits)'
           },
-          hidden: {
-            type: Boolean,
-            value: false,
-            reflectToAttribute: true
-          }
         };
       }
-      /* Convert the base value to be displayed*/
-      _valueChanged(value) {
-          if(isNaN(value)) {
-              return;
-          }
-        let newValue = value / this.multiplier;
-        newValue = Math.round(newValue * Math.pow(10, this.decimals)) / Math.pow(10, this.decimals);
-        if(newValue !== this.$.input.value) {this.$.input.value = newValue;}
-      }
-      _multiplierChanged(mult) {
-        if(isNaN(this.value)) {
-          return;
-        }
-        let newValue = this.value / mult;
-        newValue = Math.round(newValue * Math.pow(10, this.decimals)) / Math.pow(10, this.decimals);
-        this.$.input.value = newValue;
+      _computeFormattedValue(value, decimals, multiplier) {
+        return (value / multiplier).toFixed(decimals);
       }
       _computeUnits(type) {
         
@@ -560,17 +509,9 @@
         this.$.dropdown.toggle();
       }
       
-      _userInputValue(e) {
-        this.value = this.$.input.value  * this.multiplier;
-      }
-      
-      _computeStep(decimals) {
-        return 1 / Math.pow(10, this.decimals);
-      }
-      
     }
     
-    window.customElements.define(ListUnitInput.is, ListUnitInput);
+    window.customElements.define(ListUnitItem.is, ListUnitItem);
     
   </script>
 

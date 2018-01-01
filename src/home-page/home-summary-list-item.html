@@ -1,0 +1,81 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-dropdown/iron-dropdown.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="home-summary-list-item">
+
+  <template>
+    
+    <style>
+        
+        :host {
+          display: grid;
+          grid-template-rows: auto auto auto;
+          grid-template-columns: 1fr auto;
+          align-items: center;
+          padding: 16px 16px;
+          background-color: var(--white-color);
+          min-height: 64px;
+        }
+        #tag {
+          grid-row: 1 / 2;
+          grid-column: 1 / 2;
+          color: var(--app-primary-color);
+          @apply --paper-font-body2;
+        }
+        #title {
+          grid-row: 2 / 3;
+          grid-column: 1 / 2;
+          padding: 8px 0px;
+          @apply --paper-font-title;
+          color: var(--text-color);
+        }
+        #subtitle {
+          grid-row: 3 / 4;
+          grid-column: 1 / 2;
+          @apply --paper-font-caption;
+        }
+        #button-layout {
+          grid-column: 2 / 3;
+          grid-row: 1 / 4;
+          display: flex;
+          align-items: center;
+        }
+        
+    </style>
+    
+      <div id='tag'>[[tag]]</div>
+      <div id='title'>[[title]]</div>
+      <div id='subtitle'>[[subtitle]]</div>
+      
+      <div id='button-layout'>
+        <slot name='nav-button'></slot>
+      </div>
+      
+  </template>
+
+  <script>
+  
+    class HomeSummaryListItem extends Polymer.Element {
+      
+      static get is() { return 'home-summary-list-item';}
+      
+      static get properties() {
+        
+        return {
+          title: String,
+          subtitle: String,
+          tag: String
+        };
+      }
+      
+    }
+    
+    window.customElements.define(HomeSummaryListItem.is, HomeSummaryListItem);
+    
+  </script>
+
+</dom-module>

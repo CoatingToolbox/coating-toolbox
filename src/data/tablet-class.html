@@ -271,6 +271,9 @@
     get weightInMG() {
         return (this.weight * 1000).toFixed(1);
     }
+    get batchWeightInKG() {
+        return (this.batchWeight / 1000).toFixed(1);
+    }
     get volumeInCM3() {
         return (this.totalVolume * 1000000).toFixed(2);
     }

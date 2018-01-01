@@ -1,0 +1,54 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../my-icons.html">
+
+<dom-module id="pages-tab-button">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        border-bottom: 2px solid transparent;
+        color: var(--text-color);
+        @apply --paper-font-body1;
+      }
+      :host(.iron-selected) {
+        cursor: pointer;
+        border-color: var(--app-primary-color);
+        color: var(--app-primary-color);
+      }
+      :host(:hover) {
+        cursor: pointer;
+      }
+      iron-icon {
+        margin-right: 8px;
+        height: 18px;
+        width: 18px;
+      }
+    </style>
+    
+    <iron-icon icon='[[icon]]'></iron-icon>
+    <div>[[label]]</div>
+      
+    
+  </template>
+  <script>
+    class PagesTabButton extends Polymer.Element {
+      static get is() { return 'pages-tab-button'; }
+      static get properties() {
+          return {
+              label: String,
+              icon: String
+          };
+      }
+    }
+
+    window.customElements.define(PagesTabButton.is, PagesTabButton);
+  </script>
+</dom-module>

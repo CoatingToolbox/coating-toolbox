@@ -4,18 +4,25 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../inputs/unit-input.html">
-<link rel="import" href="../buttons/icon-label-button.html">
+<link rel="import" href="../list-items/list-unit-item.html">
+<link rel="import" href="../buttons/pages-tab-button.html">
 <link rel="import" href="../charts/pan-fill-chart.html">
 <link rel="import" href="../graphics/pan-schematic-layout.html">
 <link rel="import" href="../redux/redux-mixin.html">
-<link rel="import" href="input-graphic-layout-styles.html">
+<link rel="import" href="../styles/input-graphic-layout-styles.html">
 
 <dom-module id="pan-fill-page">
   
    <template>
     
     <style include='input-graphic-layout-styles'>
-      
+      icon-label-button {
+        grid-row: 5 / 6;
+      }
+      pan-schematic-layout {
+        flex-grow: 1;
+        margin-bottom: 32px;
+      }
     </style>
     
     <section id='left-section'>
@@ -36,6 +43,9 @@
         <unit-input label='Batch Volume' icon='my-icons:volume' type='volume' selected-units='l' value='[[volume]]' on-value-changed='_setBatchVolume'></unit-input>
         <unit-input label='Batch Weight' icon='my-icons:weight' type='weight' selected-units='kg' value='[[weight]]' on-value-changed='_setBatchWeight'></unit-input>
         <unit-input label='Tablet Count' icon='my-icons:count' type='' selected-units='tabs' value='[[count]]' on-value-changed='_setBatchCount'></unit-input>
+        <unit-input label='Fill Percent' icon='my-icons:percent' type='percent' decimals='0' selected-units='%' value='[[percent]]' on-value-changed='_setPanPercent'></unit-input>
+        <icon-label-button icon='my-icons:calculator' label='Min Fill' on-click='_setMinWeight'></icon-label-button>
+        <icon-label-button icon='my-icons:calculator' label='Max Fill' on-click='_setMaxWeight'></icon-label-button>
       </div>
       
     </section>
@@ -43,18 +53,33 @@
     <section id='right-section'>
       
       <iron-selector selected='{{_selectedGraphic}}'>
-          <icon-label-button icon='my-icons:line-chart' label='Chart'></icon-label-button>
-          <icon-label-button icon='my-icons:table' label='Graphic'></icon-label-button>
+          <pages-tab-button icon='my-icons:line-chart' label='Bulk Density'></pages-tab-button>
+          <pages-tab-button icon='my-icons:table' label='Pan Fill'></pages-tab-button>
       </iron-selector>
       
       <iron-pages selected='[[_selectedGraphic]]'>
-        <div>
+        <div class='page'>
           <div class='card-title'>Batch Size vs Pan Fill Height</div>
           <pan-fill-chart id='chart' class='graphic' pan='[[pan]]'></pan-fill-chart>
         </div>
-        <div>
+        <div class='page'>
           <div class='card-title'>Pan Fill Schematic</div>
-          <pan-schematic-layout class='graphic' pan='[[pan]]'></pan-schematic-layout>
+          <pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>
+          <div class='card-title'>Pan Fill Dimensions</div>
+          <list-unit-item 
+            icon='my-icons:ruler' 
+            title='Bed Depth' 
+            subtitle='The depth of the product in the coating pan'
+            type='length' 
+            selected-units='{{_lengthUnits}}' 
+            value='[[pan.batchFillHeight]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:ruler' 
+            title='Bed Width'
+            subtitle='The distance from front to back at the tablet bed surface'
+            type='length' 
+            selected-units='{{_lengthUnits}}' 
+            value='[[pan.batchFillLength]]'></list-unit-item>
         </div>
       </iron-pages>
       
@@ -71,7 +96,9 @@
           tablet: {type: Object, statePath: "tablet"},
           weight: {type: Object, statePath: 'tablet.batchWeight'},
           volume: {type: Object, statePath: 'tablet.batchVolume'},
+          percent: {type: Object, statePath: 'pan.batchFillVolumePercent'},
           count: {type: Object, statePath: 'tablet.count'},
+          _lengthUnits: {type: String, value: 'in'},
           _selectedGraphic: {type: Number, value: 1, observer: '_graphicChanged'}
         };
       }
@@ -79,6 +106,25 @@
         this.dispatch({
           type: "SET_BATCH_WEIGHT",
           value: e.detail.value
+        });
+      }
+      _setMinWeight() {
+        this.dispatch({
+          type: "SET_BATCH_WEIGHT",
+          value: this.pan.minFillWeight
+        });
+      }
+      _setMaxWeight() {
+        this.dispatch({
+          type: "SET_BATCH_WEIGHT",
+          value: this.pan.maxFillWeight
+        });
+      }
+      _setPanPercent(e) {
+        let percent = e.detail.value;
+        this.dispatch({
+          type: "SET_BATCH_VOLUME",
+          value: percent * this.pan.brimVolume
         });
       }
       _setBatchVolume(e) {

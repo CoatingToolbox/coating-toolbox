@@ -1,0 +1,118 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../home-page/home-summary-list-item.html">
+<link rel="import" href="../home-page/home-nav-button.html">
+
+<dom-module id="home-page">
+  
+   <template>
+    
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        max-width: 900px;
+        margin: auto;
+      }
+      header h1 {
+        margin: 0px;
+        @apply --paper-font-display1;
+      }
+      header p {
+        max-width: 600px;
+        text-align: justify;
+        padding-bottom: 16px;
+        @apply --paper-font-body1;
+      }
+      home-summary-list-item + home-summary-list-item {
+        border-top: 1px solid var(--border-color);
+      }
+      home-nav-button + home-nav-button {
+        margin-left: 8px;
+      }
+      section + section {
+        margin-top: 48px;
+      }
+      
+      @media(min-width: 600px) {
+        header h1 {
+          @apply --paper-font-display2;
+        }
+      }
+      
+      @media(min-width: 1024px) {
+        :host {
+          padding: 48px 32px;
+        }
+      }
+    </style>
+    
+    
+    <section>
+      <header>
+        <div>
+          <h1>Materials & Equipment</h1>
+          <p>
+            The material and equipment used for the coating process determine the the 
+            coating process parameters, the batch size and target coating weight gain. 
+            Below load the materials and equipment from the library or quickly design your own.
+          </p>
+        </div>
+      </header>
+      <home-summary-list-item tag='Tablet' title='[[tabletTitle]]'>
+        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/tablet-editor'></home-nav-button>
+        <home-nav-button slot='nav-button' opened icon='my-icons:library' label='Load' link='#/tablet-library'></home-nav-button>
+      </home-summary-list-item>
+      <home-summary-list-item tag='Coating Equipment' title='[[panTitle]]'>
+        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/pan-editor'></home-nav-button>
+        <home-nav-button slot='nav-button' opened icon='my-icons:library' label='Load' link='#/pan-library'></home-nav-button>
+      </home-summary-list-item>
+      <home-summary-list-item tag='Coating Formulation' title='[[coatingTitle]]'>
+        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/coating-editor'></home-nav-button>
+        <home-nav-button slot='nav-button' opened icon='my-icons:library' label='Load' link='#/coating-libray'></home-nav-button>
+      </home-summary-list-item>
+    </section>
+    
+    <section>
+      <header>
+        <div>
+          <h1>Trial Setup</h1>
+          <p>
+            The material and equipment used for the coating process determine the the 
+            coating process parameters, the batch size and target coating weight gain. 
+            Below load the materials and equipment from the library or quickly design your own.
+          </p>
+        </div>
+      </header>
+      <home-summary-list-item tag='Pan Fill' title='Batch Weight: [[batchWeight]] kg'>
+        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/pan-fill'></home-nav-button>
+      </home-summary-list-item>
+      <home-summary-list-item tag='Coating Amount' title='Weight Gain: [[coatingAmount]]%'>
+        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/'></home-nav-button>
+      </home-summary-list-item>
+      <home-summary-list-item tag='Process Parameters' title='Colorcon Recommended'>
+        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/'></home-nav-button>
+      </home-summary-list-item>
+    </section>
+    
+  </template>
+
+  <script>
+    class HomePage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'home-page'; }
+      static get properties() {
+        return {
+          tabletTitle: {type: String, statePath: 'tablet.productName'},
+          panTitle: {type: String, statePath: "pan.nickname"},
+          coatingTitle: {type: String, statePath: 'coatingFormula.productName'},
+          batchWeight: {type: Number, statePath: 'tablet.batchWeightInKG'}
+        };
+      }
+    }
+
+    window.customElements.define(HomePage.is, HomePage);
+  </script>
+</dom-module>

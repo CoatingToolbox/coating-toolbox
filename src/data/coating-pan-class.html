@@ -107,8 +107,8 @@ class CoatingPan {
   get batchFillHeight() {
     //we estimate the heigh that will match our fill volume
     let saggita = 0;
-    let step = this.brimHeight / 500;
-    for(let i=0; i<this.brimHeight; i = i + step){
+    let step = this.brimHeight / 750;
+    for(let i=0; i <= this.brimHeight; i = i + step){
       saggita = this.brimHeight - i;
       let volume = this.calcVolume(saggita);
       if(volume <= this.batchVolume){
@@ -133,6 +133,9 @@ class CoatingPan {
     //   this.calcWeight(this.batchFillVolume) < (this.batchVolume * this.batchBulkDensity * 1.1)), 
     //   `The calcualted batch volume is different than what is set. The calcualted batch volume is ${this.calcWeight(this.batchFillVolume)} g`);
     return this.calcWeight(this.batchFillVolume);
+  }
+  get batchFillVolumePercent() {
+    return this.batchFillVolume / this.brimVolume;
   }
   
   
