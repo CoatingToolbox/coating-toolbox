@@ -14,14 +14,18 @@
         align-items: center;
         justify-content: center;
         padding: 8px 16px;
-        border-bottom: 2px solid transparent;
+        margin-left: 8px;
+        /*border-bottom: 2px solid transparent;*/
         color: var(--text-color);
         @apply --paper-font-body1;
+        border-radius: 12px;
+        background-color: var(--border-color);
       }
       :host(.iron-selected) {
         cursor: pointer;
-        border-color: var(--app-primary-color);
-        color: var(--app-primary-color);
+        /*border-color: var(--app-primary-color);*/
+        color: var(--white-color);
+        background-color: var(--app-primary-color);
       }
       :host(:hover) {
         cursor: pointer;
