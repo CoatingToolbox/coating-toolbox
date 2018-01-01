@@ -100,7 +100,7 @@
           percent: {type: Object, statePath: 'pan.batchFillVolumePercent'},
           count: {type: Object, statePath: 'tablet.count'},
           _lengthUnits: {type: String, value: 'in'},
-          _selectedGraphic: {type: Number, value: 1, observer: '_graphicChanged'}
+          _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
       }
       _setBatchWeight(e) {

@@ -2,13 +2,13 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../graphics/tablet-schematic-layout.html">
+<link rel="import" href="../graphics/pan-schematic-layout.html">
 <link rel="import" href="../list-items/small-icon-item.html">
 <link rel="import" href="../list-items/icon-label-item.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href='../styles/overview-page-shared-styles.html'>
 
-<dom-module id="tablet-overview-page">
+<dom-module id="pan-overview-page">
   
    <template>
     
@@ -22,7 +22,7 @@
       }
       #properties-title,
       #graphic-title,
-      tablet-schematic-layout {
+      pan-schematic-layout {
         grid-column: 1 / 3;
       }
       
@@ -39,7 +39,7 @@
           grid-column: 3 / 4;
           grid-row: 1 / 2;
         }
-        tablet-schematic-layout {
+        pan-schematic-layout {
           grid-column: 3 / 4;
           grid-row: 2 / 6;
         }
@@ -47,15 +47,14 @@
     </style>
         
     <header>
-      <div id='tag'>Tablet Overview</div>
+      <div id='tag'>Coating Equipment</div>
       <div class='flex-spacer'></div>
       <paper-icon-button on-click='_openLibrary' icon='my-icons:library' slot='toolbar'></paper-icon-button>
       <paper-icon-button on-click='_openEditor' icon='my-icons:edit' slot='toolbar'></paper-icon-button>
     </header>
     
     <section id='intro'>
-        The tablet shape, size and formulation effect the coating process
-        in many ways. Including the film thickness, coating uniformity and optimal batch size.
+        The coating pan setup, baffles and spray guns are responsible for mixing the tablets, disbursing the coating liquid. And these conditions can change with different pan sizes.
     </section>
     
     <div id='line'></div>
@@ -63,10 +62,10 @@
     <section id='overview'>
       <div>[[name]]</div>
       <div id='details-layout'>
+        <small-icon-item icon='my-icons:product' label='[[make]]'></small-icon-item> 
+        <small-icon-item icon='my-icons:product' label='[[model]]'></small-icon-item> 
         <small-icon-item icon='my-icons:company' label='[[company]]'></small-icon-item> 
-        <small-icon-item icon='my-icons:contact' label='[[contact]]'></small-icon-item>
-        <small-icon-item icon='my-icons:product' label='[[productType]]'></small-icon-item>
-        <small-icon-item icon='my-icons:product' label='[[formulation]]'></small-icon-item>
+        <small-icon-item icon='my-icons:location' label='[[location]]'></small-icon-item>
       </div>
     </section>
     
@@ -75,70 +74,70 @@
       <icon-label-item 
       label='Dimensions' 
       icon='my-icons:ruler' 
-      value='[[dimensions]] mm'>
+      value='[[dimensions]] in'>
       </icon-label-item>
       <icon-label-item 
-      label='Weight' 
-      icon='my-icons:weight' 
-      value='[[weight]] mg'>
+      label='Baffles' 
+      icon='my-icons:mix' 
+      value='[[baffles]]'>
       </icon-label-item>
       <icon-label-item 
-      label='Surface Area' 
-      icon='my-icons:surface-area' 
-      value='[[area]] cm2'>
-      </icon-label-item>
-      <icon-label-item 
-      label='Compressed Density' 
-      icon='my-icons:density' 
-      value='[[compressed]] g/ml'>
-      </icon-label-item>
-      <icon-label-item 
-      label='Volume' 
+      label='Brim Volume' 
       icon='my-icons:volume' 
-      value='[[volume]] cm3'>
+      value='[[brimVolume]] L'>
       </icon-label-item>
       <icon-label-item 
-      label='Bulk Density' 
-      icon='my-icons:density' 
-      value='[[bulk]] g/ml'>
+      label='Spray Guns' 
+      icon='my-icons:product' 
+      value='[[sprayGuns]]'>
       </icon-label-item>
-      <div class='section-title' id='graphic-title'>Tablet Schematic</div>
-      <tablet-schematic-layout tablet='[[tablet]]'></tablet-schematic-layout>
+      <icon-label-item 
+      label='Working Volume' 
+      icon='my-icons:volume' 
+      value='[[workingVolume]] L'>
+      </icon-label-item>
+      <icon-label-item 
+      label='Perforations' 
+      icon='my-icons:surface-area' 
+      value='[[perforations]]'>
+      </icon-label-item>
+      <div class='section-title' id='graphic-title'>Coating Pan Schematic</div>
+      <pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>
     </section>
     
   </template>
 
   <script>
-    class TabletOverviewPage extends ReduxMixin(Polymer.Element) {
-      static get is() { return 'tablet-overview-page'; }
+    class PanOverviewPage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'pan-overview-page'; }
       static get properties() {
         return {
-          tablet: { type: Object, statePath: 'tablet' },
-          name: {type: String, statePath: 'tablet.productName'},
-          company: {type: String, statePath: 'tablet.companyName'},
-          contact: {type: String, statePath: 'tablet.contactName'},
-          productType: {type: String, statePath: 'tablet.productType'},
-          formulation: {type: String, statePath: 'tablet.formulationName'},
-          dimensions: {type: String, statePath: 'tablet.dimensionsInMM'},
-          weight: {type: String, statePath: 'tablet.weightInMG'},
-          area: {type: String, statePath: 'tablet.surfaceAreaInCM2'},
-          volume: {type: String, statePath: 'tablet.volumeInCM3'},
-          bulk: {type: String, statePath: 'tablet.bulkDensityInGML'},
-          compressed: {type: String, statePath: 'tablet.compressedDensityInGML'},
+          pan: {type: Object, statePath: "pan"},
+          name: {type: String, statePath: 'pan.nickname'},
+          make: {type: String, statePath: 'pan.manufacturer'},
+          model: {type: String, statePath: 'pan.model'},
+          company: {type: String, statePath: 'pan.company'},
+          location: {type: String, statePath: 'pan.locationName'},
+          baffles: {type: String, statePath: 'pan.baffleString'},
+          sprayGuns: {type: String, statePath: 'pan.sprayGunString'},
+          perforations: {type: String, statePath: 'pan.perforations'},
+          dimensions: {type: String, statePath: 'pan.dimensionsInInchesString'},
+          brimVolume: {type: String, statePath: 'pan.brimVolumeInLitersString'},
+          workingVolume: {type: String, statePath: 'pan.workingVolumeInLitersString'},
           
         };
       }
       _openLibrary() {
         window.scrollTo(0, 0);
-        window.location = '#/tablet-library';
+        window.location = '#/pan-library';
       }
       _openEditor() {
         window.scrollTo(0, 0);
-        window.location = '#/tablet-editor';
+        window.location = '#/pan-editor';
       }
       
     }
 
-    window.customElements.define(TabletOverviewPage.is, TabletOverviewPage);
+    window.customElements.define(PanOverviewPage.is, PanOverviewPage);
   </script>
 </dom-module>
