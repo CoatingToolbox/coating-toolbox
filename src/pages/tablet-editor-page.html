@@ -101,21 +101,21 @@
             subtitle=''
             type='area' 
             selected-units='cm2' 
-            value='[[tabletArea]]'></list-unit-item>
+            value='[[tablet.totalArea]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:volume' 
             title='Volume' 
             subtitle=''
             type='volume' 
             selected-units='cm3' 
-            value='[[tabletVolume]]'></list-unit-item>
+            value='[[tablet.totalVolume]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:density' 
             title='Compressed Density' 
             subtitle=''
             type='density' 
             selected-units='g/ml' 
-            value='[[compressedDensity]]'></list-unit-item>
+            value='[[tablet.compressedDensity]]'></list-unit-item>
           
           <div class='card-title'>Calculated Tooling Properties</div>
           <list-unit-item 
@@ -123,51 +123,51 @@
             title='Cup Surface Area' 
             subtitle=''
             type='area' 
-            selected-units='cm2' 
-            value='[[tabletVolume]]'></list-unit-item>
+            selected-units='mm2' 
+            value='[[tablet.cupArea]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:volume' 
             title='Cup Volume' 
             subtitle=''
             type='volume' 
-            selected-units='cm3' 
-            value='[[cupVolume]]'></list-unit-item>
+            selected-units='mm3' 
+            value='[[tablet.cupVolume]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:surface-area' 
             title='Cross Sectional Area' 
             subtitle=''
             type='area' 
-            selected-units='cm2' 
-            value='[[toolingCrossArea]]'></list-unit-item>
+            selected-units='mm2' 
+            value='[[tablet.crossSectionArea]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Perimeter' 
             subtitle=''
             type='length' 
             selected-units='in' 
-            value='[[toolingPerimeter]]'></list-unit-item>
+            value='[[tablet.perimeter]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Cup Depth' 
             subtitle=''
             type='length' 
             selected-units='in' 
-            value='[[cupDepth]]'></list-unit-item>
+            value='[[tablet.cupThickness]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Cup Length Radius' 
             subtitle=''
             type='length' 
             selected-units='in' 
-            value='[[cupLengthRadius]]'></list-unit-item>
+            value='[[tablet.lengthCupRadius]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Cup Width Radius' 
             subtitle=''
             type='length' 
             selected-units='in' 
-            value='[[cupWidthRadius]]'
-            hidden$='[[isRound]]'></list-unit-item>
+            value='[[tablet.widthCupRadius]]'
+            hidden$='[[tablet.isRound]]'></list-unit-item>
         </div>
       </iron-pages>
       
@@ -183,37 +183,27 @@
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
           tablet: { type: Object, statePath: 'tablet'},
           lengthUnits: { type: String, value: 'mm' },
-          tabletArea: Number,
-          compressedDensity: Number,
-          tabletVolume: Number,
-          cupDepth: Number,
-          cupLengthRadius: Number,
-          cupWidthRadius: Number,
-          cupArea: Number,
-          cupVolume: Number,
-          toolingPerimeter: Number,
-          toolingCrossArea: Number,
-          isRound: Boolean,
           _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
       }
       static get observers() {
         return [
-          '_setTabletValues(tablet.*)'
+          '_notifyTabletPaths(tablet.*)',
+          '_notifyTabletPaths(tablet)'
         ];
       }
-      _setTabletValues() {
-        this.set('tabletArea', this.tablet.totalArea);
-        this.set('tabletVolume', this.tablet.totalVolume);
-        this.set('compressedDensity', this.tablet.compressedDensity);
-        this.set('cupDepth', this.tablet.cupThickness);
-        this.set('cupLengthRadius', this.tablet.lengthCupRadius);
-        this.set('cupWidthRadius', this.tablet.widthCupRadius);
-        this.set('cupArea', this.tablet.cupArea);
-        this.set('cupVolume', this.tablet.cupVolume);
-        this.set('toolingPerimeter', this.tablet.perimeter);
-        this.set('toolingCrossArea', this.tablet.crossSectionArea);
-        this.set('isRound', this.tablet.isRound);
+      _notifyTabletPaths() {
+        this.notifyPath('tablet.totalArea');
+        this.notifyPath('tablet.totalVolume');
+        this.notifyPath('tablet.compressedDensity');
+        this.notifyPath('tablet.cupThickness');
+        this.notifyPath('tablet.lengthCupRadius');
+        this.notifyPath('tablet.widthCupRadius');
+        this.notifyPath('tablet.cupArea');
+        this.notifyPath('tablet.cupVolume');
+        this.notifyPath('tablet.perimeter');
+        this.notifyPath('tablet.crossSectionArea');
+        this.notifyPath('tablet.isRound');
       }
       _graphicChanged(page) {
         switch(page) {

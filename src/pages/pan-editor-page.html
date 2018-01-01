@@ -8,7 +8,9 @@
 <link rel="import" href="../inputs/text-input.html">
 <link rel="import" href="../inputs/unit-input.html">
 <link rel="import" href="../inputs/item-select-input.html">
+<link rel="import" href="../list-items/list-unit-item.html">
 <link rel="import" href="../graphics/pan-schematic-layout.html">
+<link rel="import" href="../charts/pan-fill-chart.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/coating-pan-class.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
@@ -94,11 +96,38 @@
     <section id='right-section'>
       <iron-selector selected='{{pageSelected}}'>
           <pages-tab-button icon='my-icons:pan' label='Coating Pan'></pages-tab-button>
+          <pages-tab-button icon='my-icons:line-chart' label='Fill Chart'></pages-tab-button>
+          <pages-tab-button icon='my-icons:table' label='Volumes'></pages-tab-button>
       </iron-selector>
       <iron-pages selected='[[pageSelected]]'>
         <div class='page'>
-          <div class='card-title underline'>Coating Pan Schematic</div>
-          <pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>
+          <div class='card-title'>Coating Pan Schematic</div>
+          <pan-schematic-layout class='graphic' pan='[[pan]]'></pan-schematic-layout>
+        </div>
+        <div class='page'>
+          <div class='card-title'>Batch Size vs Pan Fill Height</div>
+          <pan-fill-chart id='chart' class='graphic' pan='[[pan]]'></pan-fill-chart>
+        </div>
+        <div class='page'>
+          <div class='card-title'>Coating Pan Volumes</div>
+          <list-unit-item 
+            icon='my-icons:volume' 
+            title='Brim Volume' 
+            type='volume' 
+            selected-units='{{volumeUnits}}' 
+            value='[[pan.brimVolume]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:volume' 
+            title='Max Working Volume' 
+            type='volume' 
+            selected-units='{{volumeUnits}}' 
+            value='[[pan.maxFillVolume]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:volume' 
+            title='Min Working Volume' 
+            type='volume' 
+            selected-units='{{volumeUnits}}' 
+            value='[[pan.minFillVolume]]'></list-unit-item>
         </div>
       </iron-pages>
       
@@ -113,8 +142,9 @@
         return { 
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
           pan: { type: Object, statePath: 'pan'},
+          volumeUnits: {type: String, value: 'l'},
           lengthUnits: { type: String, value: 'in' },
-          pageSelected: {type: Number, value: 0},
+          pageSelected: {type: Number, value: 0, observer: '_pageChanged'},
           manufacturerOptions: { 
             type: Array, 
             value: function() 
@@ -144,6 +174,30 @@
             }
           }
         };
+      }
+      
+      _pageChanged(page) {
+        switch(page) {
+          case 1:
+            this.$.chart._setChartDimensions();
+            break;
+        }
+      }
+      
+      static get observers() {
+        return [
+          '_notifyPanPaths(pan.*)',
+          '_notifyPanPaths(pan)',
+          '_updateChart(pan.*)'
+        ];
+      }
+      _notifyPanPaths() {
+        this.notifyPath('pan.brimVolume');
+        this.notifyPath('pan.maxFillVolume');
+        this.notifyPath('pan.minFillVolume');
+      }
+      _updateChart() {
+        this.$.chart.updateChart();
       }
       _save() {
         this.dispatch({ 

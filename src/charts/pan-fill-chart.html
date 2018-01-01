@@ -221,7 +221,9 @@
             }
             
             updateChart(){
-                this._updateBatchPoint(this.pan.batchWeightVsHeight, this.chart, this.xScale, this.yScale);
+                this.notifyPath('pan.brimWeight');
+                this.notifyPath('pan.brimHeight');
+                this.notifyPath('pan.batchWeightVsHeight');
             }
         }
         
