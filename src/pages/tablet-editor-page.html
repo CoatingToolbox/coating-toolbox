@@ -79,40 +79,95 @@
     <section id='right-section'>
       
       <iron-selector selected='{{_selectedGraphic}}'>
-          <pages-tab-button icon='my-icons:table' label='Dimensions'></pages-tab-button>
+          <pages-tab-button icon='my-icons:tablet' label='Tablet'></pages-tab-button>
           <pages-tab-button icon='my-icons:line-chart' label='Density'></pages-tab-button>
+          <pages-tab-button icon='my-icons:table' label='Dimensions'></pages-tab-button>
       </iron-selector>
       
       <iron-pages selected='[[_selectedGraphic]]'>
         <div class='page'>
           <div class='card-title'>Tablet Schematic</div>
           <tablet-schematic-layout class='graphic' tablet='[[tablet]]'></tablet-schematic-layout>
+        </div>
+        <div class='page'>
+          <div class='card-title'>Tablet Bulk Density</div>
+          <bulk-density-chart id='chart' class='chart' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
+        </div>
+        <div class='page'>
           <div class='card-title'>Calculated Tablet Properties</div>
           <list-unit-item 
             icon='my-icons:surface-area' 
             title='Surface Area' 
-            subtitle='The total surface area of a compressed tablet.'
+            subtitle=''
             type='area' 
             selected-units='cm2' 
             value='[[tabletArea]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:volume' 
             title='Volume' 
-            subtitle='The total volume of a compressed tablet.'
+            subtitle=''
             type='volume' 
             selected-units='cm3' 
             value='[[tabletVolume]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:density' 
             title='Compressed Density' 
-            subtitle='The compressed density of the tablet.'
+            subtitle=''
             type='density' 
             selected-units='g/ml' 
             value='[[compressedDensity]]'></list-unit-item>
-        </div>
-        <div class='page'>
-          <div class='card-title'>Tablet Bulk Density</div>
-          <bulk-density-chart id='chart' class='chart' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
+          
+          <div class='card-title'>Calculated Tooling Properties</div>
+          <list-unit-item 
+            icon='my-icons:surface-area' 
+            title='Cup Surface Area' 
+            subtitle=''
+            type='area' 
+            selected-units='cm2' 
+            value='[[tabletVolume]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:volume' 
+            title='Cup Volume' 
+            subtitle=''
+            type='volume' 
+            selected-units='cm3' 
+            value='[[cupVolume]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:surface-area' 
+            title='Cross Sectional Area' 
+            subtitle=''
+            type='area' 
+            selected-units='cm2' 
+            value='[[toolingCrossArea]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:ruler' 
+            title='Perimeter' 
+            subtitle=''
+            type='length' 
+            selected-units='in' 
+            value='[[toolingPerimeter]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:ruler' 
+            title='Cup Depth' 
+            subtitle=''
+            type='length' 
+            selected-units='in' 
+            value='[[cupDepth]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:ruler' 
+            title='Cup Length Radius' 
+            subtitle=''
+            type='length' 
+            selected-units='in' 
+            value='[[cupLengthRadius]]'></list-unit-item>
+          <list-unit-item 
+            icon='my-icons:ruler' 
+            title='Cup Width Radius' 
+            subtitle=''
+            type='length' 
+            selected-units='in' 
+            value='[[cupWidthRadius]]'
+            hidden$='[[isRound]]'></list-unit-item>
         </div>
       </iron-pages>
       
@@ -131,6 +186,14 @@
           tabletArea: Number,
           compressedDensity: Number,
           tabletVolume: Number,
+          cupDepth: Number,
+          cupLengthRadius: Number,
+          cupWidthRadius: Number,
+          cupArea: Number,
+          cupVolume: Number,
+          toolingPerimeter: Number,
+          toolingCrossArea: Number,
+          isRound: Boolean,
           _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
       }
@@ -143,6 +206,14 @@
         this.set('tabletArea', this.tablet.totalArea);
         this.set('tabletVolume', this.tablet.totalVolume);
         this.set('compressedDensity', this.tablet.compressedDensity);
+        this.set('cupDepth', this.tablet.cupThickness);
+        this.set('cupLengthRadius', this.tablet.lengthCupRadius);
+        this.set('cupWidthRadius', this.tablet.widthCupRadius);
+        this.set('cupArea', this.tablet.cupArea);
+        this.set('cupVolume', this.tablet.cupVolume);
+        this.set('toolingPerimeter', this.tablet.perimeter);
+        this.set('toolingCrossArea', this.tablet.crossSectionArea);
+        this.set('isRound', this.tablet.isRound);
       }
       _graphicChanged(page) {
         switch(page) {

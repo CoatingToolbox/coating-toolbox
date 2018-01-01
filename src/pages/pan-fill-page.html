@@ -6,6 +6,7 @@
 <link rel="import" href="../inputs/unit-input.html">
 <link rel="import" href="../list-items/list-unit-item.html">
 <link rel="import" href="../buttons/pages-tab-button.html">
+<link rel="import" href="../buttons/icon-label-button.html">
 <link rel="import" href="../charts/pan-fill-chart.html">
 <link rel="import" href="../graphics/pan-schematic-layout.html">
 <link rel="import" href="../redux/redux-mixin.html">
@@ -53,7 +54,7 @@
     <section id='right-section'>
       
       <iron-selector selected='{{_selectedGraphic}}'>
-          <pages-tab-button icon='my-icons:line-chart' label='Bulk Density'></pages-tab-button>
+          <pages-tab-button icon='my-icons:line-chart' label='Fill Chart'></pages-tab-button>
           <pages-tab-button icon='my-icons:table' label='Pan Fill'></pages-tab-button>
       </iron-selector>
       
@@ -63,8 +64,6 @@
           <pan-fill-chart id='chart' class='graphic' pan='[[pan]]'></pan-fill-chart>
         </div>
         <div class='page'>
-          <div class='card-title'>Pan Fill Schematic</div>
-          <pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>
           <div class='card-title'>Pan Fill Dimensions</div>
           <list-unit-item 
             icon='my-icons:ruler' 
@@ -80,6 +79,8 @@
             type='length' 
             selected-units='{{_lengthUnits}}' 
             value='[[pan.batchFillLength]]'></list-unit-item>
+          <div class='card-title'>Pan Fill Schematic</div>
+          <pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>
         </div>
       </iron-pages>
       
