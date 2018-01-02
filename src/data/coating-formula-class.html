@@ -36,7 +36,7 @@
         
         // DISPLAY VAlues
         get weightGainPercent() {
-            return (this.weightGain * 100).toFixed(1);
+            return (this.weightGain * 100).toFixed(2);
         }
         get solidsInPercent() {
             return (this.solids * 100).toFixed(1);
@@ -66,7 +66,8 @@
             return this.coatingWeight / this.tabletArea;
         }
         set coatingCoverage(val) {
-            this.coatingWeight = val * this.tabelArea;
+            
+            this.coatingWeight = val * this.tabletArea;
         }
     }
 </script>

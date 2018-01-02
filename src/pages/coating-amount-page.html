@@ -7,6 +7,7 @@
 <link rel="import" href="../list-items/list-unit-item.html">
 <link rel="import" href="../buttons/pages-tab-button.html">
 <link rel="import" href="../buttons/icon-label-button.html">
+<link rel="import" href="../charts/coating-amount-chart.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
@@ -45,16 +46,13 @@
     <section id='right-section'>
       
       <iron-selector selected='{{selectedPage}}'>
-          <pages-tab-button icon='my-icons:line-chart' label='Coating Coverage'></pages-tab-button>
-          <pages-tab-button icon='my-icons:table' label='Film Thickness'></pages-tab-button>
+          <pages-tab-button icon='my-icons:line-chart' label='Functionality'></pages-tab-button>
       </iron-selector>
       
       <iron-pages selected='[[selectedPage]]'>
         <div class='page'>
-          <div class='card-title'>Weight Gain vs Coating Coverage</div>
-        </div>
-        <div class='page'>
-          <div class='card-title'>Weight Gain vs Film Thickness</div>
+          <div class='card-title'>Functionality vs Weight Gain</div>
+          <coating-amount-chart percent='[[coat.weightGain]]'></coating-amount-chart>
         </div>
     
       </iron-pages>

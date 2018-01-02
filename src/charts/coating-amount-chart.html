@@ -1,0 +1,196 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../data/coating-pan-class.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="chart-styles.html">
+
+<dom-module id='coating-amount-chart'>
+    <template>
+        <style include='chart-styles'>
+        
+            .label {
+                text-align: right;
+                direction: rtl;
+              /*font-size: 16px;*/
+              /*font-weight: 500;*/
+              fill: var(--text-color);
+            }
+            .dotted.line {
+                stroke: var(--text-light-color);
+            }
+            
+        </style>
+        
+        <svg id="chart">
+            <g class="chart">
+                <g class="x axis"></g>
+                <g class="y axis"></g>
+                <text class="x title">Coating Weight Gain (%)</text>
+                <line class='line wg dotted'></line>
+            </g>
+        </svg>
+        
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer */
+        class CoatingAmountChart extends Polymer.Element {
+            
+            static get is() { return 'coating-amount-chart'; }
+            
+            connectedCallback() {
+                super.connectedCallback();
+                window.addEventListener('resize', () => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                window.requestAnimationFrame(() => {
+                    this.height = this.$.chart.clientHeight - this.margin.top - this.margin.bottom;
+                    this.width = this.$.chart.clientWidth - this.margin.left - this.margin.right;
+                });
+            }
+            
+            static get properties() {
+                return {
+                    percent: Number,
+                    chart: Object,
+                    margin: {type: Object, value: function() {
+                        return {top: 20, right: 20, bottom: 50, left: 20};
+                    }},
+                    height: Number,
+                    width: Number,
+                    data: {
+                        type: Array, 
+                        value: function() { 
+                            return [
+                                {label: "Gloss", min: 0.5, max: 1.5},
+                                {label: "Swallowability", min: 1.5, max: 2.5},
+                                {label: "Strength", min: 2, max: 4},
+                                {label: "Color", min: 2.5, max: 3.5},
+                                {label: "Color - Low Opacity", min: 3.5, max: 5.0},
+                                {label: "Moisture", min: 4, max: 5},
+                                {label: "Enteric", min: 6.0, max: 8.0}
+                            ];
+                        }
+                    },
+                    xScale: {type: Object, computed: '_computeXScale(width)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, data)'}
+                };
+            }
+            _computeXScale(width) {
+                /* global d3*/
+                return d3.scaleLinear().range([0, width]).domain([0, 10]).nice();
+            }
+            _computeYScale(height, data) {
+                if(!data || !height) { return; }
+                return d3.scaleBand().range([height, 0]).domain(data.map(d => { return d.label; })).padding(0.2);
+            }
+        
+            static get observers() {
+                return [
+                    '_initChart(margin, height, width)',
+                    '_updateAxis(xScale, yScale, chart)',
+                    '_updateBars(data, xScale, yScale, chart)',
+                    '_updatePercentLine(percent, xScale, height, chart)'    
+                ];
+            }
+            
+            _initChart(margin, height, width) {
+                if(!margin || !height || !width) {
+                    return;
+                }
+                let chart = d3.select(this.$.chart)
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                .select(".chart")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                                
+                chart.select(".x.axis").attr("transform", "translate(0," + height + ")");
+                chart.select(".x.title").attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 25) + ")");
+                chart.select(".y.title").attr("y", 0 - margin.left).attr("x",0 - (height / 2)).attr("dy", "1em");      
+                
+                // set the chart object
+                this.chart = chart;
+            }
+            _updateAxis(xScale, yScale, chart) {
+                if(!xScale || !yScale || !chart) {
+                    return;
+                }
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+            }
+            _updateBars(data, xScale, yScale, chart) {
+                if(!data || !xScale || !yScale || !chart) {
+                    return;
+                }
+                
+                let bars = chart.selectAll('.line.range').data(data);
+                bars.enter()
+                    .append('line')
+                        .attr('class', 'line range')
+                    .merge(bars)
+                        .attr('y1', function(d) { return yScale(d.label) + yScale.bandwidth() / 2 ;})
+                        .attr('y2', function(d) { return yScale(d.label) + yScale.bandwidth() / 2 ;})
+                        .attr("x1", function(d) {return xScale(d.min);})
+                        .attr("x2", function(d) {return xScale(d.max);});
+                bars.exit().remove();
+                
+                let maxCircles = chart.selectAll('.circle.max').data(data);
+                maxCircles.enter()
+                    .append('circle')
+                        .attr('class', 'circle max')
+                        .attr('r', '7')
+                    .merge(maxCircles)
+                        .attr('cy', function(d) { return yScale(d.label) + yScale.bandwidth() / 2 ;})
+                        .attr("cx", function(d) {return xScale(d.max);});
+                maxCircles.exit().remove();
+                
+                let minCircles = chart.selectAll('.circle.min').data(data);
+                minCircles.enter()
+                    .append('circle')
+                        .attr('class', 'circle min')
+                        .attr('r', '7')
+                    .merge(minCircles)
+                        .attr('cy', function(d) { return yScale(d.label) + yScale.bandwidth() / 2 ;})
+                        .attr("cx", function(d) {return xScale(d.min);});
+                minCircles.exit().remove();
+                
+                
+                
+                let labels = chart.selectAll('text.label').data(data);
+                labels.enter()
+                    .append('text')
+                        .attr('class', 'label')
+                    .merge(labels)
+                        .attr('y', function(d) { return yScale(d.label) + yScale.bandwidth() / 2 + 4 ;})
+                        .attr("x", function(d) {return xScale(d.min) - 16;})
+                        .text(function(d) { return d.label; });
+                labels.exit().remove();
+            }
+            _updatePercentLine(wg, xScale, height, chart) {
+                if(!wg || !xScale || !height || !chart) {
+                    return;
+                }
+                let lines = chart.selectAll('.line.dotted.wg').data([wg * 100]);
+                lines.enter()
+                    .append('line')
+                        .attr('class', 'line dottted wg')
+                    .merge(lines)
+                        .attr('x1', function(d) { return xScale(d);})
+                        .attr('x2', function(d) { return xScale(d);})
+                        .attr('y1', 0)
+                        .attr('y2', height);
+            }
+            
+        }
+        
+        window.customElements.define(CoatingAmountChart.is, CoatingAmountChart);
+        
+    </script>
+</dom-module>
