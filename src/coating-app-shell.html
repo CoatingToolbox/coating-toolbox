@@ -46,6 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="pages/coating-library-page.html">
 
 <link rel="lazy-import" href="pages/pan-fill-page.html">
+<link rel="lazy-import" href="pages/coating-amount-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -170,6 +171,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <app-toolbar>Explore</app-toolbar>
         <a name="pan-fill" href="#/pan-fill">Batch Size & Pan Fill</a>
+        <a name="pan-fill" href="#/coating-amount">Coating Amount</a>
         </div>
       </app-drawer>
       
@@ -187,6 +189,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
           <home-page name='home'></home-page>
+          <pan-fill-page name='pan-fill'></pan-fill-page>
+          <coating-amount-page name='coating-amount'></coating-amount-page>
           <tablet-overview-page name='tablet-overview'></tablet-overview-page>
           <tablet-library-page name='tablet-library'></tablet-library-page>
           <tablet-editor-page name='tablet-editor'></tablet-editor-page>
@@ -196,7 +200,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <coating-overview-page name='coating-overview'></coating-overview-page>
           <coating-library-page name='coating-library'></coating-library-page>
           <coating-editor-page name='coating-editor'></coating-editor-page>
-          <pan-fill-page name='pan-fill'></pan-fill-page>
         </iron-pages>
         
       </app-header-layout>

@@ -89,6 +89,20 @@
             case "SET_BATCH_COUNT":
                 newState.tablet.count = action.value;
                 break;
+            case "SET_COATING_WEIGHT":
+                newState.coatingFormula.coatingWeight = action.value;
+                break;
+            case "SET_COATING_WEIGHT_GAIN":
+                newState.coatingFormula.weightGain = action.value;
+                break;
+            case "SET_COATING_COVERAGE":
+                newState.coatingFormula.coatingCoverage = action.value;
+                break;
+            case "SET_FILM_THICKNESS":
+                newState.coatingFormula.filmThickness = action.value;
+                break;
+            default: 
+                break;
         }
         
         // We set the properties and pass to new coating pan because most 
@@ -96,6 +110,11 @@
         newState.pan.batchVolume = newState.tablet.batchVolume;
         newState.pan.batchBulkDensity = newState.tablet.bulkDensity;
         newState.pan = new CoatingPan(newState.pan);
+        // we need to sync certain values between the tablet and coating.
+        newState.coatingFormula.tabletWeight = newState.tablet.weight;
+        newState.coatingFormula.tabletArea = newState.tablet.totalArea;
+        newState.coatingFormula.batchWeight = newState.tablet.batchWeight;
+        newState.coatingFormula = new CoatingFormula(newState.coatingFormula);
         
         // Save current state to session storage
         sessionStorage.setItem('coating-toolbox-state', JSON.stringify(newState));
