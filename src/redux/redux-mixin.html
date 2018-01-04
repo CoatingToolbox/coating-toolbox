@@ -57,6 +57,7 @@
     // create an initial state 
     const initialState = {
         isAdmin: false,
+        tooling: {},
         pan: new CoatingPan(initialPan),                    /*global CoatingPan*/
         tablet: new Tablet(initialTablet),                       /*global Tablet*/
         coatingFormula: new CoatingFormula(initialCoatingFormula)        /*global CoatingFormula*/
@@ -98,6 +99,31 @@
                 break;
             case "SET_FILM_THICKNESS":
                 newState.coatingFormula.filmThickness = action.value;
+                break;
+            case "SET_TOOLING_VALUES":
+                newState.tooling = Object.assign({}, newState.tooling, action.value);
+                break;
+            case "SET_TOOLING_CUP_LENGTH_RADIUS": 
+                newState.tooling = Object.assign({}, newState.tooling, action.value);
+                break;
+            case "SET_TOOLING_CUP_WIDTH_RADIUS": 
+                newState.tooling = Object.assign({}, newState.tooling, action.value);
+                break;
+            case "SET_TOOLING_CUP_DEPTH":
+                newState.tooling = Object.assign(newState.tooling, action.value);
+                // newState.tablet = Object.assign({}, newState.tablet, action.value);
+                break;
+            case "SET_TOOLING_CUP_AREA":
+                newState.tooling = Object.assign({}, newState.tooling, action.value);
+                break;
+            case "SET_TOOLING_CUP_VOLUME":
+                newState.tooling = Object.assign({}, newState.tooling, action.value);
+                break;
+            case "SET_TOOLING_PERIMETER":
+                newState.tooling = Object.assign({}, newState.tooling, action.value);
+                break;
+            case "SET_TOOLING_CROSS_SECTION_AREA": 
+                newState.tooling = Object.assign({}, newState.tooling, action.value);
                 break;
             default: 
                 break;

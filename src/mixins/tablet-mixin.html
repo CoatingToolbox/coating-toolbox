@@ -1,0 +1,94 @@
+
+<link rel="import" href="../redux/redux-mixin.html">
+
+<script>
+
+if(!window.CoatingToolbox) { window.CoatingToolbox = {}; }   
+
+/* global CoatingToolbox */    
+CoatingToolbox.TabletMixin = (superClass) => class extends ReduxMixin(superClass) {
+
+    static get properties() {
+        return {
+            tabletProductName: {type: String, statePath: "tablet.productName"},
+            tabletProductType: {type: String, statePath: "tablet.productType"},
+            tabletFormulationName: {type: String, statePath: "tablet.formulationName"},
+            tabletCompanyName: {type: String, statePath: "tablet.companyName"},
+            tabletContactName: {type: String, statePath: "tablet.contactName"},
+            tabletFirebaseKey: {type: String, statePath: "tablet.firebaseKey"},
+            tabletShape: {type: Number, statePath: "tablet.shape"},
+            tabletWidth: {type: Number, statePath: "tablet.width"},
+            tabletLength: {type: Number, statePath: "tablet.length"},
+            tabletSurfaceArea: {type: Number, statePath: 'tablet.surfaceArea'},
+            tabletVolume: {type: Number, statePath: 'tablet.volume'},
+            toolingCupDepth: {type: Number, statePath: 'tooling.cupDepth'},
+            toolingCupArea: {type: Number, statePath: 'tooling.cupArea'},
+            toolingCupVolume: {type: Number, statePath: 'tooling.cupVolume'},
+            toolingPerimeter: {type: Number, statePath: 'tooling.perimeter'},
+            toolingCrossSectionArea: {type: Number, statePath: 'tooling.crossSectionArea'},
+            toolingCupLengthRadius: {type: Number, statePath: 'tooling.cupLengthRadius'},
+            toolingCupWidthRadius: {type: Number, statePath: 'tooling.cupWidthRadius'},
+            batchBulkDensity: {type: Number, statePath: 'batch.bulkDensity'},
+            batchVolume: {type: Number, statePath: 'batch.volume'},
+            batchTabletCount: {type: Number, statePath: 'batch.count'},
+            batchWeight: {type: Number, statePath: 'batch.weight'}
+        };
+    }
+    
+    dispatchTabletValuesToRedux() {
+        let tablet = {
+            shape: this.tabletShape,
+            width: this.tabletWidth,
+            length: this.tabletLength,
+            surfaceArea: this.tabletSurfaceArea,
+            volume: this.tabletVolume
+        };
+        this.dispatch({
+            type: "SET_TABLET_VALUES",
+            value: tablet
+        });
+    }
+    
+    dispatchToolingValuesToRedux() {
+        let tooling = {
+            cupDepth: this.toolingCupDepth,
+            cupArea: this.toolingCupArea,
+            cupVolume: this.toolingCupVolume,
+            perimeter: this.toolingPerimeter,
+            crossSectionArea: this.toolingCrossSectionArea,
+            cupLengthRadius: this.toolingCupLengthRadius,
+            cupWidthRadius: this.toolingCupWidthRadius
+        };
+        this.dispatch({
+            type: "SET_TOOLING_VALUES",
+            value: tooling
+        });
+    }
+    
+    dispatchBatchValuesToRedux() {
+        let batch = {
+            volume: this.batchVolume,
+            weight: this.batchWeight,
+            count: this.batchTabletCount,
+            bulkDensity: this.batchBulkDensity
+        };
+        this.dispatch({
+            type: "SET_BATCH_VALUES",
+            value: batch
+        });
+    }
+    
+    setBatchVolume() {
+        this.batchVolume = this.batchWeight / this.batchBulkDensity;
+    }
+    
+    setBatchWeight() {
+        this.batchWeight = this.batchVolume * this.batchBulkDensity;
+    }
+    
+    setBatchCount() {
+        this.batchTabletCount = Math.ceil(this.batchWeight / this.tabletWeight);
+    }
+};
+
+</script>

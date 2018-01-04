@@ -15,7 +15,7 @@
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../data/tablet-class.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
-
+<link rel='import' href='../mixins/tablet-mixin.html'>
 <dom-module id="tablet-editor-page">
   
    <template>
@@ -30,7 +30,7 @@
       
     </style>
       
-    <section id='left-section'>
+    <section id='left-section' on-value-changes='dispatchTabletValuesToRedux'>
       <div class='card highlight top'>
         <div class='card-title'>Compressed Tablet Editor</div>
         <div class='card-description'>The Compressed Tablet Designer estimates important properties of a tablet. Starting with a compressed tablet measure and input a few easy to obtain dimensions like length, 
@@ -101,14 +101,14 @@
             subtitle=''
             type='area' 
             selected-units='cm2' 
-            value='[[tablet.totalArea]]'></list-unit-item>
+            value='[[tooling.cupArea]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:volume' 
             title='Volume' 
             subtitle=''
             type='volume' 
             selected-units='cm3' 
-            value='[[tablet.totalVolume]]'></list-unit-item>
+            value='[[tooling.cupVolume]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:density' 
             title='Compressed Density' 
@@ -124,49 +124,49 @@
             subtitle=''
             type='area' 
             selected-units='mm2' 
-            value='[[tablet.cupArea]]'></list-unit-item>
+            value='[[tooling.cupArea]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:volume' 
             title='Cup Volume' 
             subtitle=''
             type='volume' 
             selected-units='mm3' 
-            value='[[tablet.cupVolume]]'></list-unit-item>
+            value='[[tooling.cupVolume]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:surface-area' 
             title='Cross Sectional Area' 
             subtitle=''
             type='area' 
             selected-units='mm2' 
-            value='[[tablet.crossSectionArea]]'></list-unit-item>
+            value='[[tooling.crossSectionArea]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Perimeter' 
             subtitle=''
             type='length' 
             selected-units='in' 
-            value='[[tablet.perimeter]]'></list-unit-item>
+            value='[[tooling.perimeter]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Cup Depth' 
             subtitle=''
             type='length' 
             selected-units='in' 
-            value='[[tablet.cupThickness]]'></list-unit-item>
+            value='[[tooling.cupDepth]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Cup Length Radius' 
             subtitle=''
             type='length' 
             selected-units='in' 
-            value='[[tablet.lengthCupRadius]]'></list-unit-item>
+            value='[[tooling.cupLengthRadius]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Cup Width Radius' 
             subtitle=''
             type='length' 
             selected-units='in' 
-            value='[[tablet.widthCupRadius]]'
+            value='[[tooling.cupLengthRadius]]'
             hidden$='[[tablet.isRound]]'></list-unit-item>
         </div>
       </iron-pages>
@@ -177,22 +177,295 @@
 
   <script>
     
-    class TabletEditorPage extends ReduxMixin(Polymer.Element) {
+    class TabletEditorPage extends CoatingToolbox.TabletMixin(ReduxMixin(Polymer.Element)) {
       static get is() { return 'tablet-editor-page'; }
       static get properties() {
         return { 
           isAdmin: {type: Boolean, statePath: 'isAdmin'},
           tablet: { type: Object, statePath: 'tablet'},
+          tooling: {type: Object, statePath: 'tooling'},
           lengthUnits: { type: String, value: 'mm' },
-          _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
+          _selectedGraphic: {type: Number, value: 2, observer: '_graphicChanged'},
+          
         };
       }
+      
+      // OBSERVATIONS
       static get observers() {
         return [
-          '_notifyTabletPaths(tablet.*)',
-          '_notifyTabletPaths(tablet)'
+          "_setCupDepth(tablet.totalThickness, tablet.bandThickness)",
+          "_setCupLengthRadius(tooling.cupDepth, tablet.length)",
+          "_setCupWidthRadius(tooling.cupDepth, tablet.width)",
+          "_setPerimeter(tablet.shape, tablet.length, tablet.width)",
+          "_setCrossSectionArea(tablet.shape, tablet.length, tablet.width)",
+          "_setCupArea(tablet.shape, tooling.cupThickness, tablet.length, tablet.width)",
+          "_setCupVolume(tablet.shape, tooling.cupThickness, tablet.length, tablet.width)",
+          // "_setTabletBandVolume(tooling.crossSectionArea, tablet.bandThickness)",
+          // "_setTabletBandArea(tooling.perimeter, tablet.bandThickness)",
+          // "_setTabletVolume(tablet.bandVolume, tooling.cupVolume)",
+          // "_setTabletSurfaceArea(tablet.bandArea, tooling.cupArea)",
+          // "_setTabletCompressedDensity(tablet.weight, tablet.volume)"
         ];
       }
+      
+      // TOOLING PROPERTIES
+      _setCupDepth(total, band) {
+        this.dispatch({
+          type: "SET_TOOLING_CUP_DEPTH",
+          value: {cupDepth: (total - band) / 2}
+        });
+      }
+      _setCupLengthRadius(depth, length) {
+        this.dispatch({
+          type: "SET_TOOLING_CUP_LENGTH_RADIUS",
+          value: this._getCupRadius(depth, length)
+        });
+      }
+      _setCupWidthRadius(depth, width) {
+        // this.tooling.cupWidthRadius = this._getCupRadius(depth, width);
+        this.dispatch({
+          type: "SET_TOOLING_CUP_WIDTH_RADIUS",
+          value: this._getCupRadius(depth, width)
+        });
+      }
+      _setPerimeter(shape, length, width) {
+        let perimeter;
+
+        switch (shape) {
+
+            case 'round':
+                perimeter = this._getRoundPerimeter(length);
+                break;
+
+            case 'oval':
+                perimeter = this._getOvalPerimeter(length, width);
+                break;
+
+            case 'caplet':
+                perimeter = this._getCapletPerimeter(length, width);
+                break;
+        }
+        
+        this.dispatch({
+          type: "SET_TOOLING_PERIMETER",
+          value: perimeter
+        });
+      }
+      _setCrossSectionArea(shape, length, width) {
+        let crossSection;
+        switch(shape) {
+          case 'round':
+            crossSection = this._getRoundCrossSectionArea(length);
+            break;
+          case "oval":
+            crossSection = this._getOvalCrossSectionArea(length, width);
+            break;
+          case "caplet":
+            crossSection = this._getCapletCrossSectionArea(length, width);
+            break;
+        }
+        
+        this.dispatch({
+          type: "SET_TOOLING_CROSS_SECTION_AREA",
+          value: crossSection
+        });
+      }
+      _setCupArea(shape, cupThickness, length, width) {
+        let area;
+        switch(shape) {
+          case 'round':
+            area = this._getRoundCupArea(length);
+            break;
+          case "oval":
+            area = this._getOvalCupArea(length, width);
+            break;
+          case "caplet":
+            area = this._getCapletCupArea(length, width);
+            break;
+        }
+        this.dispatch({
+          type: "SET_TOOLING_CUP_AREA",
+          value: area
+        });
+      }
+      _setCupVolume(shape, cupThickness, length, width) {
+        let volume;
+        switch(shape) {
+          case 'round':
+            volume = this._getRoundCupVolume(length);
+            break;
+          case "oval":
+            volume = this._getOvaleCupVolume(length, width);
+            break;
+          case "caplet":
+            volume = this._getCapletCupVolume(length, width);
+            break;
+        }
+        this.dispatch({
+          type: "SET_TOOLING_CUP_VOLUME",
+          value: volume
+        });
+      }
+      
+      // TABLET PROPERTIES
+      _setTabletBandVolume(area, thickness) {
+        this.tablet.bandVolume = area * thickness;
+        this.dispatchTabletValuesToRedux();
+      }
+      _setTabletBandArea(perimeter, thickness) {
+        this.tablet.bandArea = perimeter * thickness;
+        this.dispatchTabletValuesToRedux();
+      }
+      _setTabletVolume(bandVolume, cupVolume) {
+        this.tablet.volume = bandVolume + 2 * cupVolume;
+        this.dispatchTabletValuesToRedux();
+      }
+      _setTabletSurfaceArea(bandArea, cupArea) {
+        this.tablet.surfaceArea = bandArea + 2 * cupArea;
+        this.dispatchTabletValuesToRedux();
+      }
+      _setTabletCompressedDensity(weight, volume) {
+        this.tablet.compressedDensity = weight / volume;
+        this.dispatchTabletValuesToRedux();
+      }
+      
+      // REDUX FUNCTION
+      dispatchTabletValuesToRedux() {
+        
+      }
+      
+      // TABLET HELPERS
+      _getCupRadius(depth, diameter) {
+        // see the link for more details on calculations
+        // http://liutaiomottola.com/formulae/sag.htm
+        let part1 = Math.pow(depth, 2);
+        let part2 = Math.pow(diameter / 2, 2);
+        let part3 = 2 * depth;
+        return (part1 + part2) / part3;
+      }
+      
+      // ROUND TABLET HELPERS
+      _getRoundPerimeter(length) {
+        return length * Math.PI;
+      }
+      _getRoundCrossSectionArea(length) {
+        return Math.PI * Math.pow(length / 2, 2);
+      }
+      _getRoundCupArea(cupThickness, length) {
+        // Calculate the CUP SURFACE AREA
+        // which is based on the surface area of a sphere section
+        // http://www.had2know.com/academics/spherical-cap-volume-surface-area-calculator.html
+        let rad2 = Math.pow(length / 2, 2);
+        let cup2 = Math.pow(cupThickness, 2);
+        return Math.PI * rad2 + cup2;
+      }
+      _getRoundCupVolume(cupThickness, length) {
+        // Calculate the CUP VOLUME.
+        //The volume of (1) tablet face
+        //based on the volume of sphere section
+        //http://www.had2know.com/academics/spherical-cap-volume-surface-area-calculator.html
+        let part1 = cupThickness / 6 * Math.PI;
+        let part2 = Math.pow(length / 2, 2) * 3;
+        let part3 = Math.pow(cupThickness, 2);
+        return part1 * (part2 + part3);
+      }
+      
+      // OVAL TABLET HELPERS
+      _getOvalPerimeter(length, width) {
+        
+        // Calculate the cup perimeters and set the value;
+
+        //for most calculations we uses radius not diameter
+        let r1 = length / 2;
+        let r2 = width / 2;
+
+        //circum of ellipse is estiamted first
+        //using ramanujan approximation of the circumference
+        // https://en.wikipedia.org/wiki/Ellipse#Equations
+        // 3(a + b)
+        let part1 = (r1 + r2) * 3;
+        // 10 * a * b
+        let part2 = r1 * r2 * 10;
+        // 3 (a2 + b2)
+        let part3 = 3 * (Math.pow(r1, 2) + Math.pow(r2, 2));
+        //bring together terms under sqrt and take sqrt
+        let part4 = Math.sqrt(part2 + part3);
+        // PI * 3(a + b) - sqrt term
+        return Math.PI * (part1 - part4);
+      }
+      _getOvalCrossSectionArea(length, width) {
+        
+        //for most calculations we uses radius not diameter
+        let r1 = length / 2;
+        let r2 = width / 2;
+        // Calculate the cross sectional area and set value
+        //PI * widthRadius * lengthRadius
+        return Math.PI * r1 * r2;
+      }
+      _getOvalCupArea(cupThickness, length, width) {
+        //for both oval and caplet we use an ellipse based model
+        //for most calculations we uses radius not diameter
+        let r1 = length / 2;
+        let r2 = width / 2;
+        let r3 = cupThickness; //not divided by 2 because it is alread a radius;
+        
+        // Calculate the CUP SURFACE AREA
+        //first calculate the surface area of (1) face
+        //based on the surface area of ellipsoid but only use half
+        let part1 = (Math.pow(r1 * r2, 1.6) + Math.pow(r1 * r3, 1.6) + Math.pow(r2 * r3, 1.6)) / 3;
+        // we divide by 2 at the end to get half the surface area
+        return 4 * Math.PI * Math.pow(part1, 1 / 1.6) / 2;
+                
+      }
+      _getOvalCupVolume(cupThickness, length, width) {
+        //for both oval and caplet we use an ellipse based calculation
+        //for most calculations we uses radius not diameter
+        let r1 = length / 2;
+        let r2 = width / 2;
+        let r3 = cupThickness; //not divided by 2 because it is alread a radius;
+        
+        // Calculate the CUP VOLUME.
+        //The volume of (1) tablet face
+        //we return 1/2 the cup volume of an ellipsoid
+        return r1 * r2 * r3 * (4 / 3) * Math.PI / 2;
+               
+      }
+      
+      // CAPLET TABLET HELPERS
+      _getCapletPerimeter(length, width) {
+        
+        // each arc at the end is half circle. return the periemter of a sphere
+        // with a diameter equal to the width the of the tablet.
+        let caps = Math.PI * width;
+        
+        // the length of the flat edge
+        // the radius of the end cap is equal to the half the width of the tablet
+        // remove a full width for both end caps
+        // we have two sides so multiply by 2
+        let sides = (length - width) * 2;
+        
+        return caps + sides;
+      }
+      _getCapletCrossSectionArea(length, width) {
+        // each end cap is considered a half circle and the diameter is the width of the tablet
+        // thereofre we return the area of a circle
+        // we use full circle because there are two end caps
+        let caps = Math.PI * Math.pow(width / 2, 2);
+        
+        // the surface area of the "rectanglualr" mid section;
+        // subtract our the width because this is the end caps;
+        let rect = this.width * (length - width);
+        
+        // bring the values together for the total area
+        return caps + rect;
+      }
+      _getCapletCupArea(cupThickness, length, width) {
+        this._getOvalCupArea(cupThickness, length, width);
+      }
+      _getCapletCupVolume(cupThickness, length, width) {
+        this._getOvalCupVolume(cupThickness, length, width);
+      }
+      
       _notifyTabletPaths() {
         this.notifyPath('tablet.totalArea');
         this.notifyPath('tablet.totalVolume');

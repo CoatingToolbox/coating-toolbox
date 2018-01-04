@@ -1,0 +1,42 @@
+
+<link rel="import" href="../redux/redux-mixin.html">
+
+<script>
+
+if(!window.CoatingToolbox) { window.CoatingToolbox = {}; }   
+
+/* global CoatingToolbox */    
+CoatingToolbox.ToolingMixin = (superClass) => class extends ReduxMixin(superClass) {
+
+    static get properties() {
+        return {
+            toolingCupDepth: {type: Number, statePath: 'tooling.cupDepth'},
+            toolingCupArea: {type: Number, statePath: 'tooling.cupArea'},
+            toolingCupVolume: {type: Number, statePath: 'tooling.cupVolume'},
+            toolingPerimeter: {type: Number, statePath: 'tooling.perimeter'},
+            toolingCrossSectionArea: {type: Number, statePath: 'tooling.crossSectionArea'},
+            toolingCupLengthRadius: {type: Number, statePath: 'tooling.cupLengthRadius'},
+            toolingCupWidthRadius: {type: Number, statePath: 'tooling.cupWidthRadius'}
+        };
+    }
+    
+    dispatchToolingValuesToRedux() {
+        let tooling = {
+            cupDepth: this.toolingCupDepth,
+            cupArea: this.toolingCupArea,
+            cupVolume: this.toolingCupVolume,
+            perimeter: this.toolingPerimeter,
+            crossSectionArea: this.toolingCrossSectionArea,
+            cupLengthRadius: this.toolingCupLengthRadius,
+            cupWidthRadius: this.toolingCupWidthRadius
+        };
+        this.dispatch({
+            type: "SET_TOOLING_VALUES",
+            value: tooling
+        });
+    }
+    
+    
+};
+
+</script>
