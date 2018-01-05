@@ -52,7 +52,6 @@ class Tablet {
       return this.weight / this.totalVolume;
     }
     
-    
     // TOOLING
     get cupThickness() {
         return (this.totalThickness - this.bandThickness) / 2;
@@ -167,7 +166,6 @@ class Tablet {
     get cupArea() {
         
         let area;
-        console.log(this.shape);
         switch (this.shape) {
 
             case 'round':
@@ -341,6 +339,7 @@ function tabletReducer(state = tabletInitialState, action) {
         case "SET_TABLET_BAND_THICKNESS": tablet.bandThickness = action.value; break;
         case "SET_TABLET_WEIGHT": tablet.weight = action.value; break;
         case "SET_TABLET_BULK_DENSITY": tablet.bulkDensity = action.value; break;
+        case "SET_BATCH_WEIGHT": tablet.batchWeight = action.value; break;
         case "LOAD_TABLET_FROM_LIBRARY": tablet = new Tablet(action.value); break;
     }
     sessionStorage.setItem('coating-toolbox-tablet', JSON.stringify(tablet));

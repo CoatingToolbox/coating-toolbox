@@ -99,19 +99,6 @@
           _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
       }
-      static get observers() {
-        return [
-          '_notifyPaths(pan.*)',
-          '_notifyPaths(tablet.*)',
-          '_notifyPaths(tablet)'
-        ];
-      }
-      _notifyPaths() {
-        this.notifyPath('pan.batchFillVolumePercent');
-        this.notifyPath('tablet.batchVolume');
-        this.notifyPath('tablet.batchWeight');
-        this.notifyPath('tablet.count');
-      }
       _setBatchWeight(e) {
         this.dispatch({
           type: "SET_BATCH_WEIGHT",

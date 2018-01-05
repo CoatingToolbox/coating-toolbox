@@ -6,7 +6,6 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../data/coating-formula-class.html">
 <link rel="import" href="../redux/redux-mixin.html">
 
 <dom-module id="coating-library-page">
@@ -147,7 +146,7 @@
         <div class='header cell'>Viscosity (cps)</div>
         <div class='header cell'></div>
         
-        <template is='dom-repeat' items='[[_filterLibrary(coatingLibrary, filterTerm)]]'>
+        <template is='dom-repeat' items='[[_filterLibrary(firebaseLibrary, filterTerm)]]'>
           <div class='cell'>
             <div>[[item.productName]]</div>
             <div class='item-title'>[[item.formulaName]]</div>
@@ -187,18 +186,11 @@
           filterTerm: String,
           opened: { type: Boolean, reflectToAttribute: true, value: false },
           firebaseLibrary: Array,
-          coatingLibrary: {type: Array, computed: '_computeCoatingLibrary(firebaseLibrary)'}
         };
-      }
-      
-      _computeCoatingLibrary(firebase) {
-        return firebase.map(coat => {
-          return new CoatingFormula(coat);
-        });
       }
       _load(e) {
         this.dispatch({
-          type: "CALCULATE_COATING_FORMULA",
+          type: "LOAD_COATING_FROM_LIBRARY",
           value: e.model.item
         });
         window.scrollTo(0,0);
@@ -206,7 +198,7 @@
       }
       _edit(e) {
         this.dispatch({
-          type: "CALCULATE_COATING_FORMULA",
+          type: "LOAD_COATING_FROM_LIBRARY",
           value: e.model.item
         });
         window.scrollTo(0,0);
