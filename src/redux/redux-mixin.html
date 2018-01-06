@@ -1,87 +1,27 @@
 
 <script src="../../node_modules/redux/dist/redux.min.js"></script>
+<script src="tablet.js"></script>
+<script src="pan.js"></script>
+<script src="batch.js"></script>
+<script src="coating.js"></script>
 <script src="tablet-reducer.js"></script>
 <script src="pan-reducer.js"></script>
 <script src="coating-reducer.js"></script>
+<script src="batch-reducer.js"></script>
 <script src="app-reducer.js"></script>
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
-<link rel="import" href="../data/coating-pan-class.html">
-<link rel="import" href="../data/coating-formula-class.html">
-<link rel="import" href="../data/tablet-class.html">
 
-<script >
-    
-    // const reducer = (state = initialState, action) => {
-    //     let newState = Object.assign({}, state);
-    //     switch(action.type) {
-    //         case "SET_ADMIN":
-    //             newState.isAdmin = action.value;
-    //             break;
-    //         case "CALCULATE_TABLET":
-    //             newState.tablet = new Tablet(action.value);
-    //             break;
-    //         case "CALCULATE_PAN":
-    //             newState.pan = new CoatingPan(action.value);
-    //             break;
-    //         case "CALCULATE_COATING_FORMULA":
-    //             newState.coatingFormula = new CoatingFormula(action.value);
-    //             break;
-    //         case "SET_BATCH_WEIGHT":
-    //             newState.tablet.batchWeight = action.value;
-    //             break;
-    //         case "SET_BATCH_VOLUME":
-    //             newState.tablet.batchVolume = action.value;
-    //             break;
-    //         case "SET_BATCH_COUNT":
-    //             newState.tablet.count = action.value;
-    //             break;
-    //         case "SET_COATING_WEIGHT":
-    //             newState.coatingFormula.coatingWeight = action.value;
-    //             break;
-    //         case "SET_COATING_WEIGHT_GAIN":
-    //             newState.coatingFormula.weightGain = action.value;
-    //             break;
-    //         case "SET_COATING_COVERAGE":
-    //             newState.coatingFormula.coatingCoverage = action.value;
-    //             break;
-    //         case "SET_FILM_THICKNESS":
-    //             newState.coatingFormula.filmThickness = action.value;
-    //             break;
-    //         default: 
-    //             break;
-    //     }
-        
-    //     // We set the properties and pass to new coating pan because most 
-    //     // elements are watching the pan path not individual propetry paths
-    //     newState.pan.batchVolume = newState.tablet.batchVolume;
-    //     newState.pan.batchBulkDensity = newState.tablet.bulkDensity;
-    //     newState.pan = new CoatingPan(newState.pan);
-    //     // we need to sync certain values between the tablet and coating.
-    //     newState.coatingFormula.tabletWeight = newState.tablet.weight;
-    //     newState.coatingFormula.tabletArea = newState.tablet.totalArea;
-    //     newState.coatingFormula.batchWeight = newState.tablet.batchWeight;
-    //     newState.coatingFormula = new CoatingFormula(newState.coatingFormula);
-        
-    //     // Save current state to session storage
-    //     sessionStorage.setItem('coating-toolbox-state', JSON.stringify(newState));
-        
-    //     // return the state to be handled
-    //     return newState;
-    // };
-    
-    const storedState = JSON.parse(sessionStorage.getItem('coating-toolbox-state'))
-    
-    
-    // create the redux store
-    /* global Redux */
+<script>
+
     const store = Redux.createStore(
-                        Redux.combineReducers(
-                            {tablet: tabletReducer, 
-                            pan: panReducer, 
-                            coating: coatingReducer,
-                            app: appReducer
-                            }
-                        ));
+                Redux.combineReducers(
+                    {tablet: tabletReducer, 
+                    pan: panReducer, 
+                    coating: coatingReducer,
+                    batch: batchReducer,
+                    app: appReducer
+                    }
+                ));
     
     // pass the redux store to the PolymerRedux to create a mixing which is used with other polymer elements
     /* global PolymerRedux*/

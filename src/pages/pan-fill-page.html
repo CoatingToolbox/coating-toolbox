@@ -41,10 +41,10 @@
         <b>[[tablet.weightInMG]] mg tablet weight</b>
         and <b>[[tablet.bulkDensityInGML]] g/ml bulk density</b>. Based on these values input any value and see how this translates to the other values.
         </div>
-        <unit-input label='Batch Volume' icon='my-icons:volume' type='volume' selected-units='l' value='[[tablet.batchVolume]]' on-value-changed='_setBatchVolume'></unit-input>
-        <unit-input label='Batch Weight' icon='my-icons:weight' type='weight' selected-units='kg' value='[[tablet.batchWeight]]' on-value-changed='_setBatchWeight'></unit-input>
-        <unit-input label='Tablet Count' icon='my-icons:count' type='' selected-units='tabs' value='[[tablet.count]]' on-value-changed='_setBatchCount'></unit-input>
-        <unit-input label='Fill Percent' icon='my-icons:percent' type='percent' decimals='0' selected-units='%' value='[[pan.batchFillVolumePercent]]' on-value-changed='_setPanPercent'></unit-input>
+        <unit-input label='Batch Volume' icon='my-icons:volume' type='volume' selected-units='l' value='[[batch.batchVolume]]' on-value-changed='_setBatchVolume'></unit-input>
+        <unit-input label='Batch Weight' icon='my-icons:weight' type='weight' selected-units='kg' value='[[batch.batchWeight]]' on-value-changed='_setBatchWeight'></unit-input>
+        <unit-input label='Tablet Count' icon='my-icons:count' type='' selected-units='tabs' value='[[batch.tabletCount]]' on-value-changed='_setBatchCount'></unit-input>
+        <unit-input label='Fill Percent' icon='my-icons:percent' type='percent' decimals='0' selected-units='%' value='[[batch.batchFillVolumePercent]]' on-value-changed='_setPanPercent'></unit-input>
         <icon-label-button icon='my-icons:calculator' label='Min Fill' on-click='_setMinWeight'></icon-label-button>
         <icon-label-button icon='my-icons:calculator' label='Max Fill' on-click='_setMaxWeight'></icon-label-button>
       </div>
@@ -61,7 +61,7 @@
       <iron-pages selected='[[_selectedGraphic]]'>
         <div class='page'>
           <div class='card-title'>Batch Size vs Pan Fill Height</div>
-          <pan-fill-chart id='chart' class='graphic' pan='[[pan]]'></pan-fill-chart>
+          <pan-fill-chart id='chart' class='graphic'></pan-fill-chart>
         </div>
         <div class='page'>
           <div class='card-title'>Pan Fill Dimensions</div>
@@ -71,14 +71,14 @@
             subtitle='The depth of the product in the coating pan'
             type='length' 
             selected-units='{{_lengthUnits}}' 
-            value='[[pan.batchFillHeight]]'></list-unit-item>
+            value='[[batch.batchFillHeight]]'></list-unit-item>
           <list-unit-item 
             icon='my-icons:ruler' 
             title='Bed Width'
             subtitle='The distance from front to back at the tablet bed surface'
             type='length' 
             selected-units='{{_lengthUnits}}' 
-            value='[[pan.batchFillLength]]'></list-unit-item>
+            value='[[batch.batchFillLength]]'></list-unit-item>
           <div class='card-title'>Pan Fill Schematic</div>
           <pan-schematic-layout pan='[[pan]]'></pan-schematic-layout>
         </div>
@@ -95,6 +95,7 @@
         return {
           pan: {type: Object, statePath: "pan"},
           tablet: {type: Object, statePath: "tablet"},
+          batch: {type: Object, statePath: 'batch'},
           _lengthUnits: {type: String, value: 'in'},
           _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
@@ -102,38 +103,47 @@
       _setBatchWeight(e) {
         this.dispatch({
           type: "SET_BATCH_WEIGHT",
-          value: e.detail.value
+          value: e.detail.value,
+          pan: this.pan,
+          tablet: this.tablet
         });
       }
       _setMinWeight() {
         this.dispatch({
-          type: "SET_BATCH_WEIGHT",
-          value: this.pan.minFillWeight
+          type: "SET_BATCH_TO_MIN_WEIGHT",
+          pan: this.pan,
+          tablet: this.tablet
         });
       }
       _setMaxWeight() {
         this.dispatch({
-          type: "SET_BATCH_WEIGHT",
-          value: this.pan.maxFillWeight
+          type: "SET_BATCH_TO_MAX_WEIGHT",
+          pan: this.pan,
+          tablet: this.tablet
         });
       }
       _setPanPercent(e) {
-        let percent = e.detail.value;
         this.dispatch({
-          type: "SET_BATCH_VOLUME",
-          value: percent * this.pan.brimVolume
+          type: "SET_BATCH_PERCENT_VOLUME",
+          value: e.detai.value,
+          pan: this.pan,
+          tablet: this.tablet
         });
       }
       _setBatchVolume(e) {
         this.dispatch({
           type: "SET_BATCH_VOLUME",
-          value: e.detail.value
+          value: e.detail.value,
+          pan: this.pan,
+          tablet: this.tablet
         });
       }
       _setBatchCount(e) {
         this.dispatch({
           type: "SET_BATCH_COUNT",
-          value: e.detail.value
+          value: e.detail.value,
+          pan: this.pan,
+          tablet: this.tablet
         });
       }
       _graphicChanged(page) {

@@ -3,6 +3,7 @@
 <link rel="import" href="../data/coating-pan-class.html">
 <link rel="import" href="d3-import.html">
 <link rel="import" href="chart-styles.html">
+<link rel="import" href="../redux/redux-mixin.html">
 
 <dom-module id='pan-fill-chart'>
     <template>
@@ -41,7 +42,7 @@
     <script>
         
         /*global ReduxMixin Polymer */
-        class PanFillChart extends Polymer.Element {
+        class PanFillChart extends ReduxMixin(Polymer.Element) {
             
             static get is() { return 'pan-fill-chart'; }
             
@@ -64,7 +65,12 @@
             
             static get properties() {
                 return {
-                    pan: Object,
+                    brimHeight: {type: Number, statePath: 'pan.brimHeight'},
+                    brimWeight: {type: Number, statePath: 'batch.brimWeight'},
+                    dottedLineData: {type: Array, statePath: 'batch.panRangeWeightVsFillHeight'},
+                    workingVolumeData: {type: Array, statePath: 'batch.workingFillWeightVsFillHeight'},
+                    volumePointData: {type: Array, statePath: "pan.referencePointsWeightVsHeight"},
+                    batchPointData: {type: Array, statePath: "batch.batchWeightVsHeight"},
                     volumeUnits: {type: String, value: "l"},
                     volumeSelected: {type: String, value: "brim"},
                     chart: {type: Object},
@@ -73,8 +79,8 @@
                     }},
                     height: {type: Number},
                     width: {type: Number},
-                    xScale: {type: Object, computed: '_computeXScale(width, pan.brimWeight)'},
-                    yScale: {type: Object, computed: '_computeYScale(height, pan.brimHeight)'},
+                    xScale: {type: Object, computed: '_computeXScale(width, brimWeight)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, brimHeight)'},
                     d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
                     d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
                 };
@@ -104,10 +110,10 @@
                 return [
                     '_initChart(margin, height, width)',
                     '_updateAxis(xScale, yScale, chart)',
-                    '_updateDottedLine(pan, chart, d3Line, d3Area)',
-                    '_updateWorkingVolume(pan, chart, d3Line, d3Area)',
-                    '_updateVolumePoints(pan, chart, xScale, yScale)',
-                    '_updateBatchPoint(pan.batchWeightVsHeight, chart, xScale, yScale)'
+                    '_updateDottedLine(dottedLineData, chart, d3Line, d3Area)',
+                    '_updateWorkingVolume(workingVolumeData, chart, d3Line, d3Area)',
+                    '_updateVolumePoints(volumePointData, chart, xScale, yScale)',
+                    '_updateBatchPoint(batchPointData, chart, xScale, yScale)'
                 ];
             }
             
@@ -135,42 +141,42 @@
                 chart.select(".x.axis").call(d3.axisBottom(xScale));
                 chart.select(".y.axis").call(d3.axisLeft(yScale));  
             }
-            _updateDottedLine(pan, chart, line, area) {
-                if(!pan || !chart || !line || !area) {
+            _updateDottedLine(data, chart, line, area) {
+                if(!data || !chart || !line || !area) {
                     return;
                 }
                 // Add the line
-                let lines = chart.select('.dotted.line').data([pan.panRangeWeightVsFillHeight]);
+                let lines = chart.select('.dotted.line').data([data]);
                 lines.enter()
                     .merge(lines)
                         .attr("d", line);  
                 lines.exit().remove();
             }
-            _updateWorkingVolume(pan, chart, line, area) {
-                if(!pan || !chart || !line || !area) {
+            _updateWorkingVolume(data, chart, line, area) {
+                if(!data || !chart || !line || !area) {
                     return;
                 }
                 
                 // Add the line
-                let lines = chart.select('.working-volume.line').data([pan.workingFillWeightVsFillHeight]);
+                let lines = chart.select('.working-volume.line').data([data]);
                 lines.enter()
                     .merge(lines)
                         .attr("d", line);  
                 lines.exit().remove();
                                 
                 // Add the area
-                let areas = chart.select('.working-volume.area').data([pan.workingFillWeightVsFillHeight]);
+                let areas = chart.select('.working-volume.area').data([data]);
                 areas.enter()
                     .merge(areas)
                         .attr("d", area);  
                 areas.exit().remove();
             }
-            _updateVolumePoints(pan, chart, xScale, yScale) {
-                if(!pan || !chart || !xScale || !yScale) {
+            _updateVolumePoints(data, chart, xScale, yScale) {
+                if(!data || !chart || !xScale || !yScale) {
                     return;
                 }
                 // Add the dots
-                let circles = chart.select('.reference-circles').selectAll('circle').data(pan.referencePointsWeightVsHeight);
+                let circles = chart.select('.reference-circles').selectAll('circle').data(data);
                 
                 circles.enter()
                         .append('circle')
@@ -182,7 +188,7 @@
                 circles.exit().remove();
                 
                 
-                let text = chart.select('.reference-labels').selectAll('text').data(pan.referencePointsWeightVsHeight);
+                let text = chart.select('.reference-labels').selectAll('text').data(data);
                 
                 text.enter()
                     .append('text')
