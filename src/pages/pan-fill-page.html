@@ -103,47 +103,35 @@
       _setBatchWeight(e) {
         this.dispatch({
           type: "SET_BATCH_WEIGHT",
-          value: e.detail.value,
-          pan: this.pan,
-          tablet: this.tablet
+          value: e.detail.value
         });
       }
       _setMinWeight() {
         this.dispatch({
-          type: "SET_BATCH_TO_MIN_WEIGHT",
-          pan: this.pan,
-          tablet: this.tablet
+          type: "SET_BATCH_TO_MIN_WEIGHT"
         });
       }
       _setMaxWeight() {
         this.dispatch({
-          type: "SET_BATCH_TO_MAX_WEIGHT",
-          pan: this.pan,
-          tablet: this.tablet
+          type: "SET_BATCH_TO_MAX_WEIGHT"
         });
       }
       _setPanPercent(e) {
         this.dispatch({
           type: "SET_BATCH_PERCENT_VOLUME",
-          value: e.detail.value,
-          pan: this.pan,
-          tablet: this.tablet
+          value: e.detail.value
         });
       }
       _setBatchVolume(e) {
         this.dispatch({
           type: "SET_BATCH_VOLUME",
-          value: e.detail.value,
-          pan: this.pan,
-          tablet: this.tablet
+          value: e.detail.value
         });
       }
       _setBatchCount(e) {
         this.dispatch({
           type: "SET_BATCH_COUNT",
-          value: e.detail.value,
-          pan: this.pan,
-          tablet: this.tablet
+          value: e.detail.value
         });
       }
       _graphicChanged(page) {
