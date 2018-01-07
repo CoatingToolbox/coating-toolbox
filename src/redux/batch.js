@@ -68,7 +68,6 @@ class Batch extends Pan {
     // initiate an empty array to store values in for loop
     let vals = [];
     let step = this.brimHeight / 50;
-    console.log(this.brimHeight);
     // loop through different volumes and store the volume and height values
     for(var i=0; i <= this.brimHeight; i = i + step) {
         let fillHeight = i;

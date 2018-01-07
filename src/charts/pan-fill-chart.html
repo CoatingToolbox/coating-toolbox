@@ -103,7 +103,7 @@
                     '_updateAxis(xScale, yScale, chart)',
                     '_updateDottedLine(batch.panRangeWeightVsFillHeight, chart, d3Line, d3Area)',
                     '_updateWorkingVolume(batch.workingFillWeightVsFillHeight, chart, d3Line, d3Area)',
-                    '_updateVolumePoints(pan.referencePointsWeightVsHeight, chart, xScale, yScale)',
+                    '_updateVolumePoints(batch.referencePointsWeightVsHeight, chart, xScale, yScale)',
                     '_updateBatchPoint(batch.batchWeightVsHeight, chart, xScale, yScale)'
                 ];
             }
@@ -165,6 +165,7 @@
                 if(!data || !chart || !xScale || !yScale) {
                     return;
                 }
+                console.log('update points');
                 // Add the dots
                 let circles = chart.select('.reference-circles').selectAll('circle').data(data);
                 
