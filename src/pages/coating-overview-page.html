@@ -72,7 +72,7 @@
     <div id='line'></div>
     
     <section id='overview'>
-      <div>[[name]]</div>
+      <div>[[coat.productName]]</div>
       <!--<div id='details-layout'>-->
       <!--  <small-icon-item icon='my-icons:product' label='[[formula]]'></small-icon-item> -->
       <!--  <small-icon-item icon='my-icons:product' label='[[color]]'></small-icon-item> -->
@@ -85,35 +85,35 @@
       <icon-label-item 
       label='Formula' 
       icon='my-icons:product' 
-      value='[[formula]]'>
+      value='[[coat.formulaName]]'>
       </icon-label-item>
       <icon-label-item 
       label='Recommended Solids' 
       icon='my-icons:coating-amount' 
-      value='[[solidsFormatted]]%'>
+      value='[[coat.solidsInPercent]]%'>
       </icon-label-item>
       <icon-label-item 
       label='Color' 
       icon='my-icons:product' 
-      value='[[color]]'>
+      value='[[coat.color]]'>
       </icon-label-item>
       <icon-label-item 
       label='Viscosity' 
       icon='my-icons:volume' 
-      value='[[viscosity]] cps'>
+      value='[[coat.viscosityRounded]] cps'>
       </icon-label-item>
       <icon-label-item 
       label='Functionality' 
       icon='my-icons:product' 
-      value='[[type]]'>
+      value='[[coat.type]]'>
       </icon-label-item>
       <icon-label-item 
       label='Density' 
       icon='my-icons:density' 
-      value='[[density]] g/ml'>
+      value='[[coat.densityInGML]] g/ml'>
       </icon-label-item>
       <div class='section-title' id='graphic-title'>Viscosity Profile</div>
-      <viscosity-chart intercept='[[intercept]]' exponent='[[exponent]]' solids='[[solids]]'></viscosity-chart>
+      <viscosity-chart intercept='[[coat.viscosityIntercept]]' exponent='[[coat.viscosityExponent]]' solids='[[coat.solids]]'></viscosity-chart>
       
     </section>
     
@@ -124,16 +124,7 @@
       static get is() { return 'coating-overview-page'; }
       static get properties() {
         return {
-          name: {type: String, statePath: 'coatingFormula.productName'},
-          formula: {type: String, statePath: 'coatingFormula.formulaName'},
-          color: {type: String, statePath: 'coatingFormula.color'},
-          type: {type: String, statePath: 'coatingFormula.type'},
-          solids: {type: String, statePath: 'coatingFormula.solids'},
-          solidsFormatted: {type: String, statePath: 'coatingFormula.solidsInPercent'},
-          density: {type: String, statePath: 'coatingFormula.densityInGML'},
-          viscosity: {type: String, statePath: 'coatingFormula.viscosityRounded'},
-          intercept: {type: String, statePath: "coatingFormula.viscosityIntercept"},
-          exponent: {type: String, statePath: "coatingFormula.viscosityExponent"}
+          coat: {type: Object, statePath: 'coating'}
           
         };
       }

@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
-<link rel="import" href="../data/coating-pan-class.html">
+<link rel="import" href="../redux/redux-mixin.html">
 
 <dom-module id="coating-pan-graphic">
   <template>
@@ -34,16 +34,16 @@
     
     <template is='dom-if' if='[[frontView]]'>
       <svg viewbox='0 0 24 24'>
-      <path class='outline' d$='[[_getFrontPan(_pan.panDiameter)]]'></path>
-      <path class='outline' d$='[[_getFrontPan(_pan.openingDiameter)]]'></path>
-      <path class='volume' d$='[[_getFrontFill(_pan.panDiameter, _pan.batchVolume)]]'></path>
+      <path class='outline' d$='[[_getFrontPan(pan.panDiameter)]]'></path>
+      <path class='outline' d$='[[_getFrontPan(pan.openingDiameter)]]'></path>
+      <path class='volume' d$='[[_getFrontFill(pan.panDiameter, batch.batchVolume)]]'></path>
       </svg>
     </template>
     
     <template is='dom-if' if='[[sideView]]'>
       <svg viewbox='0 0 24 24'>
-        <path class='outline' d$='[[_getSidePan(_pan.panDiameter, _pan.openingDiameter, _pan.wallWidth, _pan.brimWidth)]]'></path>
-        <path class='volume' d$='[[_getSideFill(_pan.panDiameter, _pan.openingDiameter, _pan.wallWidth, _pan.brimWidth, _pan.batchVolume)]]'></path>
+        <path class='outline' d$='[[_getSidePan(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth)]]'></path>
+        <path class='volume' d$='[[_getSideFill(pan.panDiameter, pan.openingDiameter, pan.wallWidth, pan.brimWidth, batch.batchVolume)]]'></path>
       </svg>
     </template>
             
@@ -51,7 +51,7 @@
 
   <script>
   
-    class CoatingPanGraphic extends Polymer.Element {
+    class CoatingPanGraphic extends ReduxMixin(Polymer.Element) {
       
       static get is() { return 'coating-pan-graphic';}
       
@@ -60,8 +60,8 @@
           frontView: Boolean,
           sideView: Boolean,
           volumeType: String,
-          pan: Object,
-          _pan: Object,
+          pan: {type: Object, statePath: 'pan'},
+          batch: {type: Object, statePath: 'batch'},
           svg: {
             type: Object,
             value: function() {
@@ -92,18 +92,6 @@
             }
           },
         };
-      }
-      
-      static get observers() {
-        return [
-          '_calcPanDimensions(pan.*)'
-        ];
-      }
-      
-      // take the redux tablet properties and pass to a tablet class
-      // to calculate all the values required to map the tablet
-      _calcPanDimensions() {
-        this._pan = new CoatingPan(this.pan);
       }
 
       // Path for SVG Graphics
@@ -156,7 +144,7 @@
             fill = this.pan.brimHeight;
             break;
           default:
-            fill = this.pan.batchFillHeight;
+            fill = this.batch.batchFillHeight;
             break;
         }
         
@@ -193,7 +181,7 @@
             fill = this.pan.brimHeight;
             break;
           default:
-            fill = this.pan.batchFillHeight;
+            fill = this.batch.batchFillHeight;
             break;
         }
         //helper values

@@ -3,6 +3,7 @@
 <link rel="import" href="../data/coating-pan-class.html">
 <link rel="import" href="d3-import.html">
 <link rel="import" href="chart-styles.html">
+<link rel="import" href="../redux/redux-mixin.html">
 
 <dom-module id='coating-amount-chart'>
     <template>
@@ -36,7 +37,7 @@
     <script>
         
         /*global ReduxMixin Polymer */
-        class CoatingAmountChart extends Polymer.Element {
+        class CoatingAmountChart extends ReduxMixin(Polymer.Element) {
             
             static get is() { return 'coating-amount-chart'; }
             
@@ -59,7 +60,7 @@
             
             static get properties() {
                 return {
-                    percent: Number,
+                    percent: {type: Number, statePath: 'coatingAmount.weightGain'},
                     chart: Object,
                     margin: {type: Object, value: function() {
                         return {top: 20, right: 20, bottom: 50, left: 20};

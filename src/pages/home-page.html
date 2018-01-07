@@ -96,9 +96,9 @@
       <home-summary-list-item tag='Coating Amount' title='Weight Gain: [[coatingAmount]]%'>
         <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/coating-amount'></home-nav-button>
       </home-summary-list-item>
-      <home-summary-list-item tag='Process Parameters' title='Colorcon Recommended'>
-        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/'></home-nav-button>
-      </home-summary-list-item>
+      <!--<home-summary-list-item tag='Process Parameters' title='Colorcon Recommended'>-->
+      <!--  <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/'></home-nav-button>-->
+      <!--</home-summary-list-item>-->
     </section>
     
   </template>
@@ -110,9 +110,9 @@
         return {
           tabletTitle: {type: String, statePath: 'tablet.productName'},
           panTitle: {type: String, statePath: "pan.nickname"},
-          coatingTitle: {type: String, statePath: 'coatingFormula.productName'},
-          batchWeight: {type: Number, statePath: 'tablet.batchWeightInKG'},
-          coatingAmount: {type: Number, statePath: "coatingFormula.weightGainPercent"}
+          coatingTitle: {type: String, statePath: 'coating.productName'},
+          batchWeight: {type: Number, statePath: 'batch.batchWeightInKG'},
+          coatingAmount: {type: Number, statePath: "coatingAmount.weightGainPercent"}
         };
       }
     }

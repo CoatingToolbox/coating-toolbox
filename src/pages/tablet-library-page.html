@@ -164,7 +164,7 @@
           <div class='header cell'>Weight (mg)</div>
           <div class='header cell'></div>
           
-          <template is='dom-repeat' items='[[_filterLibrary(tabletLibrary, filterTerm)]]'>
+          <template is='dom-repeat' items='[[_filterLibrary(firebaseLibrary, filterTerm)]]'>
             <div class='cell'>
               <div class='item-title'>[[item.productName]]</div>
               <div class='subtext'>[[item.formulationName]]</div>
@@ -205,25 +205,20 @@
       static get properties() {
         return {
           filterTerm: String,
-          firebaseLibrary: Array,
-          tabletLibrary: {type: Array, computed: '_computeTabletLibrary(firebaseLibrary)'}
+          firebaseLibrary: Array
         };
-      }
-      _computeTabletLibrary(firebase) {
-        return firebase.map(tablet => {
-          return new Tablet(tablet);
-        });
       }
       _loadTablet(e) {
         this.dispatch({
-          type: "CALCULATE_TABLET",
+          type: "LOAD_TABLET_FROM_LIBRARY",
           value: e.model.item
         });
+        window.scrollTo(0,0);
         window.location = '#/home';
       }
       _editTablet(e) {
         this.dispatch({
-          type: "CALCULATE_TABLET",
+          type: "LOAD_TABLET_FROM_LIBRARY",
           value: e.model.item
         });
         window.scrollTo(0,0);

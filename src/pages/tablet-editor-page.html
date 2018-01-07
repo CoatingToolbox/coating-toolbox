@@ -13,7 +13,6 @@
 <link rel="import" href="../buttons/pages-tab-button.html">
 <link rel="import" href="../buttons/icon-label-button.html">
 <link rel="import" href="../redux/redux-mixin.html">
-<link rel="import" href="../data/tablet-class.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
 <dom-module id="tablet-editor-page">
@@ -30,7 +29,7 @@
       
     </style>
       
-    <section id='left-section'>
+    <section id='left-section' on-user-input="_setValues">
       <div class='card highlight top'>
         <div class='card-title'>Compressed Tablet Editor</div>
         <div class='card-description'>The Compressed Tablet Designer estimates important properties of a tablet. Starting with a compressed tablet measure and input a few easy to obtain dimensions like length, 
@@ -40,38 +39,34 @@
       <div class='card'>
         <!--First section to input descriptoin-->
         <div class='card-title underline'>Description</div>
-        <text-input value='{{tablet.productName}}' icon='my-icons:product' label='Product'></text-input>
-        <text-input value='{{tablet.formulationName}}' icon='my-icons:product' label='Formulation'></text-input>
-        <text-input value='{{tablet.companyName}}' icon='my-icons:company' label='Company'></text-input>
-        <text-input value='{{tablet.contactName}}' icon='my-icons:contact' label='Contact'></text-input>
+        <text-input value='[[tablet.productName]]'  on-value-changed='_setProductName' icon='my-icons:product' label='Product'></text-input>
+        <text-input value='[[tablet.formulationName]]'  on-value-changed='_setFormulationName' icon='my-icons:product' label='Formulation'></text-input>
+        <text-input value='[[tablet.companyName]]'  on-value-changed='_setCompanyName' icon='my-icons:company' label='Company'></text-input>
+        <text-input value='[[tablet.contactName]]'  on-value-changed='_setContactName' icon='my-icons:contact' label='Contact'></text-input>
       </div>
       
       <div class='card'>
         <!--Section for Shape and Size-->
         <div class='card-title underline'>Shape & Size</div>
-        <shape-input shape='{{tablet.shape}}'></shape-input>
-        <unit-input value='{{tablet.length}}' icon='my-icons:ruler' label='Length' type='length' selected-units='{{lengthUnits}}'></unit-input>
-        <unit-input hidden$='{{_isRound(tablet.shape)}}' value='{{tablet.width}}' icon='my-icons:ruler' label='Width' type='length' selected-units='{{lengthUnits}}'></unit-input>
-        <unit-input value='{{tablet.totalThickness}}' icon='my-icons:ruler' label='Total Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>
-        <unit-input value='{{tablet.bandThickness}}' icon='my-icons:ruler' label='Band Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>  
+        <shape-input shape='[[tablet.shape]]' on-shape-changed='_setShape'></shape-input>
+        <unit-input value='[[tablet.length]]' on-value-changed='_setLength' icon='my-icons:ruler' label='Length' type='length' selected-units='{{lengthUnits}}'></unit-input>
+        <unit-input value='[[tablet.width]]' on-value-changed='_setWidth' icon='my-icons:ruler' label='Width' type='length' selected-units='{{lengthUnits}}' hidden$='[[tablet.isRound]]'  ></unit-input>
+        <unit-input value='[[tablet.totalThickness]]'  on-value-changed='_setTotalThickness' icon='my-icons:ruler' label='Total Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>
+        <unit-input value='[[tablet.bandThickness]]' on-value-changed='_setBandThickness' icon='my-icons:ruler' label='Band Thickness' type='length' selected-units='{{lengthUnits}}'></unit-input>  
       </div>
       
       <div class='card'>
         <div class='card-title underline'>Formulation</div>
-        <item-select-input label='Formulation Type' icon='my-icons:product' items='["Pharmaceutical", "Nutritional"]' selected='{{tablet.productType}}'></item-select-input>
-        <unit-input value='{{tablet.weight}}' icon='my-icons:weight' label='Tablet Weight' type='weight' selected-units='mg'></unit-input>
-        <unit-input value='{{tablet.bulkDensity}}' icon='my-icons:density' label='Tablet Bulk Density' type='density' selected-units='g/ml'></unit-input>
+        <item-select-input selected='[[tablet.productType]]' label='Formulation Type'  on-selected-changed='_setProductType' icon='my-icons:product' items='["Pharmaceutical", "Nutritional"]' ></item-select-input>
+        <unit-input value='[[tablet.weight]]'  on-value-changed='_setWeight' icon='my-icons:weight' label='Tablet Weight' type='weight' selected-units='mg'></unit-input>
+        <unit-input value='[[tablet.bulkDensity]]'  on-value-changed='_setBulkDensity' icon='my-icons:density' label='Tablet Bulk Density' type='density' selected-units='g/ml'></unit-input>
       </div>  
       
-      <div class='card underline'>
-        <div class='card-title'>Calculate</div>
-        <div class='card-description'>Click calcualte to determine the surface area, volume, density and more.</div>
-        <icon-label-button class='wide' icon='my-icons:calculator' label='Calculate Tablet' on-click='_save'></icon-label-button>
-      
-        <div id='admin-buttons' hidden$='[[!isAdmin]]'>
-          <icon-label-button icon='my-icons:save' label='Save Firebase' on-click='_saveToFirebase'></icon-label-button>
-          <icon-label-button icon='my-icons:save' label='Update Firebase' on-click='_replaceOnFirebase'></icon-label-button>
-        </div>
+      <div class='card underline' hidden$='[[!isAdmin]]'>
+        <div class='card-title'>Save to Firebase</div>
+        <div class='card-description'>Save the currently calcualted values to firebase or update the firebase referene.</div>
+        <icon-label-button icon='my-icons:save' label='Save' on-click='_saveToFirebase'></icon-label-button>
+        <icon-label-button icon='my-icons:save' label='Update' on-click='_replaceOnFirebase'></icon-label-button>
       </div>  
     
     </section>
@@ -87,11 +82,11 @@
       <iron-pages selected='[[_selectedGraphic]]'>
         <div class='page'>
           <div class='card-title'>Tablet Schematic</div>
-          <tablet-schematic-layout class='graphic' tablet='[[tablet]]'></tablet-schematic-layout>
+          <tablet-schematic-layout class='graphic'></tablet-schematic-layout>
         </div>
         <div class='page'>
           <div class='card-title'>Tablet Bulk Density</div>
-          <bulk-density-chart id='chart' class='chart' bulk-density='{{tablet.bulkDensity}}'></bulk-density-chart>
+          <bulk-density-chart id='chart' class='chart'></bulk-density-chart>
         </div>
         <div class='page'>
           <div class='card-title'>Calculated Tablet Properties</div>
@@ -181,30 +176,83 @@
       static get is() { return 'tablet-editor-page'; }
       static get properties() {
         return { 
-          isAdmin: {type: Boolean, statePath: 'isAdmin'},
+          isAdmin: {type: Boolean, statePath: 'app.isAdmin'},
           tablet: { type: Object, statePath: 'tablet'},
           lengthUnits: { type: String, value: 'mm' },
           _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
       }
-      static get observers() {
-        return [
-          '_notifyTabletPaths(tablet.*)',
-          '_notifyTabletPaths(tablet)'
-        ];
+      _setShape(e) {
+        this.dispatch({
+          type: "SET_TABLET_SHAPE",
+          value: e.detail.value
+        });
       }
-      _notifyTabletPaths() {
-        this.notifyPath('tablet.totalArea');
-        this.notifyPath('tablet.totalVolume');
-        this.notifyPath('tablet.compressedDensity');
-        this.notifyPath('tablet.cupThickness');
-        this.notifyPath('tablet.lengthCupRadius');
-        this.notifyPath('tablet.widthCupRadius');
-        this.notifyPath('tablet.cupArea');
-        this.notifyPath('tablet.cupVolume');
-        this.notifyPath('tablet.perimeter');
-        this.notifyPath('tablet.crossSectionArea');
-        this.notifyPath('tablet.isRound');
+      _setWidth(e) {
+        this.dispatch({
+          type: "SET_TABLET_WIDTH",
+          value: e.detail.value
+        });
+      }
+      _setLength(e) {
+        this.dispatch({
+          type: "SET_TABLET_LENGTH",
+          value: e.detail.value
+        });
+      }
+      _setTotalThickness(e) {
+        this.dispatch({
+          type: "SET_TABLET_TOTAL_THICKNESS",
+          value: e.detail.value
+        });
+      }
+      _setBandThickness(e) {
+        this.dispatch({
+          type: "SET_TABLET_BAND_THICKNESS",
+          value: e.detail.value
+        });
+      }
+      _setProductName(e) {
+        this.dispatch({
+          type: "SET_TABLET_PRODUCT_NAME",
+          value: e.detail.value
+        });
+      }
+      _setFormulationName(e) {
+        this.dispatch({
+          type: "SET_TABLET_FORMULATION_NAME",
+          value: e.detail.value
+        });
+      }
+      _setProductType(e) {
+        this.dispatch({
+          type: "SET_TABLET_PRODUCT_TYPE",
+          value: e.detail.value
+        });
+      }
+      _setCompanyName(e) {
+        this.dispatch({
+          type: "SET_TABLET_COMPANY_NAME",
+          value: e.detail.value
+        });
+      }
+      _setContactName(e) {
+        this.dispatch({
+          type: "SET_TABLET_CONTACT_NAME",
+          value: e.detail.value
+        });
+      }
+      _setWeight(e) {
+        this.dispatch({
+          type: "SET_TABLET_WEIGHT",
+          value: e.detail.value
+        });
+      }
+      _setBulkDensity(e) {
+        this.dispatch({
+          type: "SET_TABLET_BULK_DENSITY",
+          value: e.detail.value
+        });
       }
       _graphicChanged(page) {
         switch(page) {
@@ -213,42 +261,23 @@
             break;
         }
       }
-      _save() {
-        this.dispatch({ 
-          type: "CALCULATE_TABLET",
-          value: this.tablet
-        });
-        window.scrollTo(0, 0);
-        window.location = '#/home';
-      }
-      
-      // Supported functions 
-      _isRound(shape) {
-        return (shape === 'round');
-      }
       _saveToFirebase() {
         if(!this.isAdmin) { return; }
         
         /*global firebase */
         this.tablet.firebaseKey = firebase.database().ref('tablets/').push().key;
-        let tablet = this._tabletToJSON();
-        firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
+        firebase.database().ref(`tablets/${this.tablet.firebaseKey}`).set(this.tablet);
       }
       _replaceOnFirebase() {
         if(!this.isAdmin) { return; }
         
-        let tablet = this._tabletToJSON();
-        if(tablet.firebaseKey) {
+        if(this.tablet.firebaseKey) {
           /*global firebase */
-          firebase.database().ref(`tablets/${tablet.firebaseKey}`).set(tablet);
+          firebase.database().ref(`tablets/${this.tablet.firebaseKey}`).set(this.tablet);
         } else {
           console.log('could not replace firebase so loaded as new');
           this._saveToFirebase();
         }
-      }
-      _tabletToJSON() {
-        return Object.assign({}, this.tablet);
-        
       }
     }
 

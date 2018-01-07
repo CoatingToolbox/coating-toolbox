@@ -3,8 +3,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="d3-import.html">
 <link rel="import" href="chart-styles.html">
+<link rel="import" href="../redux/redux-mixin.html">
 
-<dom-module id='viscosity-chart'>
+<dom-module id='coating-viscosity-chart'>
     <template>
         <style include='chart-styles'>
         :host {
@@ -14,15 +15,10 @@
         svg {
             flex-grow: 1;
         }
-        .circle:nth-child(odd) {
+        .reference-points .circle:nth-child(odd) {
             display: none;
         }
         </style>
-            
-        <div id='tooltip' class='hide'>
-            <div>Density</div>
-            <div>[[_convertToGMLString(bulkDensity)]] g/ml</div>
-        </div>
             
         <svg id='chart' width='400'>
             <g class='chart'>
@@ -31,7 +27,10 @@
                 <text class='x title'>Solids (%)</text>
                 <text class='y title'>Viscosity (cps)</text>
                 <path class='line'></path>
-                <circle class='circle'></circle>
+                <g class='reference-points'>
+                    <circle class='circle'></circle>
+                </g>
+                <circle class='solids circle red'></circle>
             </g>
         </svg>
         
@@ -39,9 +38,9 @@
     
     <script>
         
-        class ViscosityChart extends Polymer.Element {
+        class CoatingViscosityChart extends ReduxMixin(Polymer.Element) {
             
-            static get is() { return 'viscosity-chart'; }
+            static get is() { return 'coating-viscosity-chart'; }
             
             connectedCallback() {
                 super.connectedCallback();
@@ -61,9 +60,10 @@
             
             static get properties() {
                 return {
-                    intercept: Number,
-                    exponent: Number,
-                    solids: {type: Number, value: 0.2},
+                    intercept: {type: Number, statePath: 'coating.viscosityIntercept'},
+                    exponent: {type: Number, statePath: 'coating.viscosityExponent'},
+                    solids: {type: Number, statePath: 'coating.solids'},
+                    viscosity: {type: Number, statePath: 'coating.viscosity'},
                     chart: Object,
                     margin: {type: Object, value: function() {
                         return {top: 20, right: 20, bottom: 50, left: 50};
@@ -98,7 +98,8 @@
                 return [
                     '_initChart(margin, height, width)',
                     '_updateAxis(xScale, yScale, chart)',
-                    '_updateLine(chart, d3Line, xScale, yScale)'
+                    '_updateLine(chart, d3Line, xScale, yScale)',
+                    '_updateSolidsPoint(solids, chart, xScale, yScale)'
                 ];
             }
             
@@ -147,17 +148,34 @@
                         .attr('d', d3Line);
                 line.exit().remove();
                 
-                let circles = chart.selectAll('circle').data(vals);
+                let circles = chart.select('.reference-points').selectAll('circle').data(vals);
                 circles.enter()
                         .append('circle')
                             .attr('class', 'circle')
-                            .attr('r', 4)
                         .merge(circles)
+                            .attr('r', 4)
                             .attr('cx', function(d){ return xScale(d.x);})
                             .attr('cy', function(d){ return yScale(d.y);});
                 circles.exit().remove();
             }
-            
+            _updateSolidsPoint(solids, chart, xScale, yScale) {
+                if(!solids || !chart || !xScale || !yScale) { return ; }
+                
+                let vals = [{
+                    x: (solids * 100), y: this._computeViscosity(solids)
+                }];
+                
+                
+                let circles = chart.selectAll('.circle.solids').data(vals);
+                circles.enter()
+                        .append('circle')
+                            .attr('class', 'circle solids red')
+                        .merge(circles)
+                            .attr('r', 7)
+                            .attr('cx', function(d){ return xScale(d.x);})
+                            .attr('cy', function(d){ return yScale(d.y);});
+                circles.exit().remove();
+            }
             _computeViscosity(solids) {
                 return this.intercept * Math.exp(this.exponent * solids);
             }
@@ -166,7 +184,7 @@
             }
         }
         
-        window.customElements.define(ViscosityChart.is, ViscosityChart);
+        window.customElements.define(CoatingViscosityChart.is, CoatingViscosityChart);
         
     </script>
 </dom-module>

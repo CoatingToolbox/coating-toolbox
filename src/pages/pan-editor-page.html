@@ -12,7 +12,6 @@
 <link rel="import" href="../graphics/pan-schematic-layout.html">
 <link rel="import" href="../charts/pan-fill-chart.html">
 <link rel="import" href="../redux/redux-mixin.html">
-<link rel="import" href="../data/coating-pan-class.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
 <dom-module id="pan-editor-page">
@@ -38,57 +37,53 @@
       <!--Description Section-->
       <div class='card'>
         <div class='card-title underline'>Description</div>
-        <text-input value='{{pan.nickname}}' class='wide' icon='my-icons:product' label='Name'></text-input>
-        <text-input value='{{pan.manufacturer}}' options='[[manufacturerOptions]]' icon='my-icons:company' label='Manufacturer'></text-input>
-        <text-input value='{{pan.model}}' icon='my-icons:company' label='Model'></text-input>
-        <text-input value='{{pan.company}}' icon='my-icons:contact' label='Company'></text-input>
-        <text-input value='{{pan.locationName}}' icon='my-icons:location' label='Location'></text-input>
+        <text-input value='[[pan.nickname]]' on-value-changed='_setNickname' class='wide' icon='my-icons:product' label='Name'></text-input>
+        <text-input value='[[pan.manufacturer]]' on-value-changed='_setManufacturer' options='[[manufacturerOptions]]' icon='my-icons:company' label='Manufacturer'></text-input>
+        <text-input value='[[pan.model]]' on-value-changed='_setModel' icon='my-icons:company' label='Model'></text-input>
+        <text-input value='[[pan.company]]' on-value-changed='_setCompany' icon='my-icons:contact' label='Company'></text-input>
+        <text-input value='[[pan.locationName]]' on-value-changed='_setLocationName' icon='my-icons:location' label='Location'></text-input>
       </div>
       
       <div class='card'>
         <!--Dimensions Section-->
         <div class='card-title underline'>Dimensions</div>
-        <unit-input value='{{pan.panDiameter}}' icon='my-icons:ruler' label='Main Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
-        <unit-input value='{{pan.openingDiameter}}' icon='my-icons:ruler' label='Opening Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
-        <unit-input value='{{pan.brimWidth}}' icon='my-icons:ruler' label='Depth at Brim' type='length' selected-units='{{lengthUnits}}'></unit-input>
-        <unit-input value='{{pan.wallWidth}}' icon='my-icons:ruler' label='Depth along Wall' type='length' selected-units='{{lengthUnits}}'></unit-input>
+        <unit-input value='[[pan.panDiameter]]' on-value-changed='_setDiameter' icon='my-icons:ruler' label='Main Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
+        <unit-input value='[[pan.openingDiameter]]' on-value-changed='_setOpeningDiameter' icon='my-icons:ruler' label='Opening Diameter' type='length' selected-units='{{lengthUnits}}'></unit-input>
+        <unit-input value='[[pan.brimWidth]]' on-value-changed='_setBrimWidth' icon='my-icons:ruler' label='Depth at Brim' type='length' selected-units='{{lengthUnits}}'></unit-input>
+        <unit-input value='[[pan.wallWidth]]' on-value-changed='_setWallWidth' icon='my-icons:ruler' label='Depth along Wall' type='length' selected-units='{{lengthUnits}}'></unit-input>
       </div>
       
       <div class='card'>
         <!--Airlflow Section-->
         <div class='card-title underline'>Airflow</div>
-        <item-select-input label='Pan Perforations' icon='my-icons:surface-area' items='["Fully", "Partially", "Solid"]' selected='{{pan.perforations}}'></item-select-input>
-        <unit-input value='{{pan.maxAirflow}}' icon='my-icons:ruler' type='airflow' selected-units='cfm' label='Max Airflow'></unit-input>
+        <item-select-input selected='[[pan.perforations]]' on-selected-changed='_setPerforations' label='Pan Perforations' icon='my-icons:surface-area' items='["Fully", "Partially", "Solid"]'></item-select-input>
+        <unit-input value='[[pan.maxAirflow]]' on-value-changed='_setMaxAirflow' icon='my-icons:ruler' type='airflow' selected-units='cfm' label='Max Airflow'></unit-input>
       </div>
       
       <!--Guns Section-->
       <div class='card'>
         <div class='card-title underline'>Spray Guns</div>
-        <text-input value='{{pan.gunMake}}' icon='my-icons:product' label='Manufacturer'></text-input>
-        <text-input value='{{pan.gunModel}}' icon='my-icons:product' label='Model'></text-input>
-        <unit-input value='{{pan.gunCount}}' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='guns'></unit-input>
-        <unit-input value='{{pan.gunToGunDistance}}' icon='my-icons:ruler' type='length' selected-units='{{lengthUnits}}' label='Gun To Gun Distance'></unit-input>
+        <text-input value='[[pan.gunMake]]' on-value-changed='_setGunMake' icon='my-icons:product' label='Manufacturer'></text-input>
+        <text-input value='[[pan.gunModel]]' on-value-changed='_setGunModel' icon='my-icons:product' label='Model'></text-input>
+        <unit-input value='[[pan.gunCount]]' on-value-changed='_setGunCount' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='guns'></unit-input>
+        <unit-input value='[[pan.gunToGunDistance]]' on-value-changed='_setGunToGun' icon='my-icons:ruler' type='length' selected-units='{{lengthUnits}}' label='Gun To Gun Distance'></unit-input>
       </div>
       
       <!--Baffles Section-->
       <div class='card'>
         
         <div class='card-title'>Baffles</div>
-        <text-input value='{{pan.baffleType}}' class='wide' options='[[baffleOptions]]' icon='my-icons:product' label='Baffle Type'></text-input>
-        <unit-input value='{{pan.baffleCount}}' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='baffles'></unit-input>
-        <unit-input value='{{pan.baffleHeight}}' icon='my-icons:ruler' label='Max height' type='length' selected-units='{{lengthUnits}}'></unit-input>
+        <text-input value='[[pan.baffleType]]' on-value-changed='_setBaffleType' class='wide' options='[[baffleOptions]]' icon='my-icons:product' label='Baffle Type'></text-input>
+        <unit-input value='[[pan.baffleCount]]' on-value-changed='_setBaffleCount' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='baffles'></unit-input>
+        <unit-input value='[[pan.baffleHeight]]' on-value-changed='_setBaffleHeight' icon='my-icons:ruler' label='Max height' type='length' selected-units='{{lengthUnits}}'></unit-input>
       
       </div> 
       
-      <div class='card underline'>
-        <div class='card-title'>Calculate</div>
-        <div class='card-description'>Click calcualte to save pan dimensions and volumes.</div>
-        <icon-label-button class='wide' icon='my-icons:calculator' label='Calculate Pan' on-click='_save'></icon-label-button>
-      
-        <div id='admin-buttons' hidden$='[[!isAdmin]]'>
-          <icon-label-button icon='my-icons:save' label='Save Firebase' on-click='_saveToFirebase'></icon-label-button>
-          <icon-label-button icon='my-icons:save' label='Update Firebase' on-click='_replaceOnFirebase'></icon-label-button>
-        </div>
+      <div class='card underline'  hidden$='[[!isAdmin]]'>
+        <div class='card-title'>Save to Firebase</div>
+        <div class='card-description'>Click to save or update on firebase.</div>
+        <icon-label-button icon='my-icons:save' label='Save' on-click='_saveToFirebase'></icon-label-button>
+        <icon-label-button icon='my-icons:save' label='Update' on-click='_replaceOnFirebase'></icon-label-button>
       </div>  
        
     </section>
@@ -102,11 +97,11 @@
       <iron-pages selected='[[pageSelected]]'>
         <div class='page'>
           <div class='card-title'>Coating Pan Schematic</div>
-          <pan-schematic-layout class='graphic' pan='[[pan]]'></pan-schematic-layout>
+          <pan-schematic-layout class='graphic'></pan-schematic-layout>
         </div>
         <div class='page'>
           <div class='card-title'>Batch Size vs Pan Fill Height</div>
-          <pan-fill-chart id='chart' class='graphic' pan='[[pan]]'></pan-fill-chart>
+          <pan-fill-chart id='chart' class='graphic'></pan-fill-chart>
         </div>
         <div class='page'>
           <div class='card-title'>Coating Pan Volumes</div>
@@ -140,11 +135,11 @@
       static get is() { return 'pan-editor-page'; }
       static get properties() {
         return { 
-          isAdmin: {type: Boolean, statePath: 'isAdmin'},
+          isAdmin: {type: Boolean, statePath: 'app.isAdmin'},
           pan: { type: Object, statePath: 'pan'},
           volumeUnits: {type: String, value: 'l'},
           lengthUnits: { type: String, value: 'in' },
-          pageSelected: {type: Number, value: 0, observer: '_pageChanged'},
+          pageSelected: {type: Number, value: 1, observer: '_pageChanged'},
           manufacturerOptions: { 
             type: Array, 
             value: function() 
@@ -183,56 +178,130 @@
             break;
         }
       }
-      
-      static get observers() {
-        return [
-          '_notifyPanPaths(pan.*)',
-          '_notifyPanPaths(pan)',
-          '_updateChart(pan.*)'
-        ];
-      }
-      _notifyPanPaths() {
-        this.notifyPath('pan.brimVolume');
-        this.notifyPath('pan.maxFillVolume');
-        this.notifyPath('pan.minFillVolume');
-      }
-      _updateChart() {
-        this.$.chart.updateChart();
-      }
-      _save() {
-        this.dispatch({ 
-          type: "CALCULATE_PAN",
-          value: this.pan
-        });
-        window.scrollTo(0, 0);
-        window.location = '#/home';
-      }
-      
       _saveToFirebase() {
         if(!this.isAdmin) { return; }
         /*global firebase */
         this.pan.firebaseKey = firebase.database().ref('pans/').push().key;
-        // create a copy add copy over specific values from getters
-        let pan = this._panToJSON();
-        firebase.database().ref(`pans/${pan.firebaseKey}`).set(pan);
+        firebase.database().ref(`pans/${this.pan.firebaseKey}`).set(this.pan);
       }
       _replaceOnFirebase() {
-        // if(!this.isAdmin) { return; }
-        
-        let pan = this._panToJSON();
-        if(pan.firebaseKey) {
+        if(!this.isAdmin) { return; }
+        if(this.pan.firebaseKey) {
           /*global firebase */
-          firebase.database().ref(`pans/${pan.firebaseKey}`).set(pan);
+          firebase.database().ref(`pans/${this.pan.firebaseKey}`).set(this.pan);
         } else {
           console.log('could not replace firebase so loaded as new');
           this._saveToFirebase();
         }
       }
-      // Convert pan class to JSON and add save certain getter values
-      _panToJSON() {
-        let pan = Object.assign({}, this.pan);
-        pan.diameterInInchesString = this.pan.diameterInInchesString;
-        pan.brimVolumeInLitersString = this.pan.brimVolumeInLitersString;
+      
+      _setNickname(e){
+        this.dispatch({
+          type: "SET_PAN_NICKNAME",
+          value: e.detail.value
+        });
+      }
+      _setManufacturer(e){
+        this.dispatch({
+          type: "SET_PAN_MANUFACTURER",
+          value: e.detail.value
+        });
+      }
+      _setModel(e){
+        this.dispatch({
+          type: "SET_PAN_MODEL",
+          value: e.detail.value
+        });
+      }
+      _setCompany(e){
+        this.dispatch({
+          type: "SET_PAN_COMPANY",
+          value: e.detail.value
+        });
+      }
+      _setLocationName(e){
+        this.dispatch({
+          type: "SET_PAN_LOCATION_NAME",
+          value: e.detail.value
+        });
+      }
+      _setDiameter(e){
+        this.dispatch({
+          type: "SET_PAN_DIAMETER",
+          value: e.detail.value
+        });
+      }
+      _setOpeningDiameter(e){
+        this.dispatch({
+          type: "SET_PAN_OPENING_DIAMETER",
+          value: e.detail.value
+        });
+      }
+      _setBrimWidth(e){
+        this.dispatch({
+          type: "SET_PAN_BRIM_WIDTH",
+          value: e.detail.value
+        });
+      }
+      _setWallWidth(e){
+        this.dispatch({
+          type: "SET_PAN_WALL_WIDTH",
+          value: e.detail.value
+        });
+      }
+      _setPerforations(e){
+        this.dispatch({
+          type: "SET_PAN_PERFORATIONS",
+          value: e.detail.value
+        });
+      }
+      _setMaxAirflow(e){
+        this.dispatch({
+          type: "SET_PAN_MAX_AIRFLOW",
+          value: e.detail.value
+        });
+      }
+      _setGunMake(e){
+        this.dispatch({
+          type: "SET_PAN_GUN_MAKE",
+          value: e.detail.value
+        });
+      }
+      _setGunModel(e){
+        this.dispatch({
+          type: "SET_PAN_GUN_MODEL",
+          value: e.detail.value
+        });
+      }
+      _setGunCount(e){
+        this.dispatch({
+          type: "SET_PAN_GUN_COUNT",
+          value: e.detail.value
+        });
+      }
+      _setGunToGun(e){
+        this.dispatch({
+          type: "SET_PAN_GUN_TO_GUN_DISTANCE",
+          value: e.detail.value
+        });
+      }
+      _setBaffleType(e){
+        this.dispatch({
+          type: "SET_PAN_BAFFLE_TYPE",
+          value: e.detail.value
+        });
+      }
+      _setBaffleCount(e){
+        this.dispatch({
+          type: "SET_PAN_BAFFLE_COUNT",
+          value: e.detail.value
+        });
+      }
+      _setBaffleHeight(e){
+        this.dispatch({
+          type: "SET_PAN_BAFFLE_HEIGHT",
+          value: e.detail.value
+        });
       }
     }
 

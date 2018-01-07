@@ -8,9 +8,8 @@
 <link rel="import" href="../inputs/text-input.html">
 <link rel="import" href="../inputs/unit-input.html">
 <link rel="import" href="../inputs/item-select-input.html">
-<link rel="import" href="../charts/viscosity-chart.html">
+<link rel="import" href="../charts/coating-viscosity-chart.html">
 <link rel="import" href="../redux/redux-mixin.html">
-<link rel="import" href="../data/coating-formula-class.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
 <dom-module id="coating-editor-page">
@@ -31,40 +30,36 @@
       <!--Description Section-->
       <div class='card'>
         <div class='card-title underline'>Description</div>
-        <text-input value='{{coat.productName}}' icon='my-icons:product' label='Product'></text-input>
-        <text-input value='{{coat.formulaName}}' icon='my-icons:product' label='Formula'></text-input>
-        <text-input value='{{coat.color}}' icon='my-icons:product' label='Color'></text-input>
-        <item-select-input label='Functionality' icon='my-icons:product' items='["Immediate", "Delayed", "Extended"]' selected='{{coat.type}}'></item-select-input>
+        <text-input value='[[coat.productName]]' on-value-changed='_setProductName' icon='my-icons:product' label='Product'></text-input>
+        <text-input value='[[coat.formulaName]]' on-value-changed='_setFormulaName' icon='my-icons:product' label='Formula'></text-input>
+        <text-input value='[[coat.color]]' on-value-changed='_setColor' icon='my-icons:product' label='Color'></text-input>
+        <item-select-input selected='[[coat.type]]' on-selected-changed='_setType' label='Functionality' icon='my-icons:product' items='["Immediate", "Delayed", "Extended"]'></item-select-input>
       </div>
       
       <!-- Section-->
       <div class='card'>
         <div class='card-title underline'>Film Properties</div>
-        <unit-input value='{{coat.density}}' icon='my-icons:density' label='Film Density' type='density' selected-units='g/ml'></unit-input>
+        <unit-input value='[[coat.density]]' on-value-changed='_setDensity' icon='my-icons:density' label='Film Density' type='density' selected-units='g/ml'></unit-input>
       </div>
       
       <!-- Section-->
       <div class='card'>
         <div class='card-title underline'>Viscosity Profile</div>
-        <unit-input value='{{coat.viscosityIntercept}}' icon='my-icons:count' label='Intercept' selected-units=''></unit-input>
-        <unit-input value='{{coat.viscosityExponent}}' icon='my-icons:count' label='Exponent' selected-units=''></unit-input>
+        <unit-input value='[[coat.viscosityIntercept]]' on-value-changed='_setIntercept' icon='my-icons:count' label='Intercept' selected-units=''></unit-input>
+        <unit-input value='[[coat.viscosityExponent]]' on-value-changed='_setExponent' icon='my-icons:count' label='Exponent' selected-units=''></unit-input>
       </div>
       
       <!-- Section-->
       <div class='card'>
         <div class='card-title underline'>Starting Recommendations</div>
-        <unit-input value='{{coat.solids}}' icon='my-icons:percent' label='Dispersion Solids' type='percent' selected-units='%'></unit-input>
+        <unit-input value='[[coat.solids]]' on-value-changed='_setSolids' icon='my-icons:percent' label='Dispersion Solids' type='percent' selected-units='%'></unit-input>
       </div>
       
-      <div class='card underline'>
-        <div class='card-title'>Calculate</div>
-        <div class='card-description'>Click save the coating formulation properties</div>
-        <icon-label-button class='wide' icon='my-icons:calculator' label='Calculate Coatiing' on-click='_save'></icon-label-button>
-      
-        <div id='admin-buttons' hidden$='[[!isAdmin]]'>
-          <icon-label-button icon='my-icons:save' label='Save Firebase' on-click='_saveToFirebase'></icon-label-button>
-          <icon-label-button icon='my-icons:save' label='Update Firebase' on-click='_replaceOnFirebase'></icon-label-button>
-        </div>
+      <div class='card underline' hidden$='[[!isAdmin]]'>
+        <div class='card-title'>Save to Firebase</div>
+        <div class='card-description'>Click to save or update to firebase</div>
+        <icon-label-button icon='my-icons:save' label='Save' on-click='_saveToFirebase'></icon-label-button>
+        <icon-label-button icon='my-icons:save' label='Update' on-click='_replaceOnFirebase'></icon-label-button>
       </div>  
       
     </section>
@@ -80,7 +75,7 @@
       <iron-pages selected='[[selectedPage]]'>
         <div class='page'>
           <div class='card-title'>Dispersion Solids vs Viscosity</div>
-          <viscosity-chart class='chart' intercept='[[coat.viscosityIntercept]]' exponent='[[coat.viscosityExponent]]' solids='[[coat.solids]]'></viscosity-chart>
+          <coating-viscosity-chart class='chart'></coating-viscosity-chart>
         </div>
       </iron-pages>
       
@@ -93,41 +88,75 @@
       static get is() { return 'coating-editor-page'; }
       static get properties() {
         return { 
-          isAdmin: {type: Boolean, statePath: 'isAdmin'},
-          coat: { type: Object, statePath: 'coatingFormula'},
+          isAdmin: {type: Boolean, statePath: 'app.isAdmin'},
+          coat: { type: Object, statePath: 'coating'},
           selectedPage: {type: Number, value: 0}
         };
       }
-      _save() {
-        this.dispatch({ 
-          type: "CALCULATE_COATING_FORMULA",
-          value: this.coat
+      _setProductName(e) {
+        this.dispatch({
+          type: "SET_COATING_PRODUCT_NAME",
+          value: e.detail.value
         });
-        window.location = '#/materials';
       }
-      
+      _setFormulaName(e) {
+        this.dispatch({
+          type: "SET_COATING_FORMULA_NAME",
+          value: e.detail.value
+        });
+      }
+      _setColor(e) {
+        this.dispatch({
+          type: "SET_COATING_COLOR",
+          value: e.detail.value
+        });
+      }
+      _setType(e) {
+        this.dispatch({
+          type: "SET_COATING_TYPE",
+          value: e.detail.value
+        });
+      }
+      _setDensity(e) {
+        this.dispatch({
+          type: "SET_COATING_DENSITY",
+          value: e.detail.value
+        });
+      }
+      _setIntercept(e) {
+        this.dispatch({
+          type: "SET_COATING_VISCOSITY_INTERCEPT",
+          value: e.detail.value
+        });
+      }
+      _setExponent(e) {
+        this.dispatch({
+          type: "SET_COATING_VISCOSITY_EXPONENT",
+          value: e.detail.value
+        });
+      }
+      _setSolids(e) {
+        this.dispatch({
+          type: "SET_COATING_SOLIDS",
+          value: e.detail.value
+        });
+      }
       _saveToFirebase() {
         if(!this.isAdmin) { return; }
         
         // /*global firebase */
         this.coat.firebaseKey = firebase.database().ref('coatingFormulas/').push().key;
-        let coat =this._coatToJSON();
-        firebase.database().ref(`coatingFormulas/${coat.firebaseKey}`).set(coat);
+        firebase.database().ref(`coatingFormulas/${this.coat.firebaseKey}`).set(this.coat);
       }
       _replaceOnFirebase() {
         if(!this.isAdmin) { return; }
-        
-        let coat =this._coatToJSON();
-        if(coat.firebaseKey) {
+        if(this.coat.firebaseKey) {
           /*global firebase */
-          firebase.database().ref(`coatingFormulas/${coat.firebaseKey}`).set(coat);
+          firebase.database().ref(`coatingFormulas/${this.coat.firebaseKey}`).set(this.coat);
         } else {
           console.log('could not replace firebase so loaded as new');
           this._saveToFirebase();
         }
-      }
-      _coatToJSON() {
-        return Object.assign({}, this.coat);
       }
     }
 
