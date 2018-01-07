@@ -2,7 +2,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../charts/viscosity-chart.html">
+<link rel="import" href="../charts/coating-viscosity-chart.html">
 <link rel="import" href="../list-items/small-icon-item.html">
 <link rel="import" href="../list-items/icon-label-item.html">
 <link rel="import" href="../redux/redux-mixin.html">
@@ -27,7 +27,7 @@
       #graphic-title {
         grid-column: 1 / 3;
       }
-      viscosity-chart {
+      coating-viscosity-chart {
         grid-column: 1 / 3;
         min-height: 225px;
         max-height: 300px;
@@ -45,7 +45,7 @@
           grid-column: 3 / 4;
           grid-row: 1 / 2;
         }
-        viscosity-chart {
+        coating-viscosity-chart {
           grid-column: 3 / 4;
           grid-row: 2 / 6;
         }
@@ -113,7 +113,7 @@
       value='[[coat.densityInGML]] g/ml'>
       </icon-label-item>
       <div class='section-title' id='graphic-title'>Viscosity Profile</div>
-      <viscosity-chart intercept='[[coat.viscosityIntercept]]' exponent='[[coat.viscosityExponent]]' solids='[[coat.solids]]'></viscosity-chart>
+      <coating-viscosity-chart></coating-viscosity-chart>
       
     </section>
     
