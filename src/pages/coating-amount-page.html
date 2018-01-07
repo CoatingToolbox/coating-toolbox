@@ -33,10 +33,10 @@
           The amount of coating can be defined is many ways depening on your application. When applying <b>[[coat.productName]]</b> with a <b>[[coat.densityInGML]] g/ml film density</b> to 
           <b>[[tablet.productName]]</b> with <b>[[tablet.surfaceAreaInCM2]] cm2 surface area</b> and <b>[[tablet.weightInMG]] mg weight </b> we can determine the optimal coating amount to apply. 
         </div>
-        <unit-input label='Coating Weight' icon='my-icons:weight' type='weight' selected-units='mg' value='[[coat.coatingWeight]]' on-value-changed='_setCoatingWeight'></unit-input>
-        <unit-input label='Percent Weight Gain' icon='my-icons:percent' type='percent' selected-units='%' value='[[coat.weightGain]]' on-value-changed='_setWeightGain'></unit-input>
-        <unit-input label='Coating Coverage' icon='my-icons:surface-area' type='weight/area' selected-units='mg/cm2' value='[[coat.coatingCoverage]]' on-value-changed='_setCoatingCoverage'></unit-input>
-        <unit-input label='Film Thickness' icon='my-icons:ruler' type='length' selected-units='um' value='[[coat.filmThickness]]' on-value-changed='_setFilmThickness'></unit-input>
+        <unit-input label='Coating Weight' icon='my-icons:weight' type='weight' selected-units='mg' value='[[amount.coatingWeight]]' on-value-changed='_setCoatingWeight'></unit-input>
+        <unit-input label='Percent Weight Gain' icon='my-icons:percent' type='percent' selected-units='%' value='[[amount.weightGain]]' on-value-changed='_setWeightGain'></unit-input>
+        <unit-input label='Coating Coverage' icon='my-icons:surface-area' type='weight/area' selected-units='mg/cm2' value='[[amount.coatingCoverage]]' on-value-changed='_setCoatingCoverage'></unit-input>
+        <unit-input label='Film Thickness' icon='my-icons:ruler' type='length' selected-units='um' value='[[amount.filmThickness]]' on-value-changed='_setFilmThickness'></unit-input>
         <!--<icon-label-button icon='my-icons:calculator' label='Min Fill' on-click='_setMinWeight'></icon-label-button>-->
         <!--<icon-label-button icon='my-icons:calculator' label='Max Fill' on-click='_setMaxWeight'></icon-label-button>-->
       </div>
@@ -52,7 +52,7 @@
       <iron-pages selected='[[selectedPage]]'>
         <div class='page'>
           <div class='card-title'>Functionality vs Weight Gain</div>
-          <coating-amount-chart percent='[[coat.weightGain]]'></coating-amount-chart>
+          <coating-amount-chart percent='[[amount.weightGain]]'></coating-amount-chart>
         </div>
     
       </iron-pages>
@@ -68,41 +68,40 @@
         return {
           selectedPage: {type: Number, value: 0},
           tablet: {type: Object, statePath: "tablet"},
-          coat: {type: Object, statePath: 'coatingFormula'},
+          coat: {type: Object, statePath: "coating"},
+          amount: {type: Object, statePath: 'coatingAmount'},
         };
-      }
-      static get observers() {
-        return [
-          '_notifyPaths(coat.*)'
-        ];
-      }
-      _notifyPaths() {
-        this.notifyPath('coat.coatingCoverage');
-        this.notifyPath('coat.filmThickness');
-        this.notifyPath('coat.coatingWeight');
       }
       _setCoatingWeight(e) {
         this.dispatch({
           type: "SET_COATING_WEIGHT",
-          value: e.detail.value
+          value: e.detail.value,
+          coating: e.detail.coat,
+          tablet: e.detail.tablet
         });
       }
       _setWeightGain(e) {
         this.dispatch({
           type: "SET_COATING_WEIGHT_GAIN",
-          value: e.detail.value
+          value: e.detail.value,
+          coating: e.detail.coat,
+          tablet: e.detail.tablet
         });
       }
       _setCoatingCoverage(e) {
         this.dispatch({
           type: "SET_COATING_COVERAGE",
-          value: e.detail.value
+          value: e.detail.value,
+          coating: e.detail.coat,
+          tablet: e.detail.tablet
         });
       }
       _setFilmThickness(e) {
         this.dispatch({
           type: "SET_FILM_THICKNESS",
-          value: e.detail.value
+          value: e.detail.value,
+          coating: e.detail.coat,
+          tablet: e.detail.tablet
         });
       }
     }
