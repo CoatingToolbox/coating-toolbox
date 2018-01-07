@@ -11,6 +11,7 @@
 <link rel="import" href="../list-items/list-unit-item.html">
 <link rel="import" href="../graphics/pan-schematic-layout.html">
 <link rel="import" href="../charts/pan-fill-chart.html">
+<link rel="import" href="../charts/volume-donut-chart.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
@@ -23,6 +24,22 @@
       .card text-input[label="Name"], 
       .card text-input[label="Baffle Type"] {
         grid-column: 1/ 3;
+      }
+      .volumes {
+        justify-content: center;
+      }
+      .donut-chart-layout {
+        padding: 24px 0px;
+        margin-bottom: 96px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+      volume-donut-chart[type='min'] {
+        --chart-color: var(--app-light-color);
+      }
+      volume-donut-chart[type='brim'] {
+        --chart-color: var(--app-dark-color);
       }
     </style>
     
@@ -103,26 +120,31 @@
           <div class='card-title'>Batch Size vs Pan Fill Height</div>
           <pan-fill-chart id='chart' class='graphic'></pan-fill-chart>
         </div>
-        <div class='page'>
+        <div class='page volumes'>
           <div class='card-title'>Coating Pan Volumes</div>
-          <list-unit-item 
-            icon='my-icons:volume' 
-            title='Brim Volume' 
-            type='volume' 
-            selected-units='{{volumeUnits}}' 
-            value='[[pan.brimVolume]]'></list-unit-item>
-          <list-unit-item 
-            icon='my-icons:volume' 
-            title='Max Working Volume' 
-            type='volume' 
-            selected-units='{{volumeUnits}}' 
-            value='[[pan.maxFillVolume]]'></list-unit-item>
-          <list-unit-item 
-            icon='my-icons:volume' 
-            title='Min Working Volume' 
-            type='volume' 
-            selected-units='{{volumeUnits}}' 
-            value='[[pan.minFillVolume]]'></list-unit-item>
+          <div class='donut-chart-layout'>
+            <volume-donut-chart type='brim' label='Brim Volume'></volume-donut-chart>
+            <volume-donut-chart type='max' label='Max Recommended'></volume-donut-chart>
+            <volume-donut-chart type='min' label='Min Recommended'></volume-donut-chart>
+          </div>
+          <!--<list-unit-item -->
+          <!--  icon='my-icons:volume' -->
+          <!--  title='Brim Volume' -->
+          <!--  type='volume' -->
+          <!--  selected-units='{{volumeUnits}}' -->
+          <!--  value='[[pan.brimVolume]]'></list-unit-item>-->
+          <!--<list-unit-item -->
+          <!--  icon='my-icons:volume' -->
+          <!--  title='Max Working Volume' -->
+          <!--  type='volume' -->
+          <!--  selected-units='{{volumeUnits}}' -->
+          <!--  value='[[pan.maxFillVolume]]'></list-unit-item>-->
+          <!--<list-unit-item -->
+          <!--  icon='my-icons:volume' -->
+          <!--  title='Min Working Volume' -->
+          <!--  type='volume' -->
+          <!--  selected-units='{{volumeUnits}}' -->
+          <!--  value='[[pan.minFillVolume]]'></list-unit-item>-->
         </div>
       </iron-pages>
       
@@ -139,7 +161,7 @@
           pan: { type: Object, statePath: 'pan'},
           volumeUnits: {type: String, value: 'l'},
           lengthUnits: { type: String, value: 'in' },
-          pageSelected: {type: Number, value: 1, observer: '_pageChanged'},
+          pageSelected: {type: Number, value: 0, observer: '_pageChanged'},
           manufacturerOptions: { 
             type: Array, 
             value: function() 
@@ -175,6 +197,12 @@
         switch(page) {
           case 1:
             this.$.chart._setChartDimensions();
+            break;
+          case 2:
+            let charts = [...this.root.querySelectorAll('volume-donut-chart')];
+            charts.forEach(chart => {
+              chart._setChartDimensions();
+            });
             break;
         }
       }
