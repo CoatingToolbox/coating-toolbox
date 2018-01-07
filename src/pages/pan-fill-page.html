@@ -39,7 +39,7 @@
         <div class='card-title underline'>Batch Size</div>
         <div class='card-description'>Batch sizes can be desribed by volume, weight or counting units. <b>[[tablet.productName]]</b> has a 
         <b>[[tablet.weightInMG]] mg tablet weight</b>
-        and <b>[[tablet.bulkDensityInGML]] g/ml bulk density</b>. Based on these values input any value and see how this translates to the other values.
+        and <b>[[tablet.bulkDensityInGML]] </b>g/ml bulk density</b>. Based on these values input any value and see how this translates to the other values.
         </div>
         <unit-input label='Batch Volume' icon='my-icons:volume' type='volume' selected-units='l' value='[[batch.batchVolume]]' on-value-changed='_setBatchVolume'></unit-input>
         <unit-input label='Batch Weight' icon='my-icons:weight' type='weight' selected-units='kg' value='[[batch.batchWeight]]' on-value-changed='_setBatchWeight'></unit-input>
@@ -125,7 +125,7 @@
       _setPanPercent(e) {
         this.dispatch({
           type: "SET_BATCH_PERCENT_VOLUME",
-          value: e.detai.value,
+          value: e.detail.value,
           pan: this.pan,
           tablet: this.tablet
         });

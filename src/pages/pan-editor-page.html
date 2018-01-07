@@ -97,11 +97,11 @@
       <iron-pages selected='[[pageSelected]]'>
         <div class='page'>
           <div class='card-title'>Coating Pan Schematic</div>
-          <pan-schematic-layout class='graphic' pan='[[pan]]'></pan-schematic-layout>
+          <pan-schematic-layout class='graphic'></pan-schematic-layout>
         </div>
         <div class='page'>
           <div class='card-title'>Batch Size vs Pan Fill Height</div>
-          <pan-fill-chart id='chart' class='graphic' pan='[[pan]]'></pan-fill-chart>
+          <pan-fill-chart id='chart' class='graphic'></pan-fill-chart>
         </div>
         <div class='page'>
           <div class='card-title'>Coating Pan Volumes</div>
@@ -139,7 +139,7 @@
           pan: { type: Object, statePath: 'pan'},
           volumeUnits: {type: String, value: 'l'},
           lengthUnits: { type: String, value: 'in' },
-          pageSelected: {type: Number, value: 0, observer: '_pageChanged'},
+          pageSelected: {type: Number, value: 1, observer: '_pageChanged'},
           manufacturerOptions: { 
             type: Array, 
             value: function() 

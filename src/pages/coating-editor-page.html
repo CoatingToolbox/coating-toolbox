@@ -8,7 +8,7 @@
 <link rel="import" href="../inputs/text-input.html">
 <link rel="import" href="../inputs/unit-input.html">
 <link rel="import" href="../inputs/item-select-input.html">
-<link rel="import" href="../charts/viscosity-chart.html">
+<link rel="import" href="../charts/coating-viscosity-chart.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
@@ -75,7 +75,7 @@
       <iron-pages selected='[[selectedPage]]'>
         <div class='page'>
           <div class='card-title'>Dispersion Solids vs Viscosity</div>
-          <viscosity-chart class='chart' intercept='[[coat.viscosityIntercept]]' exponent='[[coat.viscosityExponent]]' solids='[[coat.solids]]'></viscosity-chart>
+          <coating-viscosity-chart class='chart'></coating-viscosity-chart>
         </div>
       </iron-pages>
       

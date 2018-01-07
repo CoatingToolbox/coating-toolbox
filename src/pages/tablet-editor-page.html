@@ -13,7 +13,6 @@
 <link rel="import" href="../buttons/pages-tab-button.html">
 <link rel="import" href="../buttons/icon-label-button.html">
 <link rel="import" href="../redux/redux-mixin.html">
-<link rel="import" href="../data/tablet-class.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
 <dom-module id="tablet-editor-page">
@@ -83,11 +82,11 @@
       <iron-pages selected='[[_selectedGraphic]]'>
         <div class='page'>
           <div class='card-title'>Tablet Schematic</div>
-          <tablet-schematic-layout class='graphic' tablet='[[tablet]]'></tablet-schematic-layout>
+          <tablet-schematic-layout class='graphic'></tablet-schematic-layout>
         </div>
         <div class='page'>
           <div class='card-title'>Tablet Bulk Density</div>
-          <bulk-density-chart id='chart' class='chart' bulk-density='[[tablet.bulkDensity]]' on-bulk-density-changed='_setBulkDensity'></bulk-density-chart>
+          <bulk-density-chart id='chart' class='chart'></bulk-density-chart>
         </div>
         <div class='page'>
           <div class='card-title'>Calculated Tablet Properties</div>
@@ -180,7 +179,7 @@
           isAdmin: {type: Boolean, statePath: 'app.isAdmin'},
           tablet: { type: Object, statePath: 'tablet'},
           lengthUnits: { type: String, value: 'mm' },
-          _selectedGraphic: {type: Number, value: 2, observer: '_graphicChanged'}
+          _selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
       }
       _setShape(e) {

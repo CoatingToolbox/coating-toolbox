@@ -8,10 +8,6 @@
 <dom-module id='pan-fill-chart'>
     <template>
         <style include='chart-styles'>
-        
-            .circle.batch-volume {
-                stroke: var(--red-color);
-            }
             .reference-labels text {
                 text-align: right;
                 direction: rtl;
@@ -32,7 +28,7 @@
                     <g class="reference-circles circle"></g>
                     <g class='reference-labels'></g>
                 </g>
-                <circle r="7" class="batch-volume circle"></circle>
+                <circle r="7" class="red batch-volume circle"></circle>
             </g>
         </svg>
         
@@ -65,22 +61,17 @@
             
             static get properties() {
                 return {
-                    brimHeight: {type: Number, statePath: 'pan.brimHeight'},
-                    brimWeight: {type: Number, statePath: 'batch.brimWeight'},
-                    dottedLineData: {type: Array, statePath: 'batch.panRangeWeightVsFillHeight'},
-                    workingVolumeData: {type: Array, statePath: 'batch.workingFillWeightVsFillHeight'},
-                    volumePointData: {type: Array, statePath: "pan.referencePointsWeightVsHeight"},
-                    batchPointData: {type: Array, statePath: "batch.batchWeightVsHeight"},
+                    pan: {type: Object, statePath: 'pan'},
+                    batch: {type: Object, statePath: 'batch'},
                     volumeUnits: {type: String, value: "l"},
-                    volumeSelected: {type: String, value: "brim"},
                     chart: {type: Object},
                     margin: {type: Object, value: function() {
                         return {top: 20, right: 20, bottom: 50, left: 50};
                     }},
                     height: {type: Number},
                     width: {type: Number},
-                    xScale: {type: Object, computed: '_computeXScale(width, brimWeight)'},
-                    yScale: {type: Object, computed: '_computeYScale(height, brimHeight)'},
+                    xScale: {type: Object, computed: '_computeXScale(width, batch.brimWeight)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, pan.brimHeight)'},
                     d3Line: {type: Object, computed: '_computeD3Line(xScale, yScale)'},
                     d3Area: {type: Object, computed: '_computeD3Area(xScale, yScale, height)'}
                 };
@@ -110,13 +101,12 @@
                 return [
                     '_initChart(margin, height, width)',
                     '_updateAxis(xScale, yScale, chart)',
-                    '_updateDottedLine(dottedLineData, chart, d3Line, d3Area)',
-                    '_updateWorkingVolume(workingVolumeData, chart, d3Line, d3Area)',
-                    '_updateVolumePoints(volumePointData, chart, xScale, yScale)',
-                    '_updateBatchPoint(batchPointData, chart, xScale, yScale)'
+                    '_updateDottedLine(batch.panRangeWeightVsFillHeight, chart, d3Line, d3Area)',
+                    '_updateWorkingVolume(batch.workingFillWeightVsFillHeight, chart, d3Line, d3Area)',
+                    '_updateVolumePoints(pan.referencePointsWeightVsHeight, chart, xScale, yScale)',
+                    '_updateBatchPoint(batch.batchWeightVsHeight, chart, xScale, yScale)'
                 ];
             }
-            
             _initChart(margin, height, width) {
                 if(!margin || !height || !width) {
                     return;
@@ -224,12 +214,6 @@
             }
             _convertToKG(val) {
                 return (val / 1000) ;
-            }
-            
-            updateChart(){
-                this.notifyPath('pan.brimWeight');
-                this.notifyPath('pan.brimHeight');
-                this.notifyPath('pan.batchWeightVsHeight');
             }
         }
         

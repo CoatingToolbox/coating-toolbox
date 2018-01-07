@@ -29,17 +29,17 @@ class Batch extends Pan {
   }
   
   get brimWeight() {
-    return this.calcWeight(this.brimVolume);
+    return this.calcWeight(this.brimVolume, this.bulkDensity);
   }
   
   // MAX WORKING VOLUME - Calculations for 100% to the brim of the pan
   get maxFillWeight() {
-    return this.calcWeight(this.maxFillVolume);
+    return this.calcWeight(this.maxFillVolume, this.bulkDensity);
   }
   
   // MIN VOLUME - Calculations for 100% to the brim of the pan
   get minFillWeight() {
-    return this.calcWeight(this.minFillVolume);
+    return this.calcWeight(this.minFillVolume, this.bulkDensity);
   }
   
   // BATCH FILL VOLUME - Calculation based on batch volume
@@ -56,25 +56,11 @@ class Batch extends Pan {
     }
     return saggita;
   }
-  get batchFillVolume() {
-    // console.assert(
-    //   (this.calcVolume(this.batchFillHeight) > this.batchVolume * 0.9 && 
-    //   this.calcVolume(this.batchFillHeight) < this.batchVolume * 1.1), 
-    //   `The calcualted batch volume is different than what is set. The calcualted batch volume is ${this.calcVolume(this.batchFillHeight)} m3`);
-    return this.calcVolume(this.batchFillHeight);
-  }
   get batchFillLength() {
     return this.calcChordLength(this.batchFillHeight);
   }
-  get batchFillWeight() {
-    // console.assert(
-    //   (this.calcWeight(this.batchFillVolume) > (this.batchVolume * this.batchBulkDensity * 0.9) && 
-    //   this.calcWeight(this.batchFillVolume) < (this.batchVolume * this.batchBulkDensity * 1.1)), 
-    //   `The calcualted batch volume is different than what is set. The calcualted batch volume is ${this.calcWeight(this.batchFillVolume)} g`);
-    return this.calcWeight(this.batchFillVolume);
-  }
   get batchFillVolumePercent() {
-    return this.batchFillVolume / this.brimVolume;
+    return this.batchVolume / this.brimVolume;
   }
   
   // DATA FOR GRAPHS 
@@ -82,12 +68,12 @@ class Batch extends Pan {
     // initiate an empty array to store values in for loop
     let vals = [];
     let step = this.brimHeight / 50;
-    
+    console.log(this.brimHeight);
     // loop through different volumes and store the volume and height values
     for(var i=0; i <= this.brimHeight; i = i + step) {
         let fillHeight = i;
         let fillVolume = this.calcVolume(fillHeight);
-        let fillWeight = this.calcWeight(fillVolume);
+        let fillWeight = this.calcWeight(fillVolume, this.bulkDensity);
         vals.push({weight: this.gramsToKilograms(fillWeight), height: this.metersToInches(fillHeight)});
     }
     return vals;
@@ -101,16 +87,15 @@ class Batch extends Pan {
     for(var i = this.minFillHeight; i <= this.maxFillHeight; i = i + step) {
         let fillHeight = i;
         let fillVolume = this.calcVolume(fillHeight);
-        let fillWeight = this.calcWeight(fillVolume);
+        let fillWeight = this.calcWeight(fillVolume, this.bulkDensity);
         vals.push({weight: this.gramsToKilograms(fillWeight), height: this.metersToInches(fillHeight)});
     }
     return vals;
     
   }
   get batchWeightVsHeight() {
-    
     let vals = [];       
-    vals.push({weight: this.gramsToKilograms(this.batchFillWeight), 
+    vals.push({weight: this.gramsToKilograms(this.batchWeight), 
                height: this.metersToInches(this.batchFillHeight),
                label: "Batch Size"});
     return vals;
@@ -133,7 +118,7 @@ class Batch extends Pan {
     if(this.baffleHeight > 0) {
       
       let vol = this.calcVolume(this.baffleHeight);
-      let weight = this.calcWeight(vol);
+      let weight = this.calcWeight(vol, this.bulkDensity);
       vals.push({weight: this.gramsToKilograms(weight), 
                  height: this.metersToInches(this.baffleHeight),
                  label: "Baffle Height"});
@@ -145,26 +130,28 @@ class Batch extends Pan {
   gramsToKilograms(val) {
     return val / 1000;
   }
+  calcWeight(volume, density) {
+    return volume * density;
+  }
   
   toJSON() {
       return {
           batchWeight: this.batchWeight,
           bulkDensity: this.bulkDensity,
           tabletWeight: this.tabletWeight,
-          panRangeWeightVsFillHeight: this.panRangeWeightVsFillHeight,
-          workingFillWeightVsFillHeight: this.workingFillWeightVsFillHeight,
-          batchWeightVsHeight: this.batchWeightVsHeight,
-          referencePointsWeightVsHeight: this.referencePointsWeightVsHeight,
           brimWeight: this.brimWeight,
           maxFillWeight: this.maxFillWeight, 
           minFillWeight: this.minFillWeight, 
           batchFillHeight: this.batchFillHeight, 
-          batchFillVolume: this.batchFillVolume, 
           batchFillLength: this.batchFillLength, 
-          batchFillWeight: this.batchFillWeight, 
           batchFillVolumePercent: this.batchFillVolumePercent,
           batchVolume: this.batchVolume,
-          tabletCount: this.tabletCount
+          tabletCount: this.tabletCount,
+          panRangeWeightVsFillHeight: this.panRangeWeightVsFillHeight,
+          workingFillWeightVsFillHeight: this.workingFillWeightVsFillHeight,
+          batchWeightVsHeight: this.batchWeightVsHeight,
+          referencePointsWeightVsHeight: this.referencePointsWeightVsHeight,
+          batchWeightInKG: (this.batchWeight / 1000).toFixed(1)
       };
   }
 }

@@ -8,15 +8,7 @@
 
 <dom-module id='bulk-density-chart'>
     <template>
-        <style include='chart-styles'>
-        :host {
-            
-            /*padding: 8px;*/
-        }
-        .circle.fill-density {
-            stroke: var(--red-color);
-        }
-        </style>
+        <style include='chart-styles'></style>
             
         <div id='tooltip' class='hide'>
             <div>Density</div>
@@ -34,7 +26,7 @@
                     <circle class='circle'></circle>
                     <text></text>
                 </g>
-                <circle class='circle fill-density'  on-track='_trackDensity'></circle>
+                <circle class='circle fill-density red'   on-track='_trackDensity'></circle>
             </g>
         </svg>
         
@@ -65,7 +57,7 @@
             
             static get properties() {
                 return {
-                    bulkDensity: { type: Number, notify: true },
+                    bulkDensity: { type: Number, statePath: "tablet.bulkDensity" },
                     weightUnits: {type: String, value: 'kg'},
                     minWeight: {type: Number, computed: '_computeWeight(1, bulkDensity)'},
                     maxWeight: {type: Number, computed: '_computeWeight(2, bulkDensity)'},
@@ -254,7 +246,11 @@
                         this.$.tooltip.classList.remove('hide');
                         break;
                     case 'track':
-                        this.bulkDensity = this.startDensity + (this.xScale.invert(e.detail.dx) * 1e+6);
+                        let density = this.startDensity + (this.xScale.invert(e.detail.dx) * 1e+6);
+                        this.dispatch({
+                            type: "SET_TABLET_BULK_DENSITY",
+                            value: density
+                        });
                         break;
                     case 'end':
                         this.$.tooltip.classList.add('hide');

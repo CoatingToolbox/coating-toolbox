@@ -6,8 +6,6 @@ class Pan {
     this.openingDiameter = 0.4826;
     this.wallWidth = 0.508;
     this.brimWidth = 0.93345;
-    this.batchVolume = 95000;
-    this.batchBulkDensity = 760000;
     this.model = "";
     this.manufacturer = "";
     this.nickname = "";
@@ -208,9 +206,6 @@ class Pan {
       return center + cone + cone;
       
     }
-  calcWeight(volume) {
-    return volume * this.batchBulkDensity;
-  }
   
   toJSON() {
       return Object.assign({}, this, {
