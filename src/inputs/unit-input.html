@@ -221,7 +221,9 @@
               'capsules', 'softgels', 'units'
             ];
             unit = 'tablets';
-            break;  
+            break; 
+          case 'speed':
+            return [ 'inches/min', 'inches/hour', 'feet/min', 'feet/hour', 'meters/min', 'meter/hour'];
             
           default:
             units = [];
@@ -247,31 +249,19 @@
         // conversion is the value you multiple meters 
         // by to get the current units
         switch (unit) {
-        
-          case 'um':
-            return 1e-6;
-            break;
-        
-          case 'mm':
-            return 0.001;
-            break;
-        
-          case 'cm':
-            return 0.01;
-            break;
-        
-          case 'm':
-            return 1;
-            break;
-        
-          case 'km':
-            return 1000;
-            break;
-        
-          case 'in':
-            return 0.0254;
-            break;
-        
+          
+          case 'inches/min': return 1 / 39.37008;
+          case 'inches/hour': return 1 / 39.37008 / 60;
+          case 'feet/min': return 1 / 3.28084;
+          case 'feet/hour': return 1 / 3.28084 / 60;
+          case 'meters/min': return 1;
+          case 'meters/hour': return 1 / 60;
+          case 'um': return 1e-6;
+          case 'mm': return 0.001;
+          case 'cm': return 0.01;
+          case 'm': return 1;
+          case 'km': return 1000;
+          case 'in': return 0.0254;
           case 'ft':
             return 0.3048;
             break;
