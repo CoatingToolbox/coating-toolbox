@@ -47,6 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="lazy-import" href="pages/pan-fill-page.html">
 <link rel="lazy-import" href="pages/coating-amount-page.html">
+<link rel="lazy-import" href="pages/pan-speed-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -169,9 +170,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <a name="coating-editor" href="#/coating-editor">Coating Editor</a>
         <a name="coating-library" href="#/coating-library">Coating Library</a>
         
-        <app-toolbar>Explore</app-toolbar>
+        <app-toolbar>Trial Setup</app-toolbar>
         <a name="pan-fill" href="#/pan-fill">Batch Size & Pan Fill</a>
-        <a name="pan-fill" href="#/coating-amount">Coating Amount</a>
+        <a name="coating-amount" href="#/coating-amount">Coating Amount</a>
+        
+        <app-toolbar>Mixing</app-toolbar>
+        <a name="pan-speed" href="#/pan-speed">Pan Speed</a>
         </div>
       </app-drawer>
       
@@ -189,6 +193,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
           <home-page name='home'></home-page>
+          <pan-speed-page name='pan-speed'></pan-speed-page>
           <pan-fill-page name='pan-fill'></pan-fill-page>
           <coating-amount-page name='coating-amount'></coating-amount-page>
           <tablet-overview-page name='tablet-overview'></tablet-overview-page>
@@ -210,9 +215,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class CoatingAppShell extends ReduxMixin(Polymer.Element) {
       static get is() { return 'coating-app-shell'; }
       
-      attached() {
-        // this.$.auth.signInWithEmailAndPassword('jhansell@colorcon.com', 'opadry');
-      }
       
       static get properties() {
         return {

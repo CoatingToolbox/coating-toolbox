@@ -84,9 +84,9 @@
         <div>
           <h1>Trial Setup</h1>
           <p>
-            The material and equipment used for the coating process determine the the 
-            coating process parameters, the batch size and target coating weight gain. 
-            Below load the materials and equipment from the library or quickly design your own.
+            Based on the tablet, coating pan and coating formula setup the specifics 
+            of the trials. This includes optimizing the batch size to achieve the ideal
+            pan fill. And setting the coating weight gain to achieve the desired functionality.
           </p>
         </div>
       </header>
@@ -96,9 +96,23 @@
       <home-summary-list-item tag='Coating Amount' title='Weight Gain: [[coatingAmount]]%'>
         <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/coating-amount'></home-nav-button>
       </home-summary-list-item>
-      <!--<home-summary-list-item tag='Process Parameters' title='Colorcon Recommended'>-->
-      <!--  <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/'></home-nav-button>-->
-      <!--</home-summary-list-item>-->
+    </section>
+    
+    
+    
+    <section>
+      <header>
+        <div>
+          <h1>Mixing and Coating Uniformity</h1>
+          <p>
+            Below adjust the coating paramters (and other factors) that influence 
+            the tablet mixing and coating uniformity. 
+          </p>
+        </div>
+      </header>
+      <home-summary-list-item tag='Pan Speed' title='Pan Speed: [[panSpeed]] rpm'>
+        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/pan-speed'></home-nav-button>
+      </home-summary-list-item>
     </section>
     
   </template>
@@ -112,7 +126,8 @@
           panTitle: {type: String, statePath: "pan.nickname"},
           coatingTitle: {type: String, statePath: 'coating.productName'},
           batchWeight: {type: Number, statePath: 'batch.batchWeightInKG'},
-          coatingAmount: {type: Number, statePath: "coatingAmount.weightGainPercent"}
+          coatingAmount: {type: Number, statePath: "coatingAmount.weightGainPercent"},
+          panSpeed: {type: Number, statePath: "parameters.panSpeedString"}
         };
       }
     }

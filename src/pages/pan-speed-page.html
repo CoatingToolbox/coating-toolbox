@@ -1,0 +1,105 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../inputs/unit-input.html">
+<link rel="import" href="../buttons/pages-tab-button.html">
+<link rel="import" href="../buttons/icon-label-button.html">
+<link rel="import" href="../charts/pan-speed-chart.html">
+<link rel="import" href="../charts/speed-vs-fill-chart.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../styles/input-graphic-layout-styles.html">
+
+<dom-module id="pan-speed-page">
+  
+   <template>
+    
+    <style include='input-graphic-layout-styles'></style>
+    
+    <section id='left-section'>
+      
+      <div class='card highlight top'>
+        <div class='card-title'>Mixing vs Friability</div>
+        <div class='card-description'>
+          The main process parameter that controls mixing is the pan speed. Fast pan speeds
+          ensure good coating uniformity but can cause tablet defect like erosion and edge chipping.
+          Also low pan speeds are often used during development which causes issues later during scale up.
+          When selecting pan speed you should consider mixing, tablet friability and scale up to commercial equipment.
+        </div>
+      </div>
+      
+      <div class='card'>
+        <div class='card-title underline'>Pan Speed</div>
+        <div class='card-description'>
+          Pan speeds are commonly reported as rotation per minute (rpm) but this does not take into consideration 
+          the pan size. With linear velocity we can determine an optimal pan speeds for across all pan sizes. 
+          Below set the pan speed or linear velocity for <b>[[pan.nickname]]</b> which has a pan diameter of <b>[[pan.diameterInInchesString]] inches.</b>
+        </div>
+        <unit-input label='Pan Speed' icon='my-icons:volume' type='' selected-units='rpm' decimals='1' value='[[param.panSpeedRPM]]' on-value-changed='_setPanSpeed'></unit-input>
+        <unit-input label='Linear Velocity' icon='my-icons:weight' type='speed' selected-units='feet/min' value='[[param.linearVelocity]]' on-value-changed='_setLinearVelocity'></unit-input>
+        <icon-label-button icon='my-icons:calculator' label='Min Speed' on-click='_setMinSpeed'></icon-label-button>
+        <icon-label-button icon='my-icons:calculator' label='Max Speed' on-click='_setMaxSpeed'></icon-label-button>
+      </div>
+      
+    </section>
+    
+    <section id='right-section'>
+      
+      <iron-selector selected='{{selectedGraphic}}'>
+          <pages-tab-button icon='my-icons:line-chart' label='Speed'></pages-tab-button>
+          <pages-tab-button icon='my-icons:line-chart' label='Video'></pages-tab-button>
+      </iron-selector>
+      
+      <iron-pages selected='[[selectedGraphic]]'>
+        <div class='page'>
+          <div class='card-title'>Pan Speed vs Linear Velocity</div>
+          <pan-speed-chart class='graphic'></pan-speed-chart>
+        </div>
+        <div class='page'>
+          <div class='card-title'>Mixing Videos</div>
+          <speed-vs-fill-chart></speed-vs-fill-chart>
+        </div>
+      </iron-pages>
+      
+    </section>
+    
+  </template>
+
+  <script>
+    class PanSpeedPage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'pan-speed-page'; }
+      static get properties() {
+        return {
+          pan: {type: Object, statePath: 'pan'},
+          param: {type: Object, statePath: 'parameters'},
+          selectedGraphic: {type: Number, value: 0}
+        };
+      }
+      _setMaxSpeed() {
+        this.dispatch({
+          type: "SET_MAX_PAN_SPEED"
+        });
+      }
+      _setMinSpeed() {
+        this.dispatch({
+          type: "SET_MIN_PAN_SPEED"
+        });
+      }
+      _setPanSpeed(e) {
+        this.dispatch({
+          type: "SET_PAN_SPEED",
+          value: e.detail.value
+        });
+      }
+      _setLinearVelocity(e) {
+        this.dispatch({
+          type: "SET_LINEAR_VELOCITY",
+          value: e.detail.value
+        });
+      }
+    }
+
+    window.customElements.define(PanSpeedPage.is, PanSpeedPage);
+  </script>
+</dom-module>

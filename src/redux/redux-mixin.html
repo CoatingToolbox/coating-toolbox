@@ -5,10 +5,11 @@
 <script src="batch.js"></script>
 <script src="coating.js"></script>
 <script src="coating-amount.js"></script>
+<script src="parameters.js"></script>
 <link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
 
 <script>
-/* global Redux PolymerRedux Tablet Batch Pan Coating CoatingAmount*/
+/* global Redux PolymerRedux Tablet Batch Pan Coating CoatingAmount Parameters*/
 
 // REDUCERS
 function tabletReducer(state = {}, action) {
@@ -95,7 +96,6 @@ function coatingAmountReducer(state = {}, action, coating, tablet) {
     amount.tabletArea = tablet.totalArea;
     amount.tabletWeight = tablet.weight;
     amount.filmDensity = coating.density;
-    
     switch(action.type) {
         case "SET_TABLET_WEIGHT": amount.tabletWeight = action.value; break;
         case "SET_COATING_DENSITY": amount.filmDensity = action.value; break;
@@ -105,6 +105,17 @@ function coatingAmountReducer(state = {}, action, coating, tablet) {
         case "SET_FILM_THICKNESS": amount.filmThickness = action.value;break;
     }
     return Object.assign({}, state, amount.toJSON());
+}
+function parametersReducer(state = {}, action, pan) {
+    let params = new Parameters(state);
+    params.panDiameter = pan.panDiameter;
+    switch(action.type) {
+        case "SET_PAN_SPEED": params.panSpeedRPM = action.value; break;
+        case "SET_LINEAR_VELOCITY": params.linearVelocity = action.value; break;
+        case "SET_MAX_PAN_SPEED": params.linearVelocity = 80 / 3.28084; break;
+        case "SET_MIN_PAN_SPEED": params.linearVelocity = 70 / 3.28084; break;
+    }
+    return Object.assign({}, state, params.toJSON());
 }
 function appReducer(state = {}, action) {
     switch(action.type) {
@@ -122,8 +133,13 @@ function rootReducer(state = {}, action) {
         const coating = coatingReducer(state.coating, action);
         const batch = batchReducer(state.batch, action, pan, tablet);
         const coatingAmount = coatingAmountReducer(state.coatingAmount, action, coating, tablet);
+        const parameters = parametersReducer(state.parameters, action, pan);
         
-        let newState = Object.assign({}, state, { app, tablet, pan, coating, batch, coatingAmount });
+        let newState = Object.assign({}, state, { 
+            app, tablet, pan, coating, 
+            batch, coatingAmount, parameters 
+        });
+        
         sessionStorage.setItem('coating-toolbox-state', JSON.stringify(newState));
         return newState;
 }
@@ -185,15 +201,8 @@ const coating = storedState.coating || new Coating({
 });
 const batch = storedState.batch || new Batch(pan);
 const coatingAmount = storedState.coatingAmount || new CoatingAmount();
-const initialState = {
-    app,
-    tablet,
-    pan, 
-    coating,
-    batch,
-    coatingAmount
-}
-
+const parameters = storedState.parameters || new Parameters();
+const initialState = { app, tablet, pan, coating, batch, coatingAmount, parameters };
 
 // CREATE STORE AND MIXIN
 const store = Redux.createStore(rootReducer, initialState);
