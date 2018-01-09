@@ -33,9 +33,9 @@ class Parameters {
             }
             return vals;
         }
-        
         toJSON() {
             return Object.assign({}, this, {
+                panSpeedString: this.panSpeedRPM.toFixed(2),
                 linearVelocity: this.linearVelocity,
                 linearVelocityFPM: this.linearVelocityFPM,
                 velocityVsSpeedData: this.velocityVsSpeedData

@@ -1,0 +1,220 @@
+
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="chart-styles.html">
+<link rel="import" href="../../bower_components/google-youtube/google-youtube.html">
+<link rel="import" href="../redux/redux-mixin.html">
+
+<dom-module id='speed-vs-fill-chart'>
+    <template>
+        <style include='chart-styles'>
+            .current-point circle{
+                stroke: var(--app-highlight-color);
+            }
+            .video-points circle {
+                stroke: var(--text-light-color);
+            }
+            .video-points circle:hover {
+                cursor: pointer;
+                stroke: var(--app-primary-color);
+            }
+            #dialog {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                background-color: rgba(236, 236, 238, 0.75);
+                
+            }
+            #dialog.open {
+                display: flex;
+            }
+            #video {
+                min-height: 300px;
+                min-width: 500px;
+                background-color: white;
+                max-width: 900px;
+                margin: 64px 32px;
+            }
+        </style>
+            
+        <svg id='chart' width='400'>
+            <g class='chart'>
+                <g class='x axis'></g>
+                <g class='y axis'></g>
+                <text class='x title'>Linear Velocity (fpm)</text>
+                <text class='y title'>Pan Volume (%)</text>
+                <g class='video-points'></g>
+                <g class='current-point'></g>
+            </g>
+        </svg>
+        
+        <div id='dialog' on-click='_closeDialog'>
+                <google-youtube id='video'
+                    fluid
+                    chromeless
+                    loop='1'
+                    showinfo='0'
+                    modestbranding='1'
+                    src=""
+                    volume='0'
+                    on-google-youtube-ready='_playVideo'>
+                </google-youtube>
+        </div>
+        
+    </template>
+    
+    <script>
+        
+        /*global Polymer d3*/
+        class SpeedVsFillChart extends ReduxMixin(Polymer.Element) {
+            
+            static get is() { return 'speed-vs-fill-chart'; }
+            
+            connectedCallback() {
+                super.connectedCallback();
+                window.addEventListener('resize', () => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                window.requestAnimationFrame(() => {
+                    this.height = this.$.chart.clientHeight - this.margin.top - this.margin.bottom;
+                    this.width = this.$.chart.clientWidth - this.margin.left - this.margin.right;
+                });
+            }
+            
+            static get properties() {
+                return {
+                    currentSpeed: {type: Number, statePath: 'parameters.linearVelocityFPM'},
+                    currentFill: {type: Number, statePath: 'batch.batchFillVolumePercent'},
+                    margin: {type: Object, value: function() {
+                        return {top: 20, right: 20, bottom: 50, left: 50};
+                    }},
+                    height: {type: Number},
+                    width: {type: Number},
+                    xScale: {type: Object, computed: '_computeXScale(width)'},
+                    yScale: {type: Object, computed: '_computeYScale(height)'},
+                    chart: {type: Object, computed: '_computeChart(margin, height, width)'},
+                    videoData: {
+                        type: Array, value: function() {
+                            return [
+                                {fill: 100, velocity: 78.54, youtube: 'FV827ICIbUU'},
+                                {fill: 100, velocity: 58.9, youtube: 'zERSaEBJJvM'},
+                                {fill: 100, velocity: 39.27, youtube: 'UecjNnwuMPc'},
+                                {fill: 75, velocity: 78.54, youtube: 'AswIInU0wKM'},
+                                {fill: 75, velocity: 58.9, youtube: '4APEMYqoDRw'},
+                                {fill: 75, velocity: 39.27, youtube: 'SQBlbGG-xa8'},
+                                {fill: 60, velocity: 78.54, youtube: '8ZAYmwz3LTU'},
+                                {fill: 60, velocity: 58.9, youtube: 'nETSgKtvH7g'},
+                                {fill: 60, velocity: 39.27, youtube: '5cKUfip2cpw'},
+                            ];
+                        }
+                    }
+                };
+            }
+            _computeXScale(chartWidth) {
+                if(!chartWidth ) { return; }
+                return d3.scaleLinear().range([0, chartWidth]).domain([0, 100]).nice();
+            }
+            _computeYScale(chartHeight) {
+                if(!chartHeight) { return; }
+                return  d3.scaleLinear().range([chartHeight, 0]).domain([0, 100]).nice();
+            }
+            _computeChart(margin, height, width) {
+                if(!margin || !height || !width) {
+                    return;
+                }
+                let chart = d3.select(this.$.chart)
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                .select(".chart")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                                
+                chart.select(".x.axis").attr("transform", "translate(0," + height + ")");
+                chart.select(".x.title").attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 25) + ")");
+                chart.select(".y.title").attr("y", 0 - margin.left).attr("x",0 - (height / 2)).attr("dy", "1em");      
+                
+                // set the chart object
+                return chart;
+            }
+        
+            static get observers() {
+                return [
+                    "_setChartAxis(xScale, yScale, chart)",
+                    "_setVideoPoints(videoData, yScale, xScale, chart)",
+                    "_setCurrentPoint(currentSpeed, currentFill, yScale, xScale, chart)"
+                ];
+            }
+            
+            _setChartAxis(xScale, yScale, chart) {
+                if(!xScale || !yScale || !chart) { return; }
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+                chart.select(".y.axis").call(d3.axisLeft(yScale)); 
+            }
+            _setVideoPoints(data, yScale, xScale, chart) {
+                if(!data || !yScale || !xScale || !chart ) { return; } 
+                let circles = chart.select('.video-points').selectAll('circle').data(data);
+                
+                
+            
+                const openVideo = (e) => {
+                    this.$.video.videoId = e.youtube;
+                    this.$.video.playlist = e.youtube;
+                    this.$.video.mute();
+                    this.$.dialog.className = 'open';
+                    this.$.video.play();
+                };
+                
+                circles.enter()
+                        .append('circle')
+                            .attr('class', 'circle')
+                            .attr('r', 7)
+                            .on('click', openVideo)
+                        .merge(circles)
+                            .attr('cx', function(d){ return xScale(d.velocity); })
+                            .attr('cy', function(d){ return yScale(d.fill); })
+                            .attr('data-youtube', function(d) { return d.youtube; });
+                            
+                circles.exit().remove();
+            }
+            _setCurrentPoint(velocity, fill, yScale, xScale, chart) {
+                if(!velocity || !fill || !yScale || !xScale || !chart ) { return; } 
+                
+                let circles = chart.select('.current-point').selectAll('circle').data([{fill: fill * 100, velocity: velocity}]);
+                circles.enter()
+                        .append('circle')
+                            .attr('class', 'circle')
+                            .attr('r', 7)
+                        .merge(circles)
+                            .attr('cx', function(d){ return xScale(d.velocity); })
+                            .attr('cy', function(d){ return yScale(d.fill); })
+                            .attr('data-youtube', function(d) { return d.youtube; });
+                            
+                circles.exit().remove();
+            }
+            _closeDialog() {
+                this.$.dialog.className = '';
+                this.$.video.pause();
+            }
+            _playVideo() {
+                this.$.video.mute();
+                this.$.video.play();
+            }
+
+        }
+        
+        window.customElements.define(SpeedVsFillChart.is, SpeedVsFillChart);
+        
+    </script>
+</dom-module>

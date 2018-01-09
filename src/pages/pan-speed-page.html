@@ -4,10 +4,10 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../inputs/unit-input.html">
-<!--<link rel="import" href="../list-items/list-unit-item.html">-->
 <link rel="import" href="../buttons/pages-tab-button.html">
 <link rel="import" href="../buttons/icon-label-button.html">
 <link rel="import" href="../charts/pan-speed-chart.html">
+<link rel="import" href="../charts/speed-vs-fill-chart.html">
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
@@ -48,7 +48,7 @@
       
       <iron-selector selected='{{selectedGraphic}}'>
           <pages-tab-button icon='my-icons:line-chart' label='Speed'></pages-tab-button>
-          <pages-tab-button icon='my-icons:line-chart' label='Scale Up'></pages-tab-button>
+          <pages-tab-button icon='my-icons:line-chart' label='Video'></pages-tab-button>
       </iron-selector>
       
       <iron-pages selected='[[selectedGraphic]]'>
@@ -57,8 +57,8 @@
           <pan-speed-chart class='graphic'></pan-speed-chart>
         </div>
         <div class='page'>
-          <div class='card-title'>Pan Diameter vs Pan Speed</div>
-          <pan-fill-chart class='graphic'></pan-fill-chart>
+          <div class='card-title'>Mixing Videos</div>
+          <speed-vs-fill-chart></speed-vs-fill-chart>
         </div>
       </iron-pages>
       

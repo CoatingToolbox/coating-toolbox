@@ -96,7 +96,6 @@ function coatingAmountReducer(state = {}, action, coating, tablet) {
     amount.tabletArea = tablet.totalArea;
     amount.tabletWeight = tablet.weight;
     amount.filmDensity = coating.density;
-    
     switch(action.type) {
         case "SET_TABLET_WEIGHT": amount.tabletWeight = action.value; break;
         case "SET_COATING_DENSITY": amount.filmDensity = action.value; break;
@@ -113,8 +112,8 @@ function parametersReducer(state = {}, action, pan) {
     switch(action.type) {
         case "SET_PAN_SPEED": params.panSpeedRPM = action.value; break;
         case "SET_LINEAR_VELOCITY": params.linearVelocity = action.value; break;
-        case "SET_MAX_PAN_SPEED": params.linearVelocity = 70 / 3.28084; break;
-        case "SET_MIN_PAN_SPEED": params.linearVelocity = 80 / 3.28084; break;
+        case "SET_MAX_PAN_SPEED": params.linearVelocity = 80 / 3.28084; break;
+        case "SET_MIN_PAN_SPEED": params.linearVelocity = 70 / 3.28084; break;
     }
     return Object.assign({}, state, params.toJSON());
 }
