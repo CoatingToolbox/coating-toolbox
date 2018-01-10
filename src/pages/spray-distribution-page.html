@@ -1,0 +1,180 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../inputs/unit-input.html">
+<link rel="import" href="../inputs/text-input.html">
+<link rel="import" href="../buttons/pages-tab-button.html">
+<link rel="import" href="../buttons/icon-label-button.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="../charts/spray-distribution-chart.html">
+<link rel="import" href="../charts/total-spray-distribution-chart.html">
+<link rel="import" href="../styles/input-graphic-layout-styles.html">
+
+<dom-module id="spray-distribution-page">
+  
+   <template>
+    
+    <style include='input-graphic-layout-styles'></style>
+    
+    <section id='left-section'>
+      
+      <div class='card highlight top'>
+        <div class='card-title'>Spray Pattern</div>
+        <div class='card-description'>
+          The main process parameter that controls mixing is the pan speed. Fast pan speeds
+          ensure good coating uniformity but can cause tablet defect like erosion and edge chipping.
+          Also low pan speeds are often used during development which causes issues later during scale up.
+          When selecting pan speed you should consider mixing, tablet friability and scale up to commercial equipment.
+        </div>
+      </div>
+      
+      <div class='card'>
+        <div class='card-title underline'>Spray Gun Setup</div>
+        <text-input class='wide' value='[[pan.gunMake]]' on-value-changed='_setGunMake' icon='my-icons:product' label='Manufacturer'></text-input>
+        <text-input class='wide' value='[[pan.gunModel]]' on-value-changed='_setGunModel' icon='my-icons:product' label='Model'></text-input>
+        <unit-input value='[[pan.gunCount]]' on-value-changed='_setGunCount' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='guns'></unit-input>
+        <unit-input value='[[pan.gunToGunDistance]]' on-value-changed='_setGunToGun' icon='my-icons:ruler' type='length' selected-units='{{lengthUnits}}' label='Gun To Gun Distance'></unit-input>
+      </div>
+      
+      
+      
+      <div class='card'>
+        <div class='card-title underline'>Single Gun Spray Patern</div>
+        <unit-input 
+          value='[[parameters.atomizationAir]]' 
+          on-value-changed='_setAtomizationAir' 
+          icon='my-icons:spray' 
+          type='pressure' 
+          label='Atomization' 
+          decimals='0' 
+          step='1'  
+          selected-units='{{pressureUnits}}'>
+        </unit-input>
+        <unit-input 
+          value='[[parameters.patternAir]]' 
+          on-value-changed='_setPatternAir' 
+          icon='my-icons:spray' 
+          type='pressure' 
+          label='Pattern' 
+          decimals='0' 
+          step='1'  
+          selected-units='{{pressureUnits}}'>
+        </unit-input>
+        <unit-input 
+          value='[[parameters.gunToBed]]' 
+          on-value-changed='_setGunToBed' 
+          icon='my-icons:ruler' 
+          type='length' 
+          label='Gun To Bed' 
+          selected-units='{{lengthUnits}}'>
+        </unit-input>
+        <unit-input 
+          value='[[parameters.sprayPatternWidth]]' 
+          on-value-changed='_setSprayPatternWidth' 
+          icon='my-icons:ruler' 
+          type='length' 
+          label='Spray Pattern Width' 
+          selected-units='{{lengthUnits}}'>
+        </unit-input>
+      </div>
+      
+    </section>
+    
+    <section id='right-section'>
+      
+      <iron-selector selected='{{selectedGraphic}}'>
+          <pages-tab-button icon='my-icons:line-chart' label='Distrubtion'></pages-tab-button>
+          <pages-tab-button icon='my-icons:line-chart' label='Pattern'></pages-tab-button>
+      </iron-selector>
+      
+      <iron-pages selected='[[selectedGraphic]]'>
+        <div class='page distribution-page'>
+          <div class='card-title'>Single Gun Spray Distribution</div>
+          <spray-distribution-chart id='singleGunChart'></spray-distribution-chart>
+          <div class='card-title'>Total Spray Distribution</div>
+          <total-spray-distribution-chart id='totalGunChart'></total-spray-distribution-chart>
+        </div>
+        <div class='page'>
+          <div class='card-title'>Spray Patterns</div>
+        </div>
+      </iron-pages>
+      
+    </section>
+    
+  </template>
+
+  <script>
+    /* global Polymer ReduxMixin */
+    class SprayDistributionPage extends ReduxMixin(Polymer.Element) {
+      static get is() { return 'spray-distribution-page'; }
+      static get properties() {
+        return {
+          pan: {type: Object, statePath: 'pan'},
+          parameters: {type: Object, statePath: 'parameters'},
+          selectedGraphic: {type: Number, value: 0, observer: '_selectedGraphicChanged'},
+          lengthUnits: {type: String, value: 'in'},
+          pressureUnits: {type: String, value: 'psi'}
+        };
+      }
+      _selectedGraphicChanged(page) {
+        switch(page) {
+          case 0:
+            this.$.singleGunChart._setChartDimensions();
+            this.$.totalGunChart._setChartDimensions();
+        }
+      }
+      _setGunMake(e){
+        this.dispatch({
+          type: "SET_PAN_GUN_MAKE",
+          value: e.detail.value
+        });
+      }
+      _setGunModel(e){
+        this.dispatch({
+          type: "SET_PAN_GUN_MODEL",
+          value: e.detail.value
+        });
+      }
+      _setGunCount(e){
+        this.dispatch({
+          type: "SET_PAN_GUN_COUNT",
+          value: e.detail.value
+        });
+      }
+      _setGunToGun(e){
+        this.dispatch({
+          type: "SET_PAN_GUN_TO_GUN_DISTANCE",
+          value: e.detail.value
+        });
+      }
+      _setAtomizationAir(e){
+        this.dispatch({
+          type: "SET_ATOMIZATION_AIR",
+          value: e.detail.value
+        });
+      }
+      _setPatternAir(e){
+        this.dispatch({
+          type: "SET_PATTERN_AIR",
+          value: e.detail.value
+        });
+      }
+      _setSprayPatternWidth(e){
+        this.dispatch({
+          type: "SET_SPRAY_PATTERN_WIDTH",
+          value: e.detail.value
+        });
+      }
+      _setGunToBed(e){
+        this.dispatch({
+          type: "SET_GUN_TO_BED",
+          value: e.detail.value
+        });
+      }
+    }
+
+    window.customElements.define(SprayDistributionPage.is, SprayDistributionPage);
+  </script>
+</dom-module>

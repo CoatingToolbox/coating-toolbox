@@ -114,6 +114,10 @@ function parametersReducer(state = {}, action, pan) {
         case "SET_LINEAR_VELOCITY": params.linearVelocity = action.value; break;
         case "SET_MAX_PAN_SPEED": params.linearVelocity = 80 / 3.28084; break;
         case "SET_MIN_PAN_SPEED": params.linearVelocity = 70 / 3.28084; break;
+        case "SET_PATTERN_AIR": params.patternAir = action.value; break;
+        case "SET_ATOMIZATION_AIR": params.atomizationAir = action.value; break;
+        case "SET_GUN_TO_BED": params.gunToBed = action.value; break;
+        case "SET_SPRAY_PATTERN_WIDTH": params.sprayPatternWidth = action.value; break;
     }
     return Object.assign({}, state, params.toJSON());
 }

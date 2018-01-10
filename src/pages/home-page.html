@@ -113,6 +113,9 @@
       <home-summary-list-item tag='Pan Speed' title='Pan Speed: [[panSpeed]] rpm'>
         <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/pan-speed'></home-nav-button>
       </home-summary-list-item>
+      <home-summary-list-item tag='Spray Distribution' title='Atomization Air: [[atomizationAir]] psi &  Pattern Air [[patternAir]] psi'>
+        <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/spray-distribution'></home-nav-button>
+      </home-summary-list-item>
     </section>
     
   </template>
@@ -127,7 +130,9 @@
           coatingTitle: {type: String, statePath: 'coating.productName'},
           batchWeight: {type: Number, statePath: 'batch.batchWeightInKG'},
           coatingAmount: {type: Number, statePath: "coatingAmount.weightGainPercent"},
-          panSpeed: {type: Number, statePath: "parameters.panSpeedString"}
+          panSpeed: {type: Number, statePath: "parameters.panSpeedString"},
+          atomizationAir: {type: Number, statePath: "parameters.atomizationAir"},
+          patternAir: {type: Number, statePath: "parameters.patternAir"}
         };
       }
     }
