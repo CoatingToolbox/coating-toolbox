@@ -54,11 +54,11 @@
       <iron-pages selected='[[selectedGraphic]]'>
         <div class='page'>
           <div class='card-title'>Pan Speed vs Linear Velocity</div>
-          <pan-speed-chart class='graphic'></pan-speed-chart>
+          <pan-speed-chart id='speedChart' class='graphic'></pan-speed-chart>
         </div>
         <div class='page'>
           <div class='card-title'>Mixing Videos</div>
-          <speed-vs-fill-chart></speed-vs-fill-chart>
+          <speed-vs-fill-chart id='videoChart' class='graphic'></speed-vs-fill-chart>
         </div>
       </iron-pages>
       
@@ -67,14 +67,25 @@
   </template>
 
   <script>
+    /* global ReduxMixin Polymer */
     class PanSpeedPage extends ReduxMixin(Polymer.Element) {
       static get is() { return 'pan-speed-page'; }
       static get properties() {
         return {
           pan: {type: Object, statePath: 'pan'},
           param: {type: Object, statePath: 'parameters'},
-          selectedGraphic: {type: Number, value: 0}
+          selectedGraphic: {type: Number, value: 0, observer: '_graphicChanged'}
         };
+      }
+      _graphicChanged(page) {
+        switch(page) {
+          case 0:
+            this.$.speedChart._setChartDimensions();
+            break;
+          case 1:
+            this.$.videoChart._setChartDimensions();
+            break;
+        }
       }
       _setMaxSpeed() {
         this.dispatch({

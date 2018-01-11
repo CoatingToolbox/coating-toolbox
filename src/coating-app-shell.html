@@ -46,8 +46,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="pages/coating-library-page.html">
 
 <link rel="lazy-import" href="pages/pan-fill-page.html">
+<link rel="lazy-import" href="pages/spray-distribution-page.html">
 <link rel="lazy-import" href="pages/coating-amount-page.html">
 <link rel="lazy-import" href="pages/pan-speed-page.html">
+<link rel="lazy-import" href="pages/upload-spray-card-page.html">
 
 <dom-module id="coating-app-shell">
   <template>
@@ -176,6 +178,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <app-toolbar>Mixing</app-toolbar>
         <a name="pan-speed" href="#/pan-speed">Pan Speed</a>
+        <a name="spray-distribution" href="#/spray-distribution">Spray Distribution</a>
         </div>
       </app-drawer>
       
@@ -193,6 +196,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <iron-pages selected="[[page]]" attr-for-selected="name" role="main" fallback-selection='home'>
           <home-page name='home'></home-page>
+          <upload-spray-card-page name='upload-spray-card'></upload-spray-card-page>
+          <spray-distribution-page name='spray-distribution'></spray-distribution-page>
           <pan-speed-page name='pan-speed'></pan-speed-page>
           <pan-fill-page name='pan-fill'></pan-fill-page>
           <coating-amount-page name='coating-amount'></coating-amount-page>
