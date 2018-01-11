@@ -36,6 +36,9 @@
       section + section {
         margin-top: 48px;
       }
+      [hidden] {
+        display: none;
+      }
       
       @media(min-width: 600px) {
         header h1 {
@@ -114,6 +117,7 @@
         <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/pan-speed'></home-nav-button>
       </home-summary-list-item>
       <home-summary-list-item tag='Spray Distribution' title='Atomization Air: [[atomizationAir]] psi &  Pattern Air [[patternAir]] psi'>
+        <home-nav-button hidden$='[[!isAdmin]]' slot='nav-button' opened icon='my-icons:load' label='Upload' link='#/upload-spray-card'></home-nav-button>
         <home-nav-button slot='nav-button' opened icon='my-icons:ruler' label='Edit' link='#/spray-distribution'></home-nav-button>
       </home-summary-list-item>
     </section>
@@ -125,6 +129,7 @@
       static get is() { return 'home-page'; }
       static get properties() {
         return {
+          isAdmin: {type: Boolean, statePath: 'app.isAdmin'},
           tabletTitle: {type: String, statePath: 'tablet.productName'},
           panTitle: {type: String, statePath: "pan.nickname"},
           coatingTitle: {type: String, statePath: 'coating.productName'},

@@ -1,0 +1,241 @@
+<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.258/pdf.js'>
+</script>
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../inputs/unit-input.html">
+<link rel="import" href="../inputs/text-input.html">
+<link rel="import" href="../buttons/icon-label-button.html">
+<link rel="import" href="../styles/input-graphic-layout-styles.html">
+
+<dom-module id="upload-spray-card-page">
+
+    <template>
+    
+    <style include='input-graphic-layout-styles'>
+      #right-section {
+          overflow: auto;
+          align-items: flex-start;
+      }
+    </style>
+    
+    <section id='left-section'>
+      
+      <div class='card top'>
+        <div class='card-title underline'>Upload Spray Card</div>
+        <div class='card-description'>
+          Upload a pdf scanned spary card. Convert to image, crop image and calculate stats. Than save to firebase for later use.
+        </div>
+        <input id='file' class='wide' type='file' id='file' accept="application/pdf"  on-change='_fileSelected'/>
+       <text-input 
+          class='wide' 
+          value='{{coating}}'
+          icon='my-icons:product' 
+          label='Coating'>
+        </text-input>
+         <text-input 
+          class='wide' 
+          value='{{gunMake}}'
+          icon='my-icons:product' 
+          label='Manufacturer'>
+        </text-input>
+        <text-input 
+          class='wide' 
+          value='{{gunModel}}' 
+          icon='my-icons:product' 
+          label='Model'>
+        </text-input>
+         <text-input
+            class='wide' 
+            value='{{aircap}}'
+            icon='my-icons:product' 
+            label='Aircap'>
+          </text-input>
+         <text-input
+            class='wide' 
+            value='{{nozzle}}'
+            icon='my-icons:product' 
+            label='Nozzle'>
+          </text-input>
+        <unit-input 
+          value='{{atom}}' 
+          icon='my-icons:spray'
+          label='Atomization' 
+          selected-units='psi'>
+        </unit-input>
+        <unit-input 
+          value='{{pattern}}' 
+          icon='my-icons:spray' 
+          label='Pattern' 
+          selected-units='psi'>
+        </unit-input>
+        <unit-input 
+          value='{{gun2bed}}' 
+          icon='my-icons:ruler' 
+          type='length' 
+          label='Gun To Bed' 
+          selected-units='in'>
+        </unit-input>
+        <unit-input 
+          value='{{cardWidth}}' 
+          icon='my-icons:ruler' 
+          type='length' 
+          label='Spray Pattern Width' 
+          selected-units='in'>
+        </unit-input>
+        <unit-input 
+          icon='my-icons:weight' 
+          class='wide'
+          value='{{spray}}'
+          type='' 
+          label='Spray rate / gun' 
+          selected-units='g/min'>
+        </unit-input>
+        <icon-label-button icon='my-icons:save' class='wide' label='Save' on-click='_saveToFirebase'></icon-label-button>
+      </div>  
+      
+    </section>
+    
+    <secton id='right-section'>
+      <canvas id='canvas'></canvas>
+      <canvas id='finalCanvas'></canvas>
+    </secton>
+    
+  </template>
+
+<script>
+    /* global Polymer ReduxMixin URL PDFJS firebase*/
+    class UploadSprayCardPage extends Polymer.Element {
+        static get is() { return 'upload-spray-card-page'; }
+        static get properties() {
+            return {
+                gunModel: String,
+                gunMake: String,
+                aircap: String,
+                nozzle: String,
+                atom: Number,
+                pattern: Number,
+                gun2bed: Number,
+                cardWidth: Number,
+                spray: Number,
+                fileName: {type: String, observer: '_setInputs'}
+            };
+        }
+        
+        _setInputs(file) {
+            let inputs = file.replace('.pdf', '').split('-');
+            this.gunModel = "JAU";
+            this.gunMake = "Spraying Systems";
+            this.cardWidth = 0.2794;
+            this.nozzle = inputs[0];
+            this.aircap = inputs[1].replace('.', '-');
+            this.atom = parseFloat(inputs[2].replace('psi', ''));
+            this.pattern = parseFloat(inputs[2].replace('psi', ''));
+            this.spray = parseFloat(inputs[3].replace('g.min', ''));
+            this.gun2bed = 0.0254 * parseFloat(inputs[4].replace('inches', ''));
+            this.coating = inputs[5].toUpperCase();
+        }
+
+        _fileSelected(e) {
+            let image = this.$.image;
+            let canvas = this.$.canvas;
+            let canvas2 = this.$.finalCanvas;
+            this.fileName = this.$.file.files[0].name;
+            let context = canvas.getContext('2d');
+            let url = URL.createObjectURL(this.$.file.files[0]);
+            let loadingTask = PDFJS.getDocument(url).then(function(pdf) {
+                // Fetch the first page
+                var pageNumber = 1;
+                pdf.getPage(pageNumber).then(function(page) {
+                    let viewport = page.getViewport(1);
+                    // Prepare canvas using PDF page dimensions
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    // Render PDF page into canvas context
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    var renderTask = page.render(renderContext);
+                    renderTask.then(function() {
+                        console.log('image loaded beggin cropping')
+                        
+                        let data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+                        let rgba = [];
+                        for(var y = 0; y < canvas.height; y++) {
+                          // loop through each column
+                          for(var x = 0; x < canvas.width; x++) {rgba.push({
+                                x: x,
+                                y: y,
+                                red: data[((canvas.width * y) + x) * 4],
+                                green: data[((canvas.width * y) + x) * 4 + 1],
+                                blue: data[((canvas.width * y) + x) * 4 + 2],
+                                alpha: data[((canvas.width * y) + x) * 4 + 3]
+                            });
+                          }
+                        }
+                        let cropped = rgba.filter( color => { return color.blue < 200;});
+                        let centerRow = cropped.filter(color => { return color.y == canvas.height / 2;});
+                        
+                        let cropWidth = centerRow[centerRow.length - 16].x - centerRow[15].x;
+                        let croppedImageData = context.getImageData(centerRow[15].x, 0, cropWidth, canvas.height);
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        canvas.width = cropWidth;
+                        context.putImageData(croppedImageData, 0, 0);
+                        
+                        let width = canvas.height;
+                        let height = canvas.width;
+                        canvas2.width = width;
+                        canvas2.height = height;
+                        let context2 = canvas2.getContext('2d');
+                        context2.save();
+                        context2.translate(width / 2, height / 2);
+                        context2.rotate(Math.PI / 2);
+                        context2.drawImage(canvas, -height / 2, -width / 2, height, width);
+                        context2.restore();
+                    });
+                });
+            }, function(reason) {
+                // PDF loading error
+                console.error(reason);
+            });
+        }
+        
+        
+      _saveToFirebase() {
+        let imageName = this.$.file.files[0].name.replace('.pdf', '.png');
+        let data = {
+            coating: this.coating || '',
+            gunModel: this.gunModel || '',
+            gunMake: this.gunMake || '',
+            aircap: this.aircap || '',
+            nozzle: this.nozzle || '',
+            atom: this.atom || '',
+            pattern: this.pattern || '',
+            gun2bed: this.gun2bed || '',
+            cardWidth: this.cardWidth || '',
+            spray: this.spray || '',
+            imageName: imageName || ''
+        };
+        console.log(data)
+        // /*global firebase */
+        data.firebaseKey = firebase.database().ref('spray-cards/').push().key;
+        firebase.database().ref(`spray-cards/${data.firebaseKey}`).set(data);
+        
+        // Get a reference to the storage service, which is used to create references in your storage bucket
+        var storage = firebase.storage();
+        
+        // Create a storage reference from our storage service
+        var storageRef = storage.ref(`spray-cards/${imageName}`);
+        this.$.finalCanvas.toBlob(blob => {
+            console.log('we have a blob')
+            storageRef.put(blob).then(function(snapshot) {
+            console.log('Uploaded a blob or file!');
+            });
+        }, 'image/jpg');
+      }
+      
+    }
+
+    window.customElements.define(UploadSprayCardPage.is, UploadSprayCardPage);
+</script>
+</dom-module>

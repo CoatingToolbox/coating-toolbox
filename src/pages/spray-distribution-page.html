@@ -32,13 +32,38 @@
       
       <div class='card'>
         <div class='card-title underline'>Spray Gun Setup</div>
-        <text-input class='wide' value='[[pan.gunMake]]' on-value-changed='_setGunMake' icon='my-icons:product' label='Manufacturer'></text-input>
-        <text-input class='wide' value='[[pan.gunModel]]' on-value-changed='_setGunModel' icon='my-icons:product' label='Model'></text-input>
-        <unit-input value='[[pan.gunCount]]' on-value-changed='_setGunCount' icon='my-icons:count' label='Count' decimals='0' step='1' selected-units='guns'></unit-input>
-        <unit-input value='[[pan.gunToGunDistance]]' on-value-changed='_setGunToGun' icon='my-icons:ruler' type='length' selected-units='{{lengthUnits}}' label='Gun To Gun Distance'></unit-input>
+        <text-input 
+          class='wide' 
+          value='[[pan.gunMake]]'
+          on-value-changed='_setGunMake' 
+          icon='my-icons:product' 
+          label='Manufacturer'>
+        </text-input>
+        <text-input 
+          class='wide' 
+          value='[[pan.gunModel]]'
+          on-value-changed='_setGunModel' 
+          icon='my-icons:product' 
+          label='Model'>
+        </text-input>
+        <unit-input 
+          value='[[pan.gunCount]]'
+          on-value-changed='_setGunCount'
+          icon='my-icons:count' 
+          label='Count'
+          decimals='0' 
+          step='1' 
+          selected-units='guns'>
+        </unit-input>
+        <unit-input 
+          value='[[pan.gunToGunDistance]]' 
+          on-value-changed='_setGunToGun'
+          icon='my-icons:ruler'
+          type='length'
+          selected-units='{{lengthUnits}}'
+          label='Gun To Gun'>
+        </unit-input>
       </div>
-      
-      
       
       <div class='card'>
         <div class='card-title underline'>Single Gun Spray Patern</div>
@@ -79,7 +104,6 @@
           selected-units='{{lengthUnits}}'>
         </unit-input>
       </div>
-      
     </section>
     
     <section id='right-section'>
@@ -111,6 +135,7 @@
       static get is() { return 'spray-distribution-page'; }
       static get properties() {
         return {
+          isAdmin: {type: Boolean, statePath: 'app.isAdmin'},
           pan: {type: Object, statePath: 'pan'},
           parameters: {type: Object, statePath: 'parameters'},
           selectedGraphic: {type: Number, value: 0, observer: '_selectedGraphicChanged'},

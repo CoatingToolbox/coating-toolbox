@@ -4,6 +4,7 @@
   "fragments": [
     "src/redux/redux-mixin.html",
     "src/pages/home-page.html",
+    "src/pages/upload-spray-card-page.html",
     "src/pages/spray-distribution-page.html",
     "src/pages/pan-fill-page.html",
     "src/pages/coating-amount-page.html",
