@@ -10,6 +10,7 @@
 <link rel="import" href="../redux/redux-mixin.html">
 <link rel="import" href="../charts/spray-distribution-chart.html">
 <link rel="import" href="../charts/total-spray-distribution-chart.html">
+<link rel="import" href="../charts/spray-card-chart.html">
 <link rel="import" href="../styles/input-graphic-layout-styles.html">
 
 <dom-module id="spray-distribution-page">
@@ -121,7 +122,8 @@
           <total-spray-distribution-chart id='totalGunChart'></total-spray-distribution-chart>
         </div>
         <div class='page'>
-          <div class='card-title'>Spray Patterns</div>
+          <div class='card-title'>Spraying Systems JAU Spray Distribution</div>
+          <spray-card-chart id='cardChart'></spray-card-chart>
         </div>
       </iron-pages>
       
@@ -138,7 +140,7 @@
           isAdmin: {type: Boolean, statePath: 'app.isAdmin'},
           pan: {type: Object, statePath: 'pan'},
           parameters: {type: Object, statePath: 'parameters'},
-          selectedGraphic: {type: Number, value: 0, observer: '_selectedGraphicChanged'},
+          selectedGraphic: {type: Number, value: 1, observer: '_selectedGraphicChanged'},
           lengthUnits: {type: String, value: 'in'},
           pressureUnits: {type: String, value: 'psi'}
         };
@@ -148,6 +150,10 @@
           case 0:
             this.$.singleGunChart._setChartDimensions();
             this.$.totalGunChart._setChartDimensions();
+            break;
+          case 1:
+            this.$.cardChart._setChartDimensions();
+            break;
         }
       }
       _setGunMake(e){

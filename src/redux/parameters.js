@@ -6,6 +6,7 @@ class Parameters {
             this.atomizationAir = 45;
             this.patternAir = 45;
             this.sprayPatternWidth = 0.1778;
+            this.sprayRatePerGun = 100;
             this.gunToBed = 0.2032;
             
             // Set the properties that match the class

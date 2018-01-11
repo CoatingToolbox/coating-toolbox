@@ -1,0 +1,240 @@
+
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="d3-import.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../redux/redux-mixin.html">
+<link rel="import" href="chart-styles.html">
+
+<dom-module id='spray-card-chart'>
+    <template>
+        <style include='chart-styles'>
+            circle.current-point.circle {
+                stroke: var(--app-highlight-color);
+            }
+            
+            .card-points circle {
+                stroke: var(--text-light-color);
+            }
+            .card-points circle:hover {
+                cursor: pointer;
+                stroke: var(--app-primary-color);
+            }
+            #dialog {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 64px 32px;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                background-color: rgba(236, 236, 238, 0.85);
+            }
+            #dialog div {
+                
+                @apply --paper-font-title;
+                color: var(--text-color);
+                padding-bottom: 16px;
+            }
+            #dialog.open {
+                display: flex;
+            }
+            #image {
+                background-color: white;
+                width: 100%;
+                height: auto;
+            }
+            #selector-layout {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 32px 64px 8px;
+            }
+            #selector-layout > div {
+                @apply --paper-font-subhead;
+            }
+            iron-selector {
+                display: flex;
+                align-items: center;
+            }
+            iron-selector div {
+                padding: 4px 12px;
+                margin: 0 12px;
+                border-radius: 16px;
+                background-color: var(--text-disabled-color);
+            }
+            iron-selector div.iron-selected {
+                color: white;
+                background-color: var(--app-highlight-color);
+            }
+        </style>
+    
+    <firebase-query path='spray-cards' data='{{fireCards}}'></firebase-query>
+    
+        <svg id='chart' width='400'>
+            <g class='chart'>
+                <g class='x axis'></g>
+                <g class='y axis'></g>
+                <text class='x title'>Spray Rate (g/min)</text>
+                <text class='y title'>Atomization / Pattern Air (psi)</text>
+                <g class='card-points'>
+                    <circle class='card-circle circle'></circle>
+                </g>
+                <circle class='circle current-point'></circle>
+            </g>
+        </svg>
+        
+        <div id='selector-layout'>
+            <div>Gun To Bed Distance</div>
+            <iron-selector selected='{{filterValue}}'>
+                <div></div>
+                <div>7 inches</div>
+                <div>9 inches</div>
+                <div>11 inches</div>
+            </iron-selector>
+        </div>
+        
+        <div id='dialog' on-click='_closeDialog'>
+            <img id='image' src=''>
+            <div>[[sprayCardTitle]]</div>
+            <div>The total width of the spray card is 11 inches.</div>
+        </div>
+        
+    </template>
+    
+    <script>
+        
+        /*global ReduxMixin Polymer d3 firebase*/
+        class SprayCardChart extends ReduxMixin(Polymer.Element) {
+            
+            static get is() { return 'spray-card-chart'; }
+            
+            connectedCallback() {
+                super.connectedCallback();
+                window.addEventListener('resize', () => this._setChartDimensions());
+                this._setChartDimensions();
+            }
+            _setChartDimensions() {
+                if(!this.$.chart) {
+                    return;
+                }
+                
+                window.requestAnimationFrame(() => {
+                    this.height = this.$.chart.clientHeight - this.margin.top - this.margin.bottom;
+                    this.width = this.$.chart.clientWidth - this.margin.left - this.margin.right;
+                });
+            }
+            
+            static get properties() {
+                return {
+                    fireCards: Array,
+                    sprayCardTitle: String,
+                    filterValue: {type: Number, value: 2},
+                    patternPressure: {type: Number, statePath: 'parameters.patternAir'},
+                    sprayRate: {type: Number, statePath: 'parameters.sprayRatePerGun'},
+                    margin: {type: Object, value: function() {
+                        return {top: 20, right: 20, bottom: 50, left: 50};
+                    }},
+                    height: {type: Number},
+                    width: {type: Number},
+                    xScale: {type: Object, computed: '_computeXScale(width, chart)'},
+                    yScale: {type: Object, computed: '_computeYScale(height, chart)'},
+                    chart: {type: Object, computed: '_computeChart(margin, height, width)'}
+                };
+            }
+            _computeXScale(chartWidth, chart) {
+                if(!chartWidth || !chart) { return };
+                let xScale = d3.scaleLinear().range([0, chartWidth]).domain([0, 150]).nice();
+                chart.select(".x.axis").call(d3.axisBottom(xScale));
+                return xScale;
+            }
+            _computeYScale(chartHeight, chart) {
+                if(!chartHeight || !chart) { return; }
+                let yScale =  d3.scaleLinear().range([chartHeight, 0]).domain([0, 90]).nice();
+                chart.select(".y.axis").call(d3.axisLeft(yScale)); 
+                return yScale;
+            }
+            _computeChart(margin, height, width) {
+                if(!margin || !height || !width) {
+                    return;
+                }
+                let chart = d3.select(this.$.chart)
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                .select(".chart")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                                
+                chart.select(".x.axis").attr("transform", "translate(0," + height + ")");
+                chart.select(".x.title").attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 25) + ")");
+                chart.select(".y.title").attr("y", 0 - margin.left).attr("x",0 - (height / 2)).attr("dy", "1em");      
+                
+                // set the chart object
+                return chart;
+            }
+        
+            static get observers() {
+                return [
+                    '_drawCurrentPoint(patternPressure, sprayRate, xScale, yScale, chart)',
+                    '_drawCardPoints(fireCards, filterValue, xScale, yScale, chart)',
+                ];
+            }
+            _drawCurrentPoint(pressure, spray, xScale, yScale, chart) {
+                
+                if(!chart || !pressure ||  !spray ||!xScale || !yScale) { return; }
+                
+                let data = [{pressure, spray}];
+                
+                let points = chart.select('.current-point.circle').data(data);
+                points.enter()
+                      .append('circle')
+                      .attr('class', 'current-point circle')
+                  .merge(points)
+                      .attr('r', 7)
+                      .attr('cx', function(d) { return xScale(d.spray); })
+                      .attr('cy', function(d) { return yScale(d.pressure); });
+                points.exit().remove();
+            }
+            _drawCardPoints(data, filter, xScale, yScale, chart) {
+                
+                if(!chart || !filter || !data ||!xScale || !yScale) { return; }
+                
+                let gun2bed = 0.1778 + (filter - 1) * 0.0508 ;
+                let filterData = data.filter(d => {
+                    return d.gun2bed > 0.95 * gun2bed && d.gun2bed < 1.05 * gun2bed;
+                });
+                const openDialog = (e) => {
+                    console.log(e.imageName);
+                    this.sprayCardTitle = e.imageName;
+                    let ref = firebase.storage().ref(`spray-cards/${e.imageName}`);
+                    ref.getDownloadURL().then( url => {
+                        console.log('we have a URL');
+                        this.$.image.src = url;
+                        this.$.dialog.className = 'open';
+                    });
+                };
+                
+                let points = chart.select('.card-points').selectAll('.card-circle').data(filterData);
+                points.enter()
+                      .append('circle')
+                      .attr('class', 'card-circle circle')
+                        .on('click', openDialog)
+                  .merge(points)
+                      .attr('r', 7)
+                      .attr('cx', function(d) { return xScale(d.spray); })
+                      .attr('cy', function(d) { return yScale(d.pattern); });
+                points.exit().remove();
+            }
+            _closeDialog() {
+                this.$.dialog.className = '';
+            }
+
+        }
+        
+        window.customElements.define(SprayCardChart.is, SprayCardChart);
+        
+    </script>
+</dom-module>
